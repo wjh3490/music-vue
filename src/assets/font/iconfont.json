@@ -1,0 +1,114 @@
+{
+  "id": "1490096",
+  "name": "music",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "688059",
+      "name": "播放 三角形",
+      "font_class": "bofangsanjiaoxing",
+      "unicode": "e769",
+      "unicode_decimal": 59241
+    },
+    {
+      "icon_id": "1603711",
+      "name": "最近播放",
+      "font_class": "zuijinbofang",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "1621429",
+      "name": "播放暂停",
+      "font_class": "bofangzanting",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "1820805",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "2735213",
+      "name": "音乐",
+      "font_class": "yinle",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "3628224",
+      "name": "收 藏",
+      "font_class": "shoucang",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "3636876",
+      "name": "收 藏",
+      "font_class": "shoucang1",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "5172971",
+      "name": "快进",
+      "font_class": "next",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "5255475",
+      "name": "前进",
+      "font_class": "iconfont2",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7595168",
+      "name": "删 除",
+      "font_class": "shanchu",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "11563032",
+      "name": "icons／Music页面／播放模式／Play List",
+      "font_class": "iconsMusicyemianbofangmoshiPlayList",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "11563034",
+      "name": "icons／Music页面／播放模式／Alrepeat One",
+      "font_class": "iconsMusicyemianbofangmoshiAlrepeatOne",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "11563035",
+      "name": "icons／Music页面／播放模式／Repeat",
+      "font_class": "iconsMusicyemianbofangmoshiRepeat",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "11563039",
+      "name": "icons／Music页面／播放模式／Shuffle",
+      "font_class": "iconsMusicyemianbofangmoshiShuffle",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "1024810",
+      "name": "前进",
+      "font_class": "qianjin",
+      "unicode": "e750",
+      "unicode_decimal": 59216
+    }
+  ]
+}

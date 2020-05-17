@@ -1,0 +1,76 @@
+.scale-leave-to,
+.scale-enter {
+  transform: rotate(180deg);
+}
+
+.scale-enter-active,
+.scale-leave-active {
+  transition: transform 0.5s;
+  transform-origin: 70% bottom;
+}
+//
+
+//
+.fade2-enter,
+.fade2-leave-to {
+  transform: translate3d(0, 100%, 0);
+  opacity: 0;
+}
+.fade2-enter-active,
+.fade2-leave-active {
+  transition: all 0.3s;
+}
+//
+.fade1-enter,
+.fade1-enter-leave-to {
+  opacity: 0;
+}
+.fade1-enter-active,
+.fade1-enter-leave-active {
+  transition: all 1s;
+}
+//
+.slide-enter,
+.slide-leave-to {
+  transform: translate3d(0, 100%, 0);
+  opacity: 0;
+}
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s;
+}
+@keyframes move {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse {
+  from {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.3, 1.3, 1.3);
+    transform: scale3d(1.3, 1.3, 1.3);
+  }
+
+  to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes play {
+  0% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(75%);
+    transform: translateY(75%);
+  }
+}
