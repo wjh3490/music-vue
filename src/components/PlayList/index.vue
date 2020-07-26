@@ -1,6 +1,6 @@
 <template>
   <div class="playlist">
-    <div class="mask" @click.prevent="$emit('update:playShow', false)"></div>
+    <div class="mask" @click.prevent="$emit('update:visiblePlayList', false)"></div>
     <div class="item-list">
       <div class="playlist-mask"></div>
       <div class="list-title">
@@ -9,10 +9,10 @@
             class="iconfont  mode-icon"
             :class="swichMode.icon"
           ></i>
-           <span @click="changeMode1">{{  swichMode.text }}</span>
+           <span @click="handleMode">{{  swichMode.text }}</span>
         </div>
        
-        <div class="empty fr" @click="empty">
+        <div class="empty fr" @click="clearAll">
           <span>清空全部</span>
           <i class="iconfont icon-shanchu"></i>
         </div>
@@ -21,7 +21,7 @@
         <li
           v-for="(item, index) in playList"
           :key="index"
-          @click="play(index)"
+          @click="() => setCurrrentIndex(index)"
           class="ellipsis"
           ref="songItem"
         >
@@ -61,7 +61,6 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 import { shuffle } from '../../utils/index.js';
 import { playMode } from '../../utils/config.js';
-import { Stream } from 'stream';
 export default {
   name: 'PlayList',
   props: {
@@ -78,24 +77,22 @@ export default {
     ...mapGetters(['playList', 'currrenSong'])
   },
   methods: {
-    changeMode1() {
+    handleMode() {
       this.mode++;
       if (this.mode > 2) {
         this.mode = 0;
       }
-
       this.$emit('changeMode', this.mode);
     },
 
-    empty() {
+    clearAll() {
       this.$MessageBox({
         title: '',
         content: '是否要删除全部'
       })
         .then(() => {
           this.emptyList();
-          // this.playClose();
-          this.$emit('update:playShow', false);
+          this.$emit('update:visiblePlayList', false);
           this.$emit('stopPlay');
         })
         .catch(() => {});
@@ -103,15 +100,14 @@ export default {
     del(item) {
       this.delSong(item);
       if (this.playList.length === 0) {
-        // this.playClose();
-        this.$emit('update:playShow', false);
+        this.$emit('update:visiblePlayList', false);
         this.$emit('stopPlay');
       }
     },
 
-    play(index) {
-      this.setCurrrentIndex(index);
-    },
+    // play(index) {
+    //   this.setCurrrentIndex(index);
+    // },
     ...mapMutations(['setCurrrentIndex']),
     ...mapActions(['delSong', 'emptyList'])
   }

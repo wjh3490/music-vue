@@ -1,5 +1,5 @@
 <template>
-  <div class="circle" @click.stop="$emit('update:showBgc', false)">
+  <div class="circle" @click.stop="$emit('update:visibleAllLyric', false)">
     <div class="bgc" :class="animationStatus">
       <img v-lazy="$store.getters.currrenSong.picUrl" class="bgc-img" alt />
     </div>
@@ -12,7 +12,6 @@
 export default {
   name: 'CircleLyric',
   props: {
-   
     currentLyric: [Object, String],
     animationStatus: String,
     playingLyric: String

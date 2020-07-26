@@ -7,8 +7,9 @@
     <div
       class="singerPic"
       ref="singerPic"
-      v-lazy:background-image="$route.query.singerPic"
+      v-pull
     >
+     <img :src="$route.query.singerPic" alt="" class="img">
       <h1 class="ellipsis">{{ $route.query.name }}</h1>
       <p v-if="playCount > 0">{{ playCount | filterNum }}听过</p>
       <div class="mask"></div>
@@ -16,9 +17,7 @@
 
     <div
       class="out"
-      @touchstart="songStart"
-      @touchmove="songMove"
-      @touchend="songEnd"
+    
     >
       <songList :songs="songs" @player="player" />
     </div>
@@ -35,26 +34,23 @@
 </template>
 
 <script>
+/*eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
 import songList from '../SongList';
-import Return from '../Return';
+import Return from '../Return'; //
+import pull from '@/directives/pull.js';
+import { filterNum } from '@/filters/index.js';
 export default {
-  name:'Scroll',
+  name: 'Scroll',
   components: {
     songList,
     Return
   },
   filters: {
-    filterNum(val) {
-      let num;
-      if (val >= 10000) {
-        num = `${(val / 10000).toFixed(1)}万`;
-      }
-      if (val >= 100000000) {
-        num = `${(val / 100000000).toFixed(1)}亿`;
-      }
-      return num;
-    }
+    filterNum
+  },
+  directives: {
+    pull
   },
   props: {
     songs: Array,
@@ -225,6 +221,14 @@ export default {
   position: relative;
   top: -8px;
   background: #fff;
+}
+
+.img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
 }
 </style>
 >

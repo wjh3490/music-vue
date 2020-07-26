@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="detail-container">
     <slot :songs="songs" :playCount="0"></slot>
   </div>
 </template>
 
 <script>
-import { vGetSongs } from '../../api/singer';
+import { vGetSongs } from '../../../api/singer';
 
 export default {
   name: 'SingerDetail',

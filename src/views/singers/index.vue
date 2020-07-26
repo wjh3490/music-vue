@@ -23,9 +23,13 @@
 
 <script>
 import { mapMutations, mapGetters } from 'vuex';
-import { vGetSinger } from '../../api/singer';
+import { vGetSinger } from '@/api/singer';
+import { RecycleScroller } from 'vue-virtual-scroller';
+
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 export default {
   name: 'Singer',
+  components: {RecycleScroller},
   data() {
     return {
       singerList: [],
@@ -49,7 +53,7 @@ export default {
     async getSingers() {
       const { code, artists } = await vGetSinger();
       if (code === 200) {
-        this.singerList = artists;
+        this.singerList = Object.freeze(artists);
       }
     },
     pushSinger(singer) {

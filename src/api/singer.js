@@ -7,7 +7,7 @@ export function vGetSinger () {
   })
 }
 
-export function vGetSongs (id) {
+export function singerSongs (id) {
   return service({
     url: `artists?id=${id}`,
     method: 'get'

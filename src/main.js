@@ -12,9 +12,9 @@ import './utils/flexible';
 import './assets/font/iconfont.css';
 
 import MessageBox from './components/MessageBox';
-import { RecycleScroller } from 'vue-virtual-scroller';
+// import { RecycleScroller } from 'vue-virtual-scroller';
 
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
+// import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 import './registerServiceWorker'
 
 Vue.use(VueLazyload, {
@@ -22,7 +22,7 @@ Vue.use(VueLazyload, {
 });
 Vue.use(MessageBox);
 
-Vue.component('RecycleScroller', RecycleScroller);
+// Vue.component('RecycleScroller', RecycleScroller);
 Vue.config.productionTip = false;
 
 new Vue({

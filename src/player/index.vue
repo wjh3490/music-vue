@@ -16,35 +16,33 @@
           <transition name="fade1">
             <lyric
               ref="lyric"
-              v-show="!showBgc"
-              :currentTime="currentTime"
+              v-show="!visibleAllLyric"
               :currentLyric="currentLyric"
-              :showBgc.sync="showBgc"
-              :animationStatus="animationStatus"
-              :playingLyric="playingLyric"
+              :visibleAllLyric.sync="visibleAllLyric"
+              :activeLyricIndex='activeLyricIndex'
             />
           </transition>
 
           <transition name="fade1">
             <CircleLyric
-              v-show="showBgc"
+            :animationStatus='animationStatus'
+              v-show="visibleAllLyric"
               :currentLyric="currentLyric"
-              :showBgc.sync="showBgc"
-              :animationStatus="animationStatus"
-              :playingLyric="playingLyric"
+              :visibleAllLyric.sync="visibleAllLyric"
+              :playingLyric=" currentLyric[activeLyricIndex]"
             />
           </transition>
 
           <div class="bottom">
-            <Mode :showMode.sync="showMode" @changeMode="changeMode" :modeIndex="modeIndex">
+            <Mode :visibleMode.sync="visibleMode" @changeMode="changeMode">
               <i
                 class="iconfont mode-icon"
-                @click="showMode = !showMode"
+                @click="visibleMode = !visibleMode"
                 :class="swichMode.icon"
               ></i>
             </Mode>
 
-            <control
+            <Control
               @pause="pause"
               @next="next"
               @pre="pre"
@@ -52,7 +50,8 @@
               :palyStatus="palyStatus"
             />
 
-            <div class="collect" @click="showPlayList">
+            <div class="collect" @click="handlePlayListVisible
+            ">
               <i
                 class="iconfont icon-iconsMusicyemianbofangmoshiPlayList collect-icon"
               ></i>
@@ -67,13 +66,15 @@
             :bgc="bgc"
             :duration="duration"
             :currentTime="currentTime"
-            :move.sync="move"
-            @progressBar="setProgressBar"
+            @progressBar=" currentTime => audio.currentTime = currentTime"
+            :lyricKeys='lyricKeys'
+            :LyricScrollY.sync='LyricScrollY'
+            :debounce.sync='debounce'
           />
         </div>
 
         <div
-          :class="showBgc ? '' : 'filterNone'"
+          :class="visibleAllLyric ? '' : 'filterNone'"
           class="blurBg"
           v-lazy:background-image="currrenSong.picUrl"
         ></div>
@@ -87,19 +88,19 @@
         v-show="!fullScreen"
         @pause="pause"
         @next="next"
-        @showPlayList="showPlayList"
+        @handlePlayListVisible="handlePlayListVisible"
         :palyStatus="palyStatus"
         :animationStatus="animationStatus"
-        :percent="currentTime/duration"
+        :percent="percent"
       />
     </transition>
 
     <transition name="slide1">
       <play-list
-        :playShow.sync="playShow"
-        @stopPlay="StopPlay"
+        :visiblePlayList.sync="visiblePlayList"
+        @stopPlay="() => audio.pause()"
         ref="a"
-        v-if="playShow"
+        v-if="visiblePlayList"
         @changeMode="changeMode"
         :swichMode='swichMode'
       />
@@ -107,7 +108,7 @@
 
     <audio
       ref="audio"
-      @timeupdate="updateTime"
+      @timeupdate="e => currentTime = e.target.currentTime"
       @ended="end"
       @canplay="canplay"
       @error="songReady = true"
@@ -121,6 +122,12 @@
 const MAX_LENGTH = 100;
 import { mapGetters, mapMutations } from 'vuex';
 import { playMode } from '../utils/config.js';
+import {
+  shuffle,
+  scrollToEase,
+  scrollToSmooth,
+  randomColor
+} from '../utils/index.js';
 import { vGetSong, vGetLyric } from '../api/songs';
 import { parseLyric, filterList } from '../utils/index.js';
 import PlayList from '../components/PlayList';
@@ -130,7 +137,7 @@ import ProgressBar from './components/ProgressBar';
 import Lyric from './components/Lyric';
 import CircleLyric from './components/Circle';
 import Mode from './components/Mode';
-import { shuffle } from '../utils/index.js';
+
 export default {
   name: 'Player',
   components: {
@@ -142,23 +149,31 @@ export default {
     CircleLyric,
     Mode
   },
+
   data() {
     return {
       bgc: '',
-      showMode: false, // 控制播放模式显示,
+      visibleMode: false,
+      visiblePlayList: false,
+      visibleAllLyric: true,
       duration: 0,
       currentTime: 0,
-      playShow: false,
       songReady: false,
-      // isLike: false,
+
       currentLyric: {},
       playingLyric: '',
-      showBgc: true,
+      // showBgc: true,
 
       running: '',
       flag: null,
-      playMode: playMode,
-      modeIndex: 0
+
+      playMode,
+      // modeIndex: 0,
+      activeLyricIndex: '0',
+      LyricScrollY: 0,
+      lyricKeys: [],
+      // move: false,
+      debounce: false
     };
   },
 
@@ -171,27 +186,26 @@ export default {
       'fullScreen',
       'mode',
       'sequenceList',
-
       'likeList',
       'playHistory'
     ]),
 
     likeClass({ currrenSong, likeList }) {
-      let _likeList = [...likeList];
-      let flag = _likeList.every(item => item.id !== currrenSong.id);
+      const _likeList = [...likeList];
+      const flag = _likeList.every(item => item.id !== currrenSong.id);
 
       return flag ? 'icon-shoucang1' : 'icon-shoucang active_red';
     },
     palyStatus({ playing }) {
-      let _playing = playing;
+      const _playing = playing;
       return _playing ? 'icon-bofangzanting' : 'icon-bofangsanjiaoxing';
     },
     animationStatus({ playing }) {
-      let _playing = playing;
+      const _playing = playing;
       return _playing ? '' : 'animation_pause';
     },
     swichMode({ mode }) {
-      let _mode = mode;
+      const _mode = mode;
       let icon = null;
       let text = '';
       switch (_mode) {
@@ -209,75 +223,62 @@ export default {
           break;
       }
       return { icon, text };
+    },
+    percent({ currentTime, duration }) {
+      return currentTime / duration;
     }
   },
   watch: {
     async currrenSong(newSong, oldSong) {
-      if (!newSong.id) {
-        return;
-      }
-      if (newSong.id === oldSong.id) {
-        return;
-      }
+      if (!newSong.id) return;
+      if (newSong.id === oldSong.id) return;
 
       let res = await vGetSong(newSong.id);
+
       this.getLyric(newSong.id);
       if (!res.data[0].url) {
         // 如果没有歌曲路径 就直接跳下一首
         this.next();
         return;
       }
-      this.$refs.audio.src = res.data[0].url;
-      this.$nextTick(() => {
-        this.$refs.audio.play();
-      });
+      // this.el.scrollTo(0, 0);
 
+      this.audio.src = res.data[0].url;
+      this.$nextTick(() => {
+        this.audio.play();
+      });
+      scrollToSmooth(this.el, 0);
+      this.LyricScrollY = 0;
       this.setPlaying(true);
-      this.rgbColor();
+      this.bgc = randomColor();
     },
+
     currentTime(val) {
-      if (!this.currentLyric) {
-        return;
-      }
-      if (!this.fullScreen) {
-        return;
-      }
-      if (this.showBgc) {
-        return;
-      }
-      this.$nextTick(() => {
-        let yellows = document.querySelectorAll('.yellow');
-        let empty = this.$refs.lyric.$refs.empty.offsetHeight;
+      if (!this.currentLyric) return;
+      if (!this.fullScreen) return;
+      if (this.visibleAllLyric) return;
 
-        Array.from(yellows).forEach(ele => ele.classList.remove('font-color'));
-        if (yellows.length !== 0) {
-          let last = yellows[yellows.length - 1];
-          last.classList.add('font-color');
-
-          let lyricLine = last.offsetTop;
-          let offsetHeight = last.offsetHeight;
-
-          this.playingLyric = last.innerHTML;
-          this.$refs.lyric.$refs.lyricList.scrollTo({
-            top: lyricLine - empty - offsetHeight,
-            left: 0,
-            behavior: 'smooth'
-          });
+      if (this.lyricKeys[this.LyricScrollY] > Math.floor(val)) {
+        if (this.debounce) {
+          this.activeLyricIndex = this.lyricKeys[this.LyricScrollY - 1];
+          this.scrollAnimate(this.LyricScrollY);
+          this.debounce = false;
         }
-      });
+        return;
+      }
+
+      let filterLyric = [];
+      filterLyric = this.lyricKeys.filter(item => item <= Math.floor(val));
+      this.LyricScrollY = filterLyric.length;
+      this.activeLyricIndex = filterLyric.pop();
+      this.scrollAnimate(this.LyricScrollY);
     }
   },
-
-  created() {
-    this.touch = {};
-    this.move = false;
+  mounted() {
+    this.audio = this.$refs.audio;
+    this.el = this.$refs.lyric.$refs.lyricList;
   },
-
   methods: {
-    StopPlay() {
-      this.$refs.audio.pause();
-    },
-
     async getLyric(id) {
       let res = await vGetLyric(id);
       if (!res.lrc) {
@@ -286,23 +287,24 @@ export default {
         return;
       }
       let currentLyric = parseLyric(res.lrc.lyric);
-      let a = {};
+      let lyrics = {};
       // 删除空的歌词 ( 空白行 )
       for (let key in currentLyric) {
         if (currentLyric[key]) {
-          a[key] = currentLyric[key];
+          lyrics[key] = currentLyric[key];
         }
       }
 
-      this.currentLyric = a;
-      this.$refs.lyric.$refs.lyricList.scrollTo(0, 0);
+      this.currentLyric = Object.freeze(lyrics);
+      this.lyricKeys = Object.keys(lyrics);
     },
-
-    rgbColor() {
-      let r = parseInt(Math.random() * 100) + 100;
-      let g = parseInt(Math.random() * 100) + 100;
-      let b = parseInt(Math.random() * 100) + 100;
-      this.bgc = `rgb(${r}, ${g}, ${b})`;
+    scrollAnimate(index) {
+      this.$nextTick(() => {
+        const start = this.el.scrollTop;
+        const activeLyric = document.querySelector('.active-lyric');
+        const { offsetTop, offsetHeight } = activeLyric;
+        scrollToEase(this.el, start, offsetTop - 150 - offsetHeight);
+      });
     },
     //收藏功能
     likeMode() {
@@ -313,8 +315,8 @@ export default {
           this.flag = null;
         }, 300);
       }
-      let list = this.likeList;
-      let index = list.findIndex(item => item.id === this.currrenSong.id);
+      const list = this.likeList;
+      const index = list.findIndex(item => item.id === this.currrenSong.id);
       if (index > -1) {
         list.splice(index, 1);
       } else {
@@ -327,16 +329,12 @@ export default {
     //
     //播放历史功能
     ready() {
-      let list = this.playHistory;
-      let index = list.findIndex(item => item.id === this.currrenSong.id);
-      if (index > -1) {
-        list.splice(index, 1);
-      }
-      if (list.length > MAX_LENGTH) {
-        list.pop();
-      }
-      list.unshift(this.currrenSong);
+      const list = this.playHistory;
+      const index = list.findIndex(item => item.id === this.currrenSong.id);
+      if (index > -1) list.splice(index, 1);
+      if (list.length > MAX_LENGTH) list.pop();
 
+      list.unshift(this.currrenSong);
       localStorage.setItem('playHistory', JSON.stringify(list));
       this.setPlayHistory(list);
       this.songReady = true;
@@ -344,12 +342,12 @@ export default {
     //
     canplay() {
       this.$nextTick(() => {
-        this.duration = this.$refs.audio.duration;
+        this.duration = this.audio.duration;
       });
     },
 
-    showPlayList() {
-      this.playShow = true;
+    handlePlayListVisible() {
+      this.visiblePlayList = true;
       this.$nextTick(() => {
         let index = this.playList.findIndex(
           item => item.id === this.currrenSong.id
@@ -363,93 +361,56 @@ export default {
         );
       });
     },
-    /**滚动条功能 */
-    setProgressBar(currentTime) {
-      this.$refs.audio.currentTime = currentTime;
-    },
-
-    /**滚动条功能 */
-    updateTime(e) {
-      if (this.move) {
-        return;
-      }
-
-      this.currentTime = e.target.currentTime;
-    },
 
     changeMode(mode) {
       this.setMode(mode);
-      // let list = null;
-      // if (mode === playMode.random) {
-      //   list = shuffle(this.sequenceList);
-      // } else {
-      //   list = this.sequenceList;
-      // }
-      // this.resetCurrentIndex(list);
-      // this.setPlay(list);
-      this.setPlayList(mode);
-      this.showMode = false;
+      this.getNewList(mode);
+      this.visibleMode = false;
     },
-    setPlayList(mode) {
+    getNewList(mode) {
       let list = null;
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList);
-      } else {
-        list = this.sequenceList;
-      }
+      list =
+        mode === playMode.random
+          ? shuffle(this.sequenceList)
+          : this.sequenceList;
+
       this.resetCurrentIndex(list);
       this.setPlay(list);
     },
     resetCurrentIndex(list) {
-      let index = list.findIndex(item => {
-        return item.id === this.currrenSong.id;
-      });
+      const index = list.findIndex(item => item.id === this.currrenSong.id);
       this.setCurrrentIndex(index);
     },
 
     end() {
-      console.log(this.playList.length === 1);
-      if (this.playList.length === 1) {
-        this.setMode(playMode.loop);
-      }
-
-      if (this.mode === playMode.loop) {
-        this.loop();
-      } else {
-        this.next();
-      }
+      if (this.playList.length === 1) this.setMode(playMode.loop);
+      this.mode === playMode.loop ? this.loop() : this.next();
     },
     loop() {
-      this.$refs.audio.currentTime = 0;
-      this.$refs.audio.play();
+      this.audio.currentTime = 0;
+      this.audio.play();
       if (this.currentLyric) {
-        this.$refs.lyric.$refs.lyricList.scrollTo(0, 0);
+        this.el.scrollTo(0, 0);
       }
     },
     pre() {
-      if (!this.songReady) {
-        return;
-      }
-      let index = this.currrentIndex - 1;
-      if (index === -1) {
-        index = this.playList.length - 1;
-      }
+      if (!this.songReady) return;
+      const index = this.currrentIndex - 1;
+      if (index === -1) index = this.playList.length - 1;
+
       this.setCurrrentIndex(index);
       this.songReady = false;
     },
     pause() {
-      const audio = this.$refs.audio;
       this.setPlaying(!this.playing);
-      this.playing ? audio.play() : audio.pause();
+      this.playing ? this.audio.play() : this.audio.pause();
     },
     next() {
-      if (!this.songReady) {
-        return;
-      }
-      let index = this.currrentIndex + 1;
+      if (!this.songReady) return;
+      const index = this.currrentIndex + 1;
       if (index === this.playList.length) index = 0;
-      this.setCurrrentIndex(index);
 
+      this.setCurrrentIndex(index);
       this.songReady = false;
     },
 

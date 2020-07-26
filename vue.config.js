@@ -1,12 +1,13 @@
 module.exports = {
-  configureWebpack: {
-    externals: {
-      vue: 'Vue',
-      'vue-router': 'VueRouter',
-      //axios: 'axios'
-    }
-  },
+  // configureWebpack: {
+  //   externals: {
+  //     vue: 'Vue',
+  //     'vue-router': 'VueRouter',
+  //     //axios: 'axios'
+  //   }
+  // },
   chainWebpack: config => {
+    config.optimization.runtimeChunk('single'),
     config.module
       .rule('images')
       .use('image-webpack-loader')
@@ -14,18 +15,18 @@ module.exports = {
       .options({
         bypassOnDebug: true
       });
-    const cdn = {
-      js: [
-        // vue must at first!
-        'https://cdn.jsdelivr.net/npm/vue',
-        'https://unpkg.com/vue-router@3.0.1/dist/vue-router.min.js',
-        // 'https://unpkg.com/axios/dist/axios.min.js'
-      ]
-    };
-    config.plugin('html').tap(args => {
-      args[0].cdn = cdn;
-      return args;
-    });
+    // const cdn = {
+    //   js: [
+    //     // vue must at first!
+    //     'https://cdn.jsdelivr.net/npm/vue',
+    //     'https://unpkg.com/vue-router@3.0.1/dist/vue-router.min.js',
+    //     // 'https://unpkg.com/axios/dist/axios.min.js'
+    //   ]
+    // };
+    // config.plugin('html').tap(args => {
+    //   args[0].cdn = cdn;
+    //   return args;
+    // });
   },
 
   productionSourceMap: false

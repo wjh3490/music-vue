@@ -1,11 +1,11 @@
 <template>
   <div class="user">
     <div class="title clearfix">
-      <div class="left fl" @click="myLike">
+      <div class="left fl" @click="flag = false">
         <i class="iconfont icon-shoucang1 user-icon"></i>
         <span :class="{ fontColor: !flag }" class="user-name">我的收藏</span>
       </div>
-      <div class="right fr" @click="history">
+      <div class="right fr" @click="flag = true">
         <i class="iconfont icon-zuijinbofang user-icon"></i>
         <span :class="{ fontColor: flag }" class="user-name">最近播放</span>
       </div>
@@ -28,9 +28,9 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
-import { filterList } from '../../utils/index.js';
+import { filterList } from '@/utils/index.js';
 export default {
-  name: 'USer',
+  name: 'User',
   data() {
     return {
       list: [],
@@ -40,9 +40,17 @@ export default {
   computed: {
     ...mapGetters(['likeList', 'playHistory', 'playList'])
   },
-  created() {
-    this.list = this.likeList;
+  watch: {
+    flag: {
+      handler(val) {
+        let list;
+        list = val ? [...this.playHistory] : [...this.likeList];
+        this.list = Object.freeze(list);
+      },
+      immediate: true
+    }
   },
+
   methods: {
     play(song) {
       let songs = this.playList;
@@ -51,15 +59,6 @@ export default {
       this.setPlay(songs);
       this.setCurrrentIndex(index);
       this.setFullScreen(true);
-    },
-    myLike() {
-      this.list = this.likeList;
-      this.flag = false;
-    },
-    history() {
-      this.list = this.playHistory;
-
-      this.flag = true;
     },
     ...mapMutations(['setCurrrentIndex', 'setPlay', 'setFullScreen'])
   }

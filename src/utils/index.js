@@ -1,11 +1,10 @@
 /**
- *
  * @param {Array} list
  * @param {Object} currrenSong
  * @return {Array}
  */
 
- /*eslint-disable */
+/*eslint-disable */
 export function filterList(list, currrenSong) {
   if (list.length === 0) {
     list.push(currrenSong);
@@ -18,11 +17,7 @@ export function filterList(list, currrenSong) {
   return list;
 }
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 /**
- *
  * @param {Array} arr
  * @return {Array}
  */
@@ -38,7 +33,6 @@ export function shuffle(arr) {
 }
 
 /**
- *
  * @param {Lrc} lrc
  * @return {Object}
  */
@@ -64,4 +58,53 @@ export function parseLyric(lrc) {
   }
 
   return lrcObj;
+}
+
+export function scrollToEase(el, start, to, duration = 300) {
+  const change = to - start;
+
+  const increment = 20;
+  let currentTime = 0;
+
+  var animate = function() {
+    currentTime += increment;
+    var val = easeOutQuart(currentTime, start, change, duration);
+    el.scrollTop = val;
+    if (currentTime < duration) {
+      requestAnimFrame(animate);
+    }
+  };
+  animate();
+}
+
+export function scrollToSmooth(el, to, flag = false) {
+  el.scrollTo({
+    top: to,
+    behavior: flag ? 'smooth' : 'instant'
+  });
+}
+
+export function randomColor() {
+  let r = parseInt(Math.random() * 100) + 100;
+  let g = parseInt(Math.random() * 100) + 100;
+  let b = parseInt(Math.random() * 100) + 100;
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+var requestAnimFrame = (function() {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    function(callback) {
+      window.setTimeout(callback, 1000 / 60);
+    }
+  );
+})();
+
+function easeOutQuart(t, b, c, d) {
+  return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 }

@@ -1,11 +1,11 @@
 <template>
-  <div>
+   <div class="detail-container">
     <slot :songs="songs" :playCount="playCount"></slot>
   </div>
 </template>
 
 <script>
-import { vGetSongs } from '../../api/recomment';
+import { vGetSongs } from '../../../api/recomment';
 export default {
   name: 'RecommendDetail',
 

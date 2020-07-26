@@ -1,120 +1,57 @@
 <template>
-  <div class="proress-bar" ref="progressBar" @click.prevent="progressClick">
-    <div class="currentTime">{{ currentTime | format }}</div>
-    <div class="duration">{{ duration | format }}</div>
-
-    <div
-      ref="progress"
+  <div  class="proress-bar"  v-progress >
+    <div 
       class="line-bar"
       :style="{ width: `${percent}%`, backgroundColor: bgc }"
     >
       <div
         class="ball"
-        @touchstart.stop="ballTouchStart"
-        @touchmove.stop="ballTouchMove"
-        @touchend.stop="ballTouchEnd"
+        ref="progressBall"
       >
-        <div class="tip" :style="{ background: bgc }" v-show="tipShow">
+        <div class="tip" :style="{ background: bgc }" v-show="visible">
           {{ tip | format }}
         </div>
       </div>
     </div>
+    <div class="currentTime">{{ currentTime | format }}</div>
+    <div class="duration">{{ duration | format }}</div>
+
+ 
   </div>
 </template>
 
 <script>
+/*eslint-disable */
+import { format } from '@/filters';
+import progress from '@/directives/progress.js';
 export default {
   name: 'ProgressBar',
   filters: {
-    format(interval) {
-      interval = interval | 0;
-      let minute = (interval / 60) | 0;
-      let second = (interval % 60).toString().padStart(2, '0');
-      // minute = minute < 10 ? "0" + minute : minute;
-      // second = second < 10 ? '0' + second : second
-      // second = second.padStart(2, '0')
-      return minute + ':' + second;
-    }
+    format
   },
-  
+
+  directives: { progress },
   props: {
     bgc: String,
     duration: Number,
     currentTime: Number,
-    move: Boolean
+    lyricKeys: [Array, String],
+    LyricScrollY: Number,
+    debounce: Boolean
   },
 
   data() {
     return {
       tip: 0,
-      tipShow: false
+      visible: false,
+      isMove: false
     };
   },
 
   computed: {
-    percent({ currentTime, duration }) {
-      let _currentTime = currentTime;
-      let _duration = duration;
-      return (_currentTime / _duration) * 100;
-    },
-    isMove: {
-      get() {
-        return this.move;
-      },
-      set(val) {
-        this.$emit('update:move', val);
-      }
-    }
-  },
-
-  created() {
-    this.touch = {};
-  },
-
-  methods: {
-    ballTouchStart(e) {
-      this.touch.initiated = true;
-      this.touch.startX = e.touches[0].pageX;
-      this.touch.left = this.$refs.progress.clientWidth;
-    },
-    ballTouchMove(e) {
-      if (!this.touch.initiated) {
-        return;
-      }
-      this.isMove = true;
-      this.tipShow = true;
-      const deltaX = e.touches[0].pageX - this.touch.startX;
-      const offsetWidth = Math.min(
-        this.$refs.progressBar.clientWidth,
-        Math.max(0, this.touch.left + deltaX)
-      );
-
-      let percent = offsetWidth / this.$refs.progressBar.clientWidth;
-      this.$refs.progress.style.width = percent * 100 + '%';
-      let currentTime = percent * this.duration;
-      this.tip = currentTime;
-    },
-    ballTouchEnd(e) {
-      const deltaX = e.changedTouches[0].clientX - this.touch.startX;
-      const offsetWidth = Math.min(
-        this.$refs.progressBar.clientWidth,
-        Math.max(0, this.touch.left + deltaX)
-      );
-      let percent = offsetWidth / this.$refs.progressBar.clientWidth;
-      let currentTime = percent * this.duration;
-
-      this.isMove = false;
-      // this.$refs.audio.currentTime = currentTime
-      this.$emit('progressBar', currentTime);
-      this.tipShow = false;
-    },
-    progressClick(e) {
-      let offsetX = this.$refs.progressBar.getBoundingClientRect().left;
-
-      let percent = (e.clientX - offsetX) / this.$refs.progressBar.clientWidth;
-      let currentTime = percent * this.duration;
-      this.$emit('progressBar', currentTime);
-      // this.$refs.audio.currentTime = currentTime
+    percent(vm) {
+      if (this.isMove) return;
+      return (this.currentTime / this.duration) * 100 || 0;
     }
   }
 };

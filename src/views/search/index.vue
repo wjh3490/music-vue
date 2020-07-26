@@ -34,7 +34,7 @@
           key="history"
       ></SearchList>
 
-      <Result :list="searchList" @play="play">
+      <Result :list="searchList" @play="play" :noResult='noResult'>
         <template v-slot="{ item }">
           <div class="name ellipsis" v-html="highlight(item.name)"></div>
           <div class="singer ellipsis" v-html="highlight(item.singer)"></div>
@@ -47,9 +47,9 @@
 <script>
 /* eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
-import { vSearch, vSearchHot } from '../../api/search';
-import Return from '../../components/Return/index';
-import { filterList } from '../../utils/index.js';
+import { vSearch, vSearchHot } from '@/api/search';
+import Return from '@/components/Return/index';
+import { filterList } from '@/utils/index.js';
 import SearchList from './components/SearchList';
 import Result from './components/Result';
 export default {
@@ -62,7 +62,8 @@ export default {
       hotLsit: [],
       // showList: true,
       searchList: [],
-      flag: null
+      flag: null,
+      noResult: false
     };
   },
 
@@ -94,11 +95,6 @@ export default {
       this.flag = setTimeout(fn, wait);
     },
     async getSearch(data) {
-      // if (this.searchData) {
-      //   this.showList = false
-      // } else {
-      //   this.showList = true
-      // }
       if (!this.searchData) {
         this.searchList = [];
         return;
@@ -107,6 +103,12 @@ export default {
       const { code, result } = await vSearch(data);
       if (code === 200) {
         const { songs } = result;
+        if (!songs) {
+          this.searchList = [];
+          this.noResult = true;
+          return;
+        }
+        this.noResult = false;
         let songsList = [];
 
         songs.forEach(ele => {
@@ -120,7 +122,7 @@ export default {
           songsList.push(song);
         });
 
-        this.searchList = songsList;
+        this.searchList = Object.freeze(songsList);
       }
     },
     async getHotList() {
@@ -135,15 +137,8 @@ export default {
     cancle() {
       this.searchData = '';
       this.searchList = [];
-      // this.showList = true
     },
-    // searchHot(data) {
-    //   this.searchData = data;
-    // },
-    // highlight(val) {
-    //   const reg = new RegExp(this.searchData, 'gi');
-    //   return val.replace(reg, `<span class='red'>${this.searchData}</span>`);
-    // },
+
     del() {
       if (this.historyList.length === 0) return;
       this.$MessageBox({
@@ -157,7 +152,7 @@ export default {
         .catch(() => {});
     },
     play(song) {
-      console.log(song)
+      console.log(song);
       let songs = this.playList;
       let history = this.historyList;
       let id = history.indexOf(this.searchData);
@@ -170,7 +165,7 @@ export default {
       history.unshift(this.searchData);
       /**********************/
       songs = filterList(songs, song);
-      let index  = songs.findIndex(item => item.id === song.id)
+      let index = songs.findIndex(item => item.id === song.id);
       localStorage.setItem('history', JSON.stringify(history));
       this.setPlay(songs);
       this.setCurrrentIndex(index);
@@ -190,11 +185,8 @@ export default {
 <style scoped lang="less">
 @base: 37.5rem;
 .search {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
+
   background: #fbfbfb;
   padding-top: 50px;
   color: #f1f1f1;

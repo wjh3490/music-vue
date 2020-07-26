@@ -21,7 +21,7 @@ export function vGetBanner() {
   });
 }
 
-export function vGetSongs(id) {
+export function recommentSongs(id) {
   return service({
     url: `/playlist/detail?id=${id}`,
     method: 'get'

@@ -1,13 +1,14 @@
 <template>
-  <div class="lyric" @click.stop="$emit('update:showBgc', true)">
+  <div class="lyric" @click.stop="$emit('update:visibleAllLyric', true)">
     <div class="lyric-item" ref="lyricList">
       <div class="empty" ref="empty"></div>
       <div class="no-lyric" v-if="!currentLyric">暂无歌词</div>
+      <!-- :class="{ yellow: value < parseInt(currentTime) }" -->
       <p
         ref="lyricLine"
-        :class="{ yellow: value < parseInt(currentTime) }"
         v-for="(key, value) in currentLyric"
         :key="value"
+        :class="{'active-lyric' : value === activeLyricIndex }"
       >
         {{ key }}
       </p>
@@ -20,51 +21,13 @@
 export default {
   name: 'Lyric',
   props: {
-    currentTime: Number,
     currentLyric: [Object, String],
+    activeLyricIndex: String
   }
 };
 </script>
 <style scoped lang="less">
 @base: 37.5rem;
-// .circle {
-//   position: absolute;
-//   width: 100%;
-//   top: 50%;
-//   transform: translate3d(0, -65%, 0);
-//   height: 400 / @base;
-//   left: 0;
-//   font-size: 0;
-//   .no-lyric {
-//     font-size: 14px;
-//     color: #fff;
-//     text-align: center;
-//   }
-//   .currrent_lyric {
-//     font-size: 14px;
-//     color: #eeee71;
-//     text-align: center;
-//     margin-top: 30 / @base;
-//     padding: 0 50 / @base;
-//   }
-//   .bgc {
-//     width: 300 / @base;
-//     height: 300 / @base;
-//     margin: 0 auto;
-//     margin-top: 50 / @base;
-//     border: 10 / @base solid rgba(0, 0, 0, 0.25);
-//     border-radius: 50%;
-//     overflow: hidden;
-//     animation: move 20s linear infinite;
-//     &.animation_pause {
-//       animation-play-state: paused;
-//     }
-//     img {
-//       height: 100%;
-//       border-radius: 50%;
-//     }
-//   }
-// }
 
 .lyric {
   position: absolute;
@@ -101,7 +64,7 @@ export default {
       padding: 8 / @base 50 / @base;
       text-align: center;
       color: rgba(225, 225, 225, 0.8);
-      &.font-color {
+      &.active-lyric {
         color: #eeee71;
         opacity: 1;
       }

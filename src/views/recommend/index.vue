@@ -54,7 +54,7 @@ import {
   vGetNewsong,
   vGetBanner,
   vGetDetail
-} from '../../api/recomment.js';
+} from '@/api/recomment.js';
 export default {
   name: 'Recommend',
   components: { Swiper, List },
@@ -126,13 +126,13 @@ export default {
       const { code, banners } = await vGetBanner();
 
       if (code === 200) {
-        this.swiperList = banners;
+        this.swiperList = Object.freeze(banners);
       }
     },
     async getPersonalized() {
       const { code, result } = await vGetPersonalized();
       if (code === 200) {
-        this.personalized = result.splice(0, 15);
+        this.personalized = Object.freeze(result.splice(0, 15));
       }
     },
     async getNewsong() {
@@ -149,7 +149,7 @@ export default {
           this.newsong.push(song);
         });
 
-        this.newsong = this.newsong.splice(0, 9);
+        this.newsong = Object.freeze(this.newsong.splice(0, 9));
       }
     },
     async getDetail(id) {
@@ -163,13 +163,13 @@ export default {
         picUrl: songs[0].al.picUrl,
         singer: songs[0].ar[0].name
       };
-      let index = this.newsong.findIndex(item => item.id === song.id);
-      
+      let index = this.playList.findIndex(item => item.id === song.id);
+     
       if (index >= 0) {
-        this.playSong(index);
+        this.setCurrrentIndex(index);
       } else {
-        this.newsong.unshift(song);
-        this.playSong(0);
+        this.setPlay([song, ...this.playList]);
+        this.setCurrrentIndex(0);
       }
     },
 
@@ -182,7 +182,9 @@ export default {
 
       this.setSinger(_singer);
       this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=RecommendDetail`
+        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${
+          singer.name
+        }&componentName=RecommendDetail`
       );
     },
     ...mapMutations([

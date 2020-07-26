@@ -1,5 +1,6 @@
 <template functional>
   <div class="result">
+  
     <ul class="result-list">
       <li
         v-for="(item, index) in props.list"
@@ -10,6 +11,7 @@
         <slot :item="item" />
       </li>
     </ul>
+      <p v-if="props.noResult" style="color: red; textAlign:center; marginTop: 0.4rem">暂无结果</p>
   </div>
 </template>
 

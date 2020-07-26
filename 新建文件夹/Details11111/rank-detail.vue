@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="detail-container">
     <slot :songs="songs" :playCount="0"></slot>
   </div>
 </template>
 
 <script>
 /*eslint-disable */
-import { vGetList } from '../../api/rank';
+import { vGetList } from '../../../api/rank.js';
 export default {
   name: 'RankDetail',
   // provide() {

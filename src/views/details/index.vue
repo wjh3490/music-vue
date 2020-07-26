@@ -9,39 +9,78 @@
 //     </RankDetail>
 //   </div>
 // </template>
-import Scroll from '../../components/Scroll';
-import { vGetList } from '../../api/rank';
+import { recommentSongs } from '@/api/recomment';
+import { singerSongs } from '@/api/singer';
+import { rankSongs } from '@/api/rank';
+import Scroll from '@/components/Scroll';
 
 export default {
   name: 'Detail',
-  components: {
-    Scroll,
-    RankDetail: () =>
-      import(
-        /* webpackChunkName: "rank-detail" */ '../../components/Details/rank-detail'
-      ),
-    RecommendDetail: () =>
-      import(
-        /* webpackChunkName: "recommend-detail" */ '../../components/Details/recommend-detail'
-      ),
-    SingerDetail: () =>
-      import(
-        /* webpackChunkName: "singer-detail" */ '../../components/Details/singer-detail'
-      )
+
+  data() {
+    return {
+      songs: [],
+      playCount: 0
+    };
+  },
+
+  created() {
+    const { query, params } = this.$route;
+    this[query.componentName](params.id);
+  },
+  methods: {
+    async RankDetail(id) {
+      const {
+        code,
+        playlist: { playCount, tracks }
+      } = await rankSongs(id);
+
+      if (code === 200) {
+        this.getSongs(tracks);
+      }
+    },
+    async RecommendDetail(id) {
+      const {
+        code,
+        playlist: { playCount, tracks }
+      } = await recommentSongs(id);
+
+      if (code === 200) {
+        this.getSongs(tracks, playCount);
+      }
+    },
+    async SingerDetail(id) {
+      const { code, hotSongs } = await singerSongs(id);
+
+      if (code === 200) {
+        this.getSongs(hotSongs);
+      }
+    },
+
+    getSongs(list, count = 0) {
+      let songs = [];
+      list.forEach(ele => {
+        const song = {
+          id: ele.id,
+          name: ele.name,
+          singer: ele.ar[0].name,
+          picUrl: ele.al.picUrl
+        };
+        this.playCount = count;
+        songs.push(song);
+      });
+
+      this.songs = Object.freeze(songs);
+    }
   },
 
   render() {
-    const { componentName } = this.$route.query;
-    const data = {
-      scopedSlots: {
-        default: slotProps => {
-          return (
-            <Scroll songs={slotProps.songs} playCount={slotProps.playCount} />
-          );
-        }
-      }
-    };
-    return <componentName {...data} />;
+    const { songs, playCount } = this;
+    return (
+      <div class="detail-container">
+        <Scroll songs={songs} playCount={playCount} />
+      </div>
+    );
   }
 };
 </script>
