@@ -17,13 +17,13 @@
           <i class="iconfont icon-shanchu"></i>
         </div>
       </div>
-      <ul ref="scrollSong" class="playlist-main">
+      <ul ref="scrollBar" class="playlist-main">
         <li
           v-for="(item, index) in playList"
           :key="index"
-          @click="() => setCurrrentIndex(index)"
+          @click.stop="() => setCurrrentIndex(index)"
           class="ellipsis"
-          ref="songItem"
+          ref="scrollItem"
         >
           <div class="pic">
             <template v-if="item.id === currrenSong.id">
@@ -44,7 +44,6 @@
             <i class="iconfont icon-shanchu"></i>
           </div>
 
-          
         </li>
       </ul>
      
@@ -53,14 +52,11 @@
 </template>
 
 <script>
-/** eslint-disable */
-//  <div class="close" @click.prevent="$emit('update:playShow', false)">
-//   关闭
-// </div>
 /*eslint-disable */
 import { mapGetters, mapMutations, mapActions } from 'vuex';
-import { shuffle } from '../../utils/index.js';
+import { shuffle, scrollToSmooth } from '../../utils/index.js';
 import { playMode } from '../../utils/config.js';
+import { log } from 'util';
 export default {
   name: 'PlayList',
   props: {
@@ -76,7 +72,24 @@ export default {
   computed: {
     ...mapGetters(['playList', 'currrenSong'])
   },
+  mounted() {
+    this.scrollBar = this.$refs.scrollBar;
+    this.scrollItem = this.$refs.scrollItem;
+  },
   methods: {
+    getActiveItemDistancce() {
+      this.$nextTick(() => {
+        let index = this.playList.findIndex(
+          item => item.id === this.currrenSong.id
+        );
+
+        let to =
+          this.scrollItem[index].offsetTop -
+          (this.scrollBar.offsetHeight - this.scrollItem[index].offsetHeight) /
+            2;
+        scrollToSmooth(this.scrollBar, to);
+      });
+    },
     handleMode() {
       this.mode++;
       if (this.mode > 2) {
@@ -97,6 +110,7 @@ export default {
         })
         .catch(() => {});
     },
+
     del(item) {
       this.delSong(item);
       if (this.playList.length === 0) {

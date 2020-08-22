@@ -56,11 +56,6 @@
       <template v-for="item in audioIcon">
       <div :class="{active: !playing}" class="column" :style="{animationDelay: `${item.time}s`}" :key="item.time"></div>
       </template>
-      <!-- <div :class="{active: !playing}" class="column" style="animation-delay: -1.2s;"></div>
-      <div :class="{active: !playing}" class="column"></div>
-      <div :class="{active: !playing}" class="column" style="animation-delay: -1.5s;"> </div>
-      <div :class="{active: !playing}" class="column" style="animation-delay: -0.9s;"></div>
-      <div :class="{active: !playing}" class="column" style="animation-delay: -0.6s;"></div> -->
     </div>
 
      <div class="control">
@@ -76,7 +71,7 @@
 
       <i
         class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
-        @click.stop="$emit('showPlayList')"
+        @click.stop="$emit('handlePlayListVisible')"
       ></i>
     </div>
   </div>
@@ -143,9 +138,9 @@ export default {
     height: 56 / @base;
     transition: all 0.5s;
     overflow: hidden;
-    transform: translateY(-5/ @base);
+    transform: translateY(-5 / @base);
     &.active {
-      transform:  translateY(-1/ @base) scale(0.8);
+      transform: translateY(-1 / @base) scale(0.8);
     }
     .svg {
       width: 100%;
@@ -163,7 +158,7 @@ export default {
       // bottom: 0;
       // margin: auto;
 
-      padding: 3/@base;
+      padding: 3 / @base;
       overflow: hidden;
       animation: move 20s linear infinite;
       &.animation_pause {

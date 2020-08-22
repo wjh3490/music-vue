@@ -7,8 +7,9 @@
         :item-size="50"
         key-field="id"
         v-slot="{ item, index }"
+        v-scroll
       >
-        <li :key="index" @click.stop="pushSinger(item)" class="singers-item">
+        <li :key="index" @click.stop="getSingerDetail(item)" class="singers-item">
           <div class="avatar">
             <img v-lazy="item.img1v1Url" alt class="singers-img" />
           </div>
@@ -23,13 +24,14 @@
 
 <script>
 import { mapMutations, mapGetters } from 'vuex';
+import scroll from '@/directives/scroll.js';
 import { vGetSinger } from '@/api/singer';
 import { RecycleScroller } from 'vue-virtual-scroller';
-
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 export default {
   name: 'Singer',
-  components: {RecycleScroller},
+  components: { RecycleScroller },
+  directives: { scroll },
   data() {
     return {
       singerList: [],
@@ -56,7 +58,7 @@ export default {
         this.singerList = Object.freeze(artists);
       }
     },
-    pushSinger(singer) {
+    getSingerDetail(singer) {
       const _singer = {
         id: singer.id,
         singerPic: singer.picUrl,
@@ -65,7 +67,9 @@ export default {
 
       this.setSinger(_singer);
       this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=SingerDetail`
+        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${
+          singer.name
+        }&componentName=SingerDetail`
       );
     },
 

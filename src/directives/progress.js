@@ -1,5 +1,5 @@
 /*eslint-disable */
-let touchstart, touchmove, touchend, click, ball;
+let touchstart, touchmove, touchend, click, ball, timeId;
 export default {
   inserted(el, binding, vnode) {
     ball = vnode.context.$refs.progressBall;
@@ -58,7 +58,7 @@ export default {
       handleLyric(currentTime);
 
       context.visible = false;
-      setTimeout(() => (context.isMove = false), 50);
+     timeId =  setTimeout(() => (context.isMove = false), 50);
     };
 
     click = e => {
@@ -75,6 +75,7 @@ export default {
 
   unbind(el) {
     eventListener('removeEventListener', el);
+    clearTimeout(timeId)
   }
 };
 

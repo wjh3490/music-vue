@@ -1,8 +1,10 @@
-let touchstart, touchmove, touchend;
+let touchstart, touchmove, touchend, parentNode;
+/*eslint-disable */
 export default {
   inserted(el) {
     const imgEl = el.children[0];
-    const imgHeight = el.clientHeight;
+    const imgHeight = el.clientHeight; // parentNode
+    parentNode = el.parentNode; // parentNode
     let startY;
     const easeOutCubic = (t, b, c, d) => c * ((t = t / d - 1) * t * t + 1) + b;
 
@@ -38,13 +40,15 @@ export default {
       el.classList.add('rebound');
       imgEl.classList.add('rebound');
     };
-    window.addEventListener('touchstart', touchstart);
-    window.addEventListener('touchmove', touchmove);
-    window.addEventListener('touchend', touchend);
+
+    EventListener('addEventListener');
   },
   unbind() {
-    window.removeEventListener('touchstart', touchstart);
-    window.removeEventListener('touchmove', touchmove);
-    window.removeEventListener('touchend', touchend);
+    EventListener('removeEventListener');
   }
 };
+function EventListener(name) {
+  parentNode[name]('touchstart', touchstart);
+  parentNode[name]('touchmove', touchmove);
+  parentNode[name]('touchend', touchend);
+}

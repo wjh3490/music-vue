@@ -99,7 +99,7 @@
       <play-list
         :visiblePlayList.sync="visiblePlayList"
         @stopPlay="() => audio.pause()"
-        ref="a"
+        ref="playList"
         v-if="visiblePlayList"
         @changeMode="changeMode"
         :swichMode='swichMode'
@@ -276,7 +276,7 @@ export default {
   },
   mounted() {
     this.audio = this.$refs.audio;
-    this.el = this.$refs.lyric.$refs.lyricList;
+    this.el = this.$refs.lyric.$refs.lyricList; //
   },
   methods: {
     async getLyric(id) {
@@ -349,16 +349,8 @@ export default {
     handlePlayListVisible() {
       this.visiblePlayList = true;
       this.$nextTick(() => {
-        let index = this.playList.findIndex(
-          item => item.id === this.currrenSong.id
-        );
-        this.$refs.a.$refs.scrollSong.scrollTo(
-          0,
-          this.$refs.a.$refs.songItem[index].offsetTop -
-            (this.$refs.a.$refs.scrollSong.offsetHeight +
-              this.$refs.a.$refs.songItem[index].offsetHeight) /
-              2
-        );
+        const playList = this.$refs.playList; //
+        playList.getActiveItemDistancce();
       });
     },
 

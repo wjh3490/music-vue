@@ -24,7 +24,7 @@ Vue.use(MessageBox);
 
 // Vue.component('RecycleScroller', RecycleScroller);
 Vue.config.productionTip = false;
-
+// git@github.com:wjh3490/music-vue.git
 new Vue({
   render: h => h(App),
   store,

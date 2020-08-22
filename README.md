@@ -1,5 +1,5 @@
 # music
-
+感谢 Binaryify 提供 NeteaseCloudMusicApi 。
 请先从这里下载 node 服务器 [https://binaryify.github.io/NeteaseCloudMusicApi/#/]
 下载之后 node app.js 来运行服务器
 
