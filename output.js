@@ -1,7 +1,7 @@
 {
   mode: 'production',
-  context: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music',
-  devtool: 'source-map',
+  context: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music',
+  devtool: false,
   node: {
     setImmediate: false,
     process: 'mock',
@@ -12,14 +12,14 @@
     child_process: 'empty'
   },
   output: {
-    path: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\dist',
+    path: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\dist',
     filename: 'js/[name].[contenthash:8].js',
     publicPath: '/',
     chunkFilename: 'js/[name].[contenthash:8].js'
   },
   resolve: {
     alias: {
-      '@': 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\src',
+      '@': 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\src',
       vue$: 'vue/dist/vue.runtime.esm.js'
     },
     extensions: [
@@ -32,16 +32,16 @@
     ],
     modules: [
       'node_modules',
-      'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules',
-      'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\@vue\\cli-service\\node_modules'
+      'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules',
+      'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\@vue\\cli-service\\node_modules'
     ]
   },
   resolveLoader: {
     modules: [
-      'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\@vue\\cli-plugin-babel\\node_modules',
+      'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\@vue\\cli-plugin-babel\\node_modules',
       'node_modules',
-      'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules',
-      'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\@vue\\cli-service\\node_modules'
+      'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules',
+      'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\@vue\\cli-service\\node_modules'
     ]
   },
   module: {
@@ -53,21 +53,21 @@
         use: [
           /* config.module.rule('vue').use('cache-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\cache-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\cache-loader\\dist\\cjs.js',
             options: {
-              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '29af56d2'
+              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\.cache\\vue-loader',
+              cacheIdentifier: 'a2121c7c'
             }
           },
           /* config.module.rule('vue').use('vue-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\vue-loader\\lib\\index.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\vue-loader\\lib\\index.js',
             options: {
               compilerOptions: {
                 whitespace: 'condense'
               },
-              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\.cache\\vue-loader',
-              cacheIdentifier: '29af56d2'
+              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\.cache\\vue-loader',
+              cacheIdentifier: 'a2121c7c'
             }
           }
         ]
@@ -78,7 +78,7 @@
         use: [
           /* config.module.rule('images').use('url-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
             options: {
               limit: 4096,
               fallback: {
@@ -87,6 +87,13 @@
                   name: 'img/[name].[hash:8].[ext]'
                 }
               }
+            }
+          },
+          /* config.module.rule('images').use('image-webpack-loader') */
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: true
             }
           }
         ]
@@ -97,7 +104,7 @@
         use: [
           /* config.module.rule('svg').use('file-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\file-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\file-loader\\dist\\cjs.js',
             options: {
               name: 'img/[name].[hash:8].[ext]'
             }
@@ -110,7 +117,7 @@
         use: [
           /* config.module.rule('media').use('url-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
             options: {
               limit: 4096,
               fallback: {
@@ -129,7 +136,7 @@
         use: [
           /* config.module.rule('fonts').use('url-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\url-loader\\dist\\cjs.js',
             options: {
               limit: 4096,
               fallback: {
@@ -181,7 +188,7 @@
             use: [
               /* config.module.rule('css').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -189,7 +196,7 @@
               },
               /* config.module.rule('css').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -200,7 +207,7 @@
               },
               /* config.module.rule('css').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -216,7 +223,7 @@
             use: [
               /* config.module.rule('css').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -224,7 +231,7 @@
               },
               /* config.module.rule('css').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -232,7 +239,7 @@
               },
               /* config.module.rule('css').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -248,7 +255,7 @@
             use: [
               /* config.module.rule('css').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -256,7 +263,7 @@
               },
               /* config.module.rule('css').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -267,7 +274,7 @@
               },
               /* config.module.rule('css').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -282,7 +289,7 @@
             use: [
               /* config.module.rule('css').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -290,7 +297,7 @@
               },
               /* config.module.rule('css').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -298,7 +305,7 @@
               },
               /* config.module.rule('css').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -320,7 +327,7 @@
             use: [
               /* config.module.rule('postcss').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -328,7 +335,7 @@
               },
               /* config.module.rule('postcss').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -339,7 +346,7 @@
               },
               /* config.module.rule('postcss').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -355,7 +362,7 @@
             use: [
               /* config.module.rule('postcss').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -363,7 +370,7 @@
               },
               /* config.module.rule('postcss').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -371,7 +378,7 @@
               },
               /* config.module.rule('postcss').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -387,7 +394,7 @@
             use: [
               /* config.module.rule('postcss').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -395,7 +402,7 @@
               },
               /* config.module.rule('postcss').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -406,7 +413,7 @@
               },
               /* config.module.rule('postcss').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -421,7 +428,7 @@
             use: [
               /* config.module.rule('postcss').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -429,7 +436,7 @@
               },
               /* config.module.rule('postcss').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -437,7 +444,7 @@
               },
               /* config.module.rule('postcss').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -459,7 +466,7 @@
             use: [
               /* config.module.rule('scss').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -467,7 +474,7 @@
               },
               /* config.module.rule('scss').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -478,7 +485,7 @@
               },
               /* config.module.rule('scss').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -501,7 +508,7 @@
             use: [
               /* config.module.rule('scss').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -509,7 +516,7 @@
               },
               /* config.module.rule('scss').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -517,7 +524,7 @@
               },
               /* config.module.rule('scss').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -540,7 +547,7 @@
             use: [
               /* config.module.rule('scss').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -548,7 +555,7 @@
               },
               /* config.module.rule('scss').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -559,7 +566,7 @@
               },
               /* config.module.rule('scss').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -581,7 +588,7 @@
             use: [
               /* config.module.rule('scss').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -589,7 +596,7 @@
               },
               /* config.module.rule('scss').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -597,7 +604,7 @@
               },
               /* config.module.rule('scss').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -626,7 +633,7 @@
             use: [
               /* config.module.rule('sass').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -634,7 +641,7 @@
               },
               /* config.module.rule('sass').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -645,7 +652,7 @@
               },
               /* config.module.rule('sass').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -671,7 +678,7 @@
             use: [
               /* config.module.rule('sass').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -679,7 +686,7 @@
               },
               /* config.module.rule('sass').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -687,7 +694,7 @@
               },
               /* config.module.rule('sass').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -713,7 +720,7 @@
             use: [
               /* config.module.rule('sass').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -721,7 +728,7 @@
               },
               /* config.module.rule('sass').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -732,7 +739,7 @@
               },
               /* config.module.rule('sass').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -757,7 +764,7 @@
             use: [
               /* config.module.rule('sass').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -765,7 +772,7 @@
               },
               /* config.module.rule('sass').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -773,7 +780,7 @@
               },
               /* config.module.rule('sass').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -805,7 +812,7 @@
             use: [
               /* config.module.rule('less').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -813,7 +820,7 @@
               },
               /* config.module.rule('less').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -824,7 +831,7 @@
               },
               /* config.module.rule('less').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -834,7 +841,7 @@
               },
               /* config.module.rule('less').oneOf('vue-modules').use('less-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false
                 }
@@ -847,7 +854,7 @@
             use: [
               /* config.module.rule('less').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -855,7 +862,7 @@
               },
               /* config.module.rule('less').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -863,7 +870,7 @@
               },
               /* config.module.rule('less').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -873,7 +880,7 @@
               },
               /* config.module.rule('less').oneOf('vue').use('less-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false
                 }
@@ -886,7 +893,7 @@
             use: [
               /* config.module.rule('less').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -894,7 +901,7 @@
               },
               /* config.module.rule('less').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -905,7 +912,7 @@
               },
               /* config.module.rule('less').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -915,7 +922,7 @@
               },
               /* config.module.rule('less').oneOf('normal-modules').use('less-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false
                 }
@@ -927,7 +934,7 @@
             use: [
               /* config.module.rule('less').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -935,7 +942,7 @@
               },
               /* config.module.rule('less').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -943,7 +950,7 @@
               },
               /* config.module.rule('less').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -953,7 +960,7 @@
               },
               /* config.module.rule('less').oneOf('normal').use('less-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\less-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false
                 }
@@ -972,7 +979,7 @@
             use: [
               /* config.module.rule('stylus').oneOf('vue-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -980,7 +987,7 @@
               },
               /* config.module.rule('stylus').oneOf('vue-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -991,7 +998,7 @@
               },
               /* config.module.rule('stylus').oneOf('vue-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -1015,7 +1022,7 @@
             use: [
               /* config.module.rule('stylus').oneOf('vue').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -1023,7 +1030,7 @@
               },
               /* config.module.rule('stylus').oneOf('vue').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -1031,7 +1038,7 @@
               },
               /* config.module.rule('stylus').oneOf('vue').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -1055,7 +1062,7 @@
             use: [
               /* config.module.rule('stylus').oneOf('normal-modules').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -1063,7 +1070,7 @@
               },
               /* config.module.rule('stylus').oneOf('normal-modules').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2,
@@ -1074,7 +1081,7 @@
               },
               /* config.module.rule('stylus').oneOf('normal-modules').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -1097,7 +1104,7 @@
             use: [
               /* config.module.rule('stylus').oneOf('normal').use('extract-css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\mini-css-extract-plugin\\dist\\loader.js',
                 options: {
                   hmr: false,
                   publicPath: '../'
@@ -1105,7 +1112,7 @@
               },
               /* config.module.rule('stylus').oneOf('normal').use('css-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\css-loader\\dist\\cjs.js',
                 options: {
                   sourceMap: false,
                   importLoaders: 2
@@ -1113,7 +1120,7 @@
               },
               /* config.module.rule('stylus').oneOf('normal').use('postcss-loader') */
               {
-                loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
+                loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\postcss-loader\\src\\index.js',
                 options: {
                   sourceMap: false,
                   plugins: [
@@ -1142,19 +1149,19 @@
         use: [
           /* config.module.rule('js').use('cache-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\cache-loader\\dist\\cjs.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\cache-loader\\dist\\cjs.js',
             options: {
-              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\.cache\\babel-loader',
-              cacheIdentifier: '2af0e384'
+              cacheDirectory: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\.cache\\babel-loader',
+              cacheIdentifier: '15ed7d7f'
             }
           },
           /* config.module.rule('js').use('thread-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\thread-loader\\dist\\cjs.js'
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\thread-loader\\dist\\cjs.js'
           },
           /* config.module.rule('js').use('babel-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\babel-loader\\lib\\index.js'
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\babel-loader\\lib\\index.js'
           }
         ]
       },
@@ -1164,12 +1171,12 @@
         test: /\.(vue|(j|t)sx?)$/,
         exclude: [
           /node_modules/,
-          'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\@vue\\cli-service\\lib'
+          'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\@vue\\cli-service\\lib'
         ],
         use: [
           /* config.module.rule('eslint').use('eslint-loader') */
           {
-            loader: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\eslint-loader\\index.js',
+            loader: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\eslint-loader\\index.js',
             options: {
               extensions: [
                 '.js',
@@ -1177,10 +1184,10 @@
                 '.vue'
               ],
               cache: true,
-              cacheIdentifier: '59477283',
+              cacheIdentifier: '73513d75',
               emitWarning: false,
               emitError: false,
-              eslintPath: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\node_modules\\eslint',
+              eslintPath: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\node_modules\\eslint',
               formatter: function () { /* omitted long function */ }
             }
           }
@@ -1206,6 +1213,7 @@
         }
       }
     },
+    runtimeChunk: 'single',
     minimizer: [
       /* config.optimization.minimizer('terser') */
       new TerserPlugin(
@@ -1240,7 +1248,7 @@
               safari10: true
             }
           },
-          sourceMap: true,
+          sourceMap: false,
           cache: true,
           parallel: true,
           extractComments: false
@@ -1316,7 +1324,7 @@
           collapseBooleanAttributes: true,
           removeScriptTypeAttributes: true
         },
-        template: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\public\\index.html'
+        template: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\public\\index.html'
       }
     ),
     /* config.plugin('pwa') */
@@ -1367,8 +1375,8 @@
     new CopyPlugin(
       [
         {
-          from: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\public',
-          to: 'C:\\Users\\Administrator\\Desktop\\vue\\my\\vue-music\\dist',
+          from: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\public',
+          to: 'C:\\Users\\Administrator\\Desktop\\vue-music\\vue-music\\dist',
           toType: 'dir',
           ignore: [
             '.DS_Store',

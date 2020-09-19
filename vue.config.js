@@ -8,13 +8,13 @@ module.exports = {
   // },
   chainWebpack: config => {
     config.optimization.runtimeChunk('single'),
-    config.module
-      .rule('images')
-      .use('image-webpack-loader')
-      .loader('image-webpack-loader')
-      .options({
-        bypassOnDebug: true
-      });
+      config.module
+        .rule('images')
+        .use('image-webpack-loader')
+        .loader('image-webpack-loader')
+        .options({
+          bypassOnDebug: true
+        });
     // const cdn = {
     //   js: [
     //     // vue must at first!

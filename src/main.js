@@ -31,7 +31,7 @@ new Vue({
   router,
   components: { App }
 }).$mount('#app');
-
+//git@github.com:wjh3490/music-vue.git
   //  <!-- <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
   //   <script src="<%=js%>"></script>
   //   <% } %> -->

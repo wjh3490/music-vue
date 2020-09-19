@@ -67,6 +67,9 @@ export default {
       &.active-lyric {
         color: #eeee71;
         opacity: 1;
+        transition: all .2s;
+        transform:  scale(1.2);
+
       }
     }
   }
