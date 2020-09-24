@@ -21,7 +21,7 @@ Vue.use(VueLazyload, {
   loading: require('./assets/imgs/default.jpg')
 });
 Vue.use(MessageBox);
-
+console.log(111);
 // Vue.component('RecycleScroller', RecycleScroller);
 Vue.config.productionTip = false;
 // git@github.com:wjh3490/music-vue.git
