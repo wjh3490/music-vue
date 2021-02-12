@@ -1,45 +1,44 @@
 <template>
   <div class="search">
-    <div class="input">
-      <Return />
-      <div class="content">
-        <input
-          type="text"
-          v-model="searchData"
-          placeholder="热门"
-          class="search-input"
-        />
-      </div>
-      <div class="cancle" @click="cancle">
-        <span>取消</span>
-      </div>
-    </div>
+    <BaseBack :isFixed="true" :background="'rgb(22, 154, 243'">
+      <input
+        type="text"
+        v-model="searchData"
+        placeholder="热门"
+        class="search-input"
+      />
+
+      <template #right>
+        <span @click="cancle" style="font-size:15px">取消</span>
+      </template>
+    </BaseBack>
 
     <div class="item">
       <SearchList
         :list="hotLsit"
-        @handleSearch="data => (searchData = data)"
+        hotTitle="热门搜索"
+        @handleSearch="(data) => (searchData = data)"
         :visible="!searchData"
         :vertical="true"
         key="hot"
-      >
-      </SearchList>
+      />
 
       <SearchList
         :visible="!searchData"
+        hotTitle="历史记录"
         :list="historyList"
-        @handleSearch="data => (searchData = data)"
+        @handleSearch="(data) => (searchData = data)"
         @del="del"
         :vertical="false"
-          key="history"
-      ></SearchList>
+        key="history"
+      />
 
-      <Result :list="searchList" @play="play" :noResult='noResult'>
+      <SearchResult :list="searchList" @play="play" :noResult="noResult">
         <template v-slot="{ item }">
           <div class="name ellipsis" v-html="highlight(item.name)"></div>
           <div class="singer ellipsis" v-html="highlight(item.singer)"></div>
         </template>
-      </Result>
+      </SearchResult>
     </div>
   </div>
 </template>
@@ -48,22 +47,19 @@
 /* eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
 import { vSearch, vSearchHot } from '@/api/search';
-import Return from '@/components/Return/index';
 import { filterList } from '@/utils/index.js';
-import SearchList from './components/SearchList';
-import Result from './components/Result';
+import SearchList from '@/components/Search/SearchList';
+import SearchResult from '@/components/Search/SearchResult';
 export default {
   name: 'Search',
-  components: { Return, SearchList, Result },
-
+  components: { SearchList, SearchResult },
   data() {
     return {
       searchData: '',
       hotLsit: [],
-      // showList: true,
       searchList: [],
       flag: null,
-      noResult: false
+      noResult: false,
     };
   },
 
@@ -74,15 +70,15 @@ export default {
         return val.replace(reg, `<span class='red'>${this.searchData}</span>`);
       };
     },
-    ...mapGetters(['playList', 'historyList'])
+    ...mapGetters(['playList', 'historyList']),
   },
 
   watch: {
     searchData(newVal) {
       this.debounce(() => {
         this.getSearch(newVal);
-      }, 500);
-    }
+      }, 300);
+    },
   },
 
   created() {
@@ -109,18 +105,17 @@ export default {
           return;
         }
         this.noResult = false;
-        let songsList = [];
-
-        songs.forEach(ele => {
+        const songsList = songs.reduce((acur, ele) => {
           const song = {
             id: ele.id,
             name: ele.name,
             singer: ele.artists[0].name,
-            picUrl: ele.artists[0].img1v1Url
+            picUrl: ele.artists[0].img1v1Url,
           };
 
-          songsList.push(song);
-        });
+          acur.push(song);
+          return acur;
+        }, []);
 
         this.searchList = Object.freeze(songsList);
       }
@@ -129,9 +124,11 @@ export default {
       const { code, result } = await vSearchHot();
       if (code === 200) {
         const { hots } = result;
-        hots.forEach(item => {
-          this.hotLsit.push(item.first);
-        });
+        const list = hots.reduce((acur, item) => {
+          acur.push(item.first);
+          return acur;
+        }, []);
+        this.hotLsit = list;
       }
     },
     cancle() {
@@ -143,7 +140,7 @@ export default {
       if (this.historyList.length === 0) return;
       this.$MessageBox({
         title: '',
-        content: '是否要删除全部'
+        content: '是否要删除全部',
       })
         .then(() => {
           this.setHistoryList([]);
@@ -152,20 +149,20 @@ export default {
         .catch(() => {});
     },
     play(song) {
-      console.log(song);
-      let songs = this.playList;
-      let history = this.historyList;
-      let id = history.indexOf(this.searchData);
+      // console.log(song);
+      // let songs = this.playList;
+      const history = this.historyList;
+      const id = history.indexOf(this.searchData);
       if (id > -1) {
         history.splice(id, 1);
       }
-      if (history.length > 10) {
+      if (history.length >= 10) {
         history.pop();
       }
       history.unshift(this.searchData);
       /**********************/
-      songs = filterList(songs, song);
-      let index = songs.findIndex(item => item.id === song.id);
+      const songs = filterList(this.playList, song);
+      const index = songs.findIndex((item) => item.id === song.id);
       localStorage.setItem('history', JSON.stringify(history));
       this.setPlay(songs);
       this.setCurrrentIndex(index);
@@ -175,18 +172,29 @@ export default {
     ...mapMutations([
       'setCurrrentIndex',
       'setPlay',
-      // 'setPlaying',
       'setFullScreen',
-      'setHistoryList'
-    ])
-  }
+      'setHistoryList',
+    ]),
+  },
 };
 </script>
 <style scoped lang="less">
 @base: 37.5rem;
+.search-input {
+  width: 100%;
+  height: 28 / @base;
+  padding-left: 15 / @base;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  &::-webkit-input-placeholder {
+    /* placeholder颜色  */
+    color: #f1f1f1;
+    /* placeholder字体大小  */
+    font-size: 14px;
+  }
+}
 .search {
   position: relative;
-
   background: #fbfbfb;
   padding-top: 50px;
   color: #f1f1f1;
@@ -195,44 +203,6 @@ export default {
     height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
-  }
-  .input {
-    top: 0;
-    width: 100%;
-    position: fixed;
-    padding: 0 50px;
-    background: #169af3;
-    height: 50 / @base;
-    overflow: hidden;
-    font-size: 0px;
-    // color: #f1f1f1;
-    .content {
-      margin-top: 10 / @base;
-      font-size: 14px;
-      .search-input {
-        width: 100%;
-        height: 28 / @base;
-        padding-left: 15 / @base;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 50px;
-        &::-webkit-input-placeholder {
-          /* placeholder颜色  */
-          color: #f1f1f1;
-          /* placeholder字体大小  */
-          font-size: 14px;
-          /* placeholder位置  */
-          // text-align: right;
-        }
-      }
-    }
-    .cancle {
-      position: absolute;
-      right: 10 / @base;
-      top: 50%;
-      transform: translate3d(0, -50%, 0);
-      font-size: 14px;
-      color: #f1f1f1;
-    }
   }
 }
 .name {

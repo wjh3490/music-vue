@@ -6,6 +6,7 @@ import { playMode } from '../utils/config';
 
 const store = new Vuex.Store({
   state: {
+    axiosList: {},
     singer: {},
     currrentIndex: -1,
     playList: [],
@@ -54,6 +55,12 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    setAxiosList (state, obj) {
+      state.axiosList = Object.assign(state.axiosList, obj)
+    },
+    clearAxiosList (state) {
+      state.axiosList = {}
+    },
     setPlayHistory(state, playHistory) {
       state.playHistory = playHistory;
     },

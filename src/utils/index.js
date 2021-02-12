@@ -5,16 +5,17 @@
  */
 
 /*eslint-disable */
-export function filterList(list, currrenSong) {
-  if (list.length === 0) {
-    list.push(currrenSong);
+export function filterList (list, currrenSong) {
+  let data = list.slice()
+  if (data.length === 0) {
+    data.push(currrenSong);
   } else {
-    let flag = list.every(ele => ele.id !== currrenSong.id);
-    if (flag) {
-      list.unshift(currrenSong);
+    let flag = data.find(ele => ele.id === currrenSong.id);
+    if (!flag) {
+      data.unshift(currrenSong);
     }
   }
-  return list;
+  return data;
 }
 
 /**

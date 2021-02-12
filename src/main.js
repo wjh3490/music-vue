@@ -10,21 +10,15 @@ import './style/base.less';
 import './style/transition.less';
 import './utils/flexible';
 import './assets/font/iconfont.css';
-
+import '@/components/Base'
 import MessageBox from './components/MessageBox';
-// import { RecycleScroller } from 'vue-virtual-scroller';
-
-// import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
-import './registerServiceWorker'
+// import './registerServiceWorker'
 
 Vue.use(VueLazyload, {
   loading: require('./assets/imgs/default.jpg')
 });
 Vue.use(MessageBox);
-console.log(111);
-// Vue.component('RecycleScroller', RecycleScroller);
 Vue.config.productionTip = false;
-// git@github.com:wjh3490/music-vue.git
 new Vue({
   render: h => h(App),
   store,

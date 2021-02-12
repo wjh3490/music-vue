@@ -34,5 +34,6 @@ export function vGetDetail(id) {
     method: 'get'
   });
 }
+//https://platform.xuanyu.com.cn/promotions/seckill/time-line
 
 

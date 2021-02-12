@@ -1,80 +1,59 @@
 <template>
-  <div class="singers" ref="singers">
+  <div class="singers" >
+    <BaseNav />
     <ul>
-      <RecycleScroller
-        class="scroller"
-        :items="singerList"
-        :item-size="50"
-        key-field="id"
-        v-slot="{ item, index }"
-        v-scroll
+      <li
+        v-for="(item, index) in singerList"
+        :key="index"
+        @click.stop="getSingerDetail(item)"
+        class="singers-item"
       >
-        <li :key="index" @click.stop="getSingerDetail(item)" class="singers-item">
-          <div class="avatar">
-            <img v-lazy="item.img1v1Url" alt class="singers-img" />
-          </div>
-          <div class="name">
-            <span>{{ item.name }}</span>
-          </div>
-        </li>
-      </RecycleScroller>
+        <div class="avatar">
+          <img v-lazy="item.img1v1Url" alt class="singers-img" />
+        </div>
+        <div class="name">
+          <span>{{ item.name }}</span>
+        </div>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
 import { mapMutations, mapGetters } from 'vuex';
-import scroll from '@/directives/scroll.js';
 import { vGetSinger } from '@/api/singer';
-import { RecycleScroller } from 'vue-virtual-scroller';
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 export default {
   name: 'Singer',
-  components: { RecycleScroller },
-  directives: { scroll },
   data() {
     return {
       singerList: [],
-      scrollY: 0
     };
   },
   computed: {
-    ...mapGetters(['singer'])
+    ...mapGetters(['singer']),
   },
-
   created() {
     this.getSingers();
   },
-
-  /*eslint-disable */
   methods: {
-    handleScroll() {
-      this.scrollY = window.scrollTop;
-      console.log(window);
-    },
     async getSingers() {
       const { code, artists } = await vGetSinger();
-      if (code === 200) {
-        this.singerList = Object.freeze(artists);
-      }
+      if (code === 200) this.singerList = Object.freeze(artists);
     },
     getSingerDetail(singer) {
       const _singer = {
         id: singer.id,
         singerPic: singer.picUrl,
-        name: singer.name
+        name: singer.name,
       };
 
       this.setSinger(_singer);
       this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${
-          singer.name
-        }&componentName=SingerDetail`
+        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=SingerDetail`
       );
     },
-
-    ...mapMutations(['setSinger'])
-  }
+    ...mapMutations(['setSinger']),
+  },
 };
 </script>
 <style scoped lang="less">
@@ -82,7 +61,6 @@ export default {
 @ca: 119 / @base;
 .singers ul .scroller {
   height: 100vh;
-  // overflow: hidden;
 }
 .singers-item {
   font-size: 16px;

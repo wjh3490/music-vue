@@ -1,5 +1,6 @@
 <template>
   <div class="rank">
+    <BaseNav />
     <ul class="rank-list">
       <li
         v-for="(item, index) in rankList"
@@ -30,8 +31,8 @@ export default {
         { name: '说唱榜', url: require('../../assets/imgs/3.jpg'), idx: 2 },
         { name: '热歌榜', url: require('../../assets/imgs/4.jpg'), idx: 3 },
         { name: '原创榜', url: require('../../assets/imgs/5.jpg'), idx: 4 },
-        { name: '飙升榜', url: require('../../assets/imgs/6.jpg'), idx: 5 }
-      ]
+        { name: '飙升榜', url: require('../../assets/imgs/6.jpg'), idx: 5 },
+      ],
     };
   },
 
@@ -40,14 +41,14 @@ export default {
       this.setSinger({
         name: item.name,
         id: item.idx,
-        singerPic: item.url
+        singerPic: item.url,
       });
       this.$router.push(
         `/details/${item.idx}?singerPic=${item.url}&name=${item.name}&componentName=RankDetail`
       );
     },
-    ...mapMutations(['setSinger'])
-  }
+    ...mapMutations(['setSinger']),
+  },
 };
 </script>
 <style scoped lang="less">
