@@ -1,4 +1,4 @@
-module.exports = {
+// module.exports = {
   // configureWebpack: {
   //   externals: {
   //     vue: 'Vue',
@@ -6,15 +6,15 @@ module.exports = {
   //     //axios: 'axios'
   //   }
   // },
-  chainWebpack: config => {
-    config.optimization.runtimeChunk('single'),
-      config.module
-        .rule('images')
-        .use('image-webpack-loader')
-        .loader('image-webpack-loader')
-        .options({
-          bypassOnDebug: true
-        });
+  // chainWebpack: config => {
+  //   config.optimization.runtimeChunk('single'),
+  //     config.module
+  //       .rule('images')
+  //       .use('image-webpack-loader')
+  //       .loader('image-webpack-loader')
+  //       .options({
+  //         bypassOnDebug: true
+  //       });
     // const cdn = {
     //   js: [
     //     // vue must at first!
@@ -27,10 +27,10 @@ module.exports = {
     //   args[0].cdn = cdn;
     //   return args;
     // });
-  },
+  // },
 
-  productionSourceMap: false
-};
+  // productionSourceMap: false
+// };
 
 // module: {
 //   rules: [

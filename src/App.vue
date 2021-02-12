@@ -1,20 +1,25 @@
 <template>
-  <div id="app">
-    <router-view  />
-    <player />
+  <div id="app" :class="{ padding75: playList.length > 0 }">
+    <!-- <keep-alive> -->
+      <router-view :key="$route.path" />
+    <!-- </keep-alive> -->
+    <Player />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import Player from './player';
 export default {
   name: 'App',
-  components: { Player }
+  components: { Player },
+  computed: {
+    ...mapGetters(['playList']),
+  },
 };
 </script>
-
 <style scoped>
 #app {
-  height: 100%;
+  font-size: 12px;
 }
 </style>

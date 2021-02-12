@@ -1,5 +1,6 @@
 <template>
   <div class="user">
+    <BaseNav />
     <div class="title clearfix">
       <div class="left fl" @click="flag = false">
         <i class="iconfont icon-shoucang1 user-icon"></i>
@@ -34,11 +35,11 @@ export default {
   data() {
     return {
       list: [],
-      flag: false
+      flag: false,
     };
   },
   computed: {
-    ...mapGetters(['likeList', 'playHistory', 'playList'])
+    ...mapGetters(['likeList', 'playHistory', 'playList']),
   },
   watch: {
     flag: {
@@ -47,21 +48,21 @@ export default {
         list = val ? [...this.playHistory] : [...this.likeList];
         this.list = Object.freeze(list);
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
 
   methods: {
     play(song) {
       let songs = this.playList;
       songs = filterList(songs, song);
-      let index = songs.findIndex(item => item.id === song.id);
+      let index = songs.findIndex((item) => item.id === song.id);
       this.setPlay(songs);
       this.setCurrrentIndex(index);
       this.setFullScreen(true);
     },
-    ...mapMutations(['setCurrrentIndex', 'setPlay', 'setFullScreen'])
-  }
+    ...mapMutations(['setCurrrentIndex', 'setPlay', 'setFullScreen']),
+  },
 };
 </script>
 <style scoped lang="less">
