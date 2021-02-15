@@ -6,14 +6,20 @@
 
 ## Project setup
 
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
+### 方式一
 
 ```
-npm run serve
+npm run allin
+
+npm run go
+```
+
+### 方式二
+
+```
+先进入server server运行 npm install  在运行 node app.js
+然后在根目录下执行 npm install 在npm run serve
+
 ```
 
 ### Compiles and minifies for production

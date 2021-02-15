@@ -7,7 +7,6 @@
         :audio="audio"
         :currentTime="currentTime"
         :duration="duration"
-        :src.sync="src"
         :palyStatus="palyStatus"
         :animationStatus="animationStatus"
         :currentLyric="currentLyric"
@@ -34,7 +33,7 @@
     </transition>
 
     <transition name="slide1">
-      <PlayerList
+      <PlayList
         :visiblePlayList.sync="visiblePlayList"
         @stopPlay="() => audio.pause()"
         ref="playList"
@@ -77,10 +76,10 @@ import {
 import { vGetSong, vGetLyric } from '../api/songs';
 import MiniPlayer from '@/components/Player/MiniPlayer';
 import NormalPlayer from '@/components/Player/NormalPlayer';
-import PlayerList from '@/components/Player/PlayerList';
+import PlayList from '@/components/Player/PlayList';
 export default {
   name: 'Player',
-  components: { MiniPlayer, NormalPlayer, PlayerList },
+  components: { MiniPlayer, NormalPlayer, PlayList },
   data() {
     return {
       src: '',

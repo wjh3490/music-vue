@@ -57,10 +57,7 @@
 /*eslint-disable */
 
 import { mapGetters, mapMutations } from 'vuex';
-import {
-  scrollToEase,
-  scrollToSmooth,
-} from '../../utils/index.js';
+import { scrollToEase, scrollToSmooth } from '../../utils/index.js';
 import components from '@/components/Player';
 export default {
   name: 'NormalPlayer',
@@ -72,7 +69,6 @@ export default {
     duration: Number,
     audio: [Object, String, HTMLAudioElement],
     swichMode: [Object, String],
-    src: String,
     lyricKeys: Array,
     currentLyric: [Object, String],
   },
@@ -101,7 +97,6 @@ export default {
     currentTime(val) {
       if (!this.currentLyric) return;
       if (!this.fullScreen) return;
-
       if (this.lyricKeys[this.LyricScrollY] > Math.floor(val)) {
         if (this.debounce) {
           this.activeLyricIndex = this.lyricKeys[this.LyricScrollY - 1];
@@ -118,10 +113,10 @@ export default {
     },
   },
   mounted() {
-    this.el = this.$refs.lyric.$refs.lyricList; 
+    this.el = this.$refs.lyric.$refs.lyricList;
   },
   methods: {
-    scrollAnimate(index) {
+    scrollAnimate() {
       this.$nextTick(() => {
         const start = this.el.scrollTop;
         const activeLyric = document.querySelector('.active-lyric');
