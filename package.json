@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "inspect": "vue-cli-service inspect --mode production  > output.js",
     "go": "concurrently \"npm run serve\" \"npm run music\"",
-    "allin": "concurrently \"npm install\" \"cd server && npm install\""
+    "allin": "npm install && cd server && npm install"
   },
   "dependencies": {
     "core-js": "^3.6.5",
