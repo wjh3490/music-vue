@@ -32,7 +32,9 @@ module.exports = {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       // 自定义的service worker文件的位置
-      swSrc: 'src/service-worker.js'
+      swSrc: 'src/service-worker.js',
+      skipWaiting: true,
+      clientsClaim: true,
       // ...other Workbox options...
     }
   }
