@@ -53,6 +53,7 @@
     },
     "rules": {}
   },
+  "homepage": "https://wjh3490.github.io/music-vue/",
   "browserslist": [
     "> 1%",
     "last 2 versions",
