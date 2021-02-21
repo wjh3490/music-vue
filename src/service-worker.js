@@ -32,7 +32,7 @@ workbox.routing.registerRoute(
   workbox.strategies.networkFirst({
   cacheName: "images",
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
+     new workbox.expiration.Plugin({
         maxAgeSeconds: 5 * 24 * 60 * 60 // 设置缓存有效期为5天
       })
     ],
@@ -44,8 +44,7 @@ workbox.routing.registerRoute(
   workbox.strategies.networkFirst({
   cacheName: "api",
     plugins: [
-      new workbox.expiration.ExpirationPlugin({
-        maxEntries: 60,
+      new workbox.expiration.Plugin({
         maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为5天
       })
     ],
