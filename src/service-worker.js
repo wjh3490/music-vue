@@ -33,18 +33,14 @@ workbox.routing.registerRoute(
   cacheName: "images",
     plugins: [
       new workbox.expiration.ExpirationPlugin({
-        maxEntries: 60,
         maxAgeSeconds: 5 * 24 * 60 * 60 // 设置缓存有效期为5天
       })
     ],
-    fetchOptions: {
-      credentials: "include" // 支持跨域
-    }
   })
 );
 
 workbox.routing.registerRoute(
-  /^http:\/\/139\.9\.230\.159/,
+  /^http:\/\/127\.0\.0\.1/,
   workbox.strategies.networkFirst({
   cacheName: "api",
     plugins: [
@@ -53,9 +49,6 @@ workbox.routing.registerRoute(
         maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为5天
       })
     ],
-    fetchOptions: {
-      credentials: "include" // 支持跨域
-    }
   })
 );
 
