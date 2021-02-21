@@ -1,5 +1,6 @@
 const pxRem = require("postcss-pxtorem")
 module.exports = {
+  publicPath: process.env.NODE_ENV === "production" ? "/vue-running" : "/",
     css:{
         loaderOptions:{
             postcss: {
