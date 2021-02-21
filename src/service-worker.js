@@ -27,8 +27,8 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 //   /''.*\.html'/,
 //   workbox.strategies.networkFirst()
 // );
-// workbox.routing.registerRoute(
-//   /^https:\/\/p1\.music\.126\.net/,
-//   workbox.strategies.networkFirst()
-// );
-// wget https://nodejs.org/dist/v8.10.0/node-v8.10.0-linux-x64.tar.xz
+workbox.routing.registerRoute(
+  /^https:\/\/p1\.music\.126\.net/,
+  workbox.strategies.networkFirst()
+);
+
