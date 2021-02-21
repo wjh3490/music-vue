@@ -57,32 +57,31 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
-@ca: 119 / @base;
+@ca: 119px;
 .singers ul .scroller {
   height: 100vh;
 }
 .singers-item {
   font-size: 16px;
-  height: 50 / @base;
-  line-height: 50 / @base;
-  padding-left: 60 / @base;
+  height: 50px;
+  line-height: 50px;
+  padding-left: 60px;
   position: relative;
   .name {
-    border-bottom: 1 / @base solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
     height: 100%;
-    line-height: 50 / @base;
+    line-height: 50px;
   }
   .avatar {
     position: absolute;
-    left: 10 / @base;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     border-radius: 50%;
     overflow: hidden;
     .singers-img {
-      width: 38 / @base;
-      height: 38 / @base;
+      width: 38px;
+      height: 38px;
     }
   }
 }

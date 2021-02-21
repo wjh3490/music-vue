@@ -52,18 +52,17 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .rank {
   background: #f2f3f4;
   .rank-list {
     .rank-item {
       display: flex;
-      padding: 10 / @base;
+      padding: 10px;
 
       .pic {
         flex: 1;
         .rank-img {
-          border-radius: 6 / @base;
+          border-radius: 6px;
         }
       }
       .desc {

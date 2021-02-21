@@ -1,11 +1,24 @@
 @charset "UTF-8";
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  // -webkit-user-select: none;
+  // user-select: none;
+}
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
+  height: 100%;
+  //    -webkit-tap-highlight-color: transparent;
+  //     -webkit-touch-callout: none;
+  //     -webkit-user-select: none;
+  //     user-select: none;
 }
+
 body {
+  height: 100%;
   margin: 0;
 }
 article,
@@ -38,6 +51,7 @@ audio:not([controls]) {
 template {
   display: none;
 }
+
 .clamp {
   overflow: hidden;
   text-overflow: ellipsis;

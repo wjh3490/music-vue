@@ -22,7 +22,6 @@ export default {
 }
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 @color: #169af3;
 
 .header {
@@ -30,13 +29,13 @@ export default {
   font-size: 16px;
   background: @color;
   .search {
-    padding: 0 20 / @base;
+    padding: 0 20px;
     .inp {
       width: 100%;
-      height: 28 / @base;
-      line-height: 28 / @base;
+      height: 28px;
+      line-height: 28px;
       background: rgba(255, 255, 255, 0.3);
-      border-radius: 50 / @base;
+      border-radius: 50px;
       text-align: center;
       font-size: 0;
       color: #f1f1f1;
@@ -47,24 +46,24 @@ export default {
       }
       .icon-sousuo {
         font-size: 16px;
-        margin-right: 5 / @base;
+        margin-right: 5px;
       }
     }
   }
   header {
     text-align: center;
-    height: 44 / @base;
-    line-height: 44 / @base;
+    height: 44px;
+    line-height: 44px;
     font-weight: 700;
-    letter-spacing: 3 / @base;
-    padding: 0 44 / @base;
+    letter-spacing: 3px;
+    padding: 0 44px;
     color: #f1f1f1;
 
     i {
       position: absolute;
       top: 0;
-      width: 44 / @base;
-      height: 44 / @base;
+      width: 44px;
+      height: 44px;
       &.left {
         left: 0;
       }

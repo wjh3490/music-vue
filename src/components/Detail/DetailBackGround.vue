@@ -1,5 +1,5 @@
 <template>
-  <div class="singerPic" ref="singerPic" v-pull>
+  <div class="singerPic" ref="singerPic">
     <img :src="$route.query.singerPic" alt="" class="img" />
     <h1 class="ellipsis">{{ $route.query.name }}</h1>
     <div class="mask"></div>
@@ -15,7 +15,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-@base: 37.5rem;
 .singerPic {
   height: 250px;
   overflow: hidden;
@@ -34,16 +33,16 @@ export default {
   h1,
   p {
     position: absolute;
-    left: 15 / @base;
+    left: 15px;
   }
   h1 {
-    bottom: 35 / @base;
+    bottom: 35px15px;
     width: 80%;
     font-weight: 500;
     font-size: 24px;
   }
   p {
-    bottom: 22 / @base;
+    bottom: 22px15px;
     font-size: 14px;
   }
 }

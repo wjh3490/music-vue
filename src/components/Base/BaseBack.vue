@@ -29,7 +29,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@base: 37.5rem;
 .isFixed {
   position: fixed;
   position: fixed;
@@ -39,14 +38,14 @@ export default {
 .return {
   display: flex;
   justify-content: space-between;
-  height: 50 / @base;
-  line-height: 50 / @base;
+  height: 50px;
+  line-height: 50px;
   width: 100%;
   z-index: 1;
   &-left,
   &-right {
     height: 100%;
-    width: 50 / @base;
+    width: 50px;
     text-align: center;
     font-size: 20px;
     color: #fff;

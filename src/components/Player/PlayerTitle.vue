@@ -28,29 +28,28 @@ export default {
 </script>
 
 <style scoped lang="less">
-@base: 37.5rem;
 .normal-player-header {
   position: relative;
   &-title {
-    padding: 10 / @base 50 / @base 0 50 / @base;
+    padding: 10px 50px 0 50px;
     font-size: 0;
     color: #fff;
     text-align: center;
   }
   &-song_name {
     font-size: 20px;
-    padding-bottom: 5 / @base;
+    padding-bottom: 5px;
   }
   &-singer_name {
     font-size: 14px;
   }
   &-return {
     position: absolute;
-    left: 5 / @base;
-    top: 5 / @base;
-    width: 40 / @base;
-    height: 40 / @base;
-    line-height: 40 / @base;
+    left: 5px;
+    top: 5px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
     transform: rotate(270deg);
   }

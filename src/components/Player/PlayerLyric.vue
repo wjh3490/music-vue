@@ -39,7 +39,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 
 .lyric {
   position: absolute;
@@ -48,36 +47,37 @@ export default {
   width: 100%;
   top: 50%;
   transform: translate(0, -65%) rotateY(0deg);
-  height: 400 / @base;
+  height: 400px;
   left: 0;
   // background-color: pink;
   width: 100%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 0,
-    rgba(255, 255, 255, 0.6) 15%,
-    rgba(255, 255, 255, 1) 25%,
-    rgba(255, 255, 255, 1) 75%,
-    rgba(255, 255, 255, 0.6) 85%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  // overflow: hidden;
+  // -webkit-mask-image: linear-gradient(
+  //   to bottom,
+  //   rgba(255, 255, 255, 0) 0,
+  //   rgba(255, 255, 255, 0.6) 15%,
+  //   rgba(255, 255, 255, 1) 25%,
+  //   rgba(255, 255, 255, 1) 75%,
+  //   rgba(255, 255, 255, 0.6) 85%,
+  //   rgba(255, 255, 255, 0) 100%
+  // );
   .lyric-item {
     height: 100%;
     width: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
-    padding-right: 7 / @base;
+    padding-right: 7px;
     box-sizing: content-box;
     transform: rotateY(180deg);
     transition: opacity 1s;
+    -webkit-overflow-scrolling:touch
     .empty {
-      height: 150 / @base;
+      height: 150px;
     }
 
     p {
       font-size: 14px;
-      padding: 8 / @base 50 / @base;
+      padding: 8px 50px;
       text-align: center;
       color: rgba(225, 225, 225, 0.8);
       &.active-lyric {

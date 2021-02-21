@@ -21,17 +21,16 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .result {
   .result-list {
-    padding: 0 30 / @base;
+    padding: 0 30px;
 
     .result-item {
       color: #2e3030;
       font-size: 12px;
-      padding-top: 5 / @base;
-      height: 50 / @base;
-      border-bottom: 1 / @base solid #e4e4e4;
+      padding-top: 5px;
+      height: 50px;
+      border-bottom: 1px solid #e4e4e4;
       /deep/ .red {
         color: #169af3;
       }

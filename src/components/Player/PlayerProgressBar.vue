@@ -58,27 +58,26 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .proress-bar {
   position: absolute;
   bottom: 120px;
   left: 50%;
   width: 70%;
   transform: translateX(-50%);
-  height: 3 / @base;
+  height: 3px;
   background-color: rgba(255, 255, 255, 0.3);
   font-size: 14px;
   font-weight: 100;
   color: #fff;
   .currentTime {
     position: absolute;
-    left: -36 / @base;
+    left: -36px;
     top: 50%;
     transform: translateY(-50%);
   }
   .duration {
     position: absolute;
-    right: -40 / @base;
+    right: -40px;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -90,23 +89,23 @@ export default {
     height: 100%;
     .ball {
       position: absolute;
-      right: -10 / @base;
+      right: -10px;
       top: 50%;
       transform: translateY(-50%);
-      height: 10 / @base;
-      width: 10 / @base;
+      height: 10px;
+      width: 10px;
       background-color: #fff;
       border-radius: 50%;
       .tip {
-        width: 40 / @base;
-        height: 22 / @base;
+        width: 40px;
+        height: 22px;
         position: absolute;
         text-align: center;
-        line-height: 22 / @base;
-        top: -35 / @base;
+        line-height: 22px;
+        top: -35px;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        border-radius: 4 / @base;
+        border-radius: 4px;
         font-size: 12px;
       }
     }

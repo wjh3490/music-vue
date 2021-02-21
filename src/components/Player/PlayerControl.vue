@@ -31,7 +31,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@base: 37.5rem;
 .control {
   position: absolute;
   left: 50%;
@@ -39,20 +38,20 @@ export default {
   transform: translate(-50%, -50%);
   .control-icon {
     display: inline-block;
-    width: 30 / @base;
-    height: 30 / @base;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     color: #fff;
     font-size: 16px;
     text-align: center;
-    line-height: 30 / @base;
+    line-height: 30px;
     vertical-align: middle;
     &.pause {
-      font-size: 25 / @base;
-      width: 50 / @base;
-      height: 50 / @base;
-      line-height: 50 / @base;
-      margin: 0 10 / @base;
+      font-size: 25px;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      margin: 0 10px;
     }
     &.next {
       transform: rotate(180deg);

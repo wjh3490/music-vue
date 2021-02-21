@@ -57,7 +57,7 @@ export default {
   position: relative;
   width: 90%;
   padding: 0 1.5%;
-  margin-top: 6 / @base;
+  margin-top: 6px;
 }
 .swiper /deep/ .swiper-pagination-bullet {
   background: #f1f1f1;
@@ -66,7 +66,7 @@ export default {
   background: @color;
 }
 .swiper .swiper-img {
-  height: 140 / @base;
-  border-radius: 6 / @base;
+  height: 140px;
+  border-radius: 6px;
 }
 </style>

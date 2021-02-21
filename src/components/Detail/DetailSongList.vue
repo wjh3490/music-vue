@@ -48,21 +48,20 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .scroller {
   height: 100%;
 }
 
 .songList {
-  border-radius: 5 / @base;
+  border-radius: 5px;
   background: #fff;
  
   ul {
     li {
       font-size: 0;
-      padding-left: 60 / @base;
+      padding-left: 60px;
       position: relative;
-      height: 55 / @base;
+      height: 55px;
       .inner {
         position: absolute;
         top: 0;
@@ -75,15 +74,15 @@ export default {
           height: 100%;
           img {
             height: 100%;
-            width: 60 / @base;
+            width: 60px;
             vertical-align: middle;
           }
         }
         .name {
-          height: 55 / @base;
-          line-height: 55 / @base;
-          padding-left: 10 / @base;
-          padding-right: 50 / @base;
+          height: 55px;
+          line-height: 55px;
+          padding-left: 10px;
+          padding-right: 50px;
           span {
             // vertical-align: middle;
             font-size: 14px;
@@ -91,8 +90,8 @@ export default {
         }
       }
       .desc {
-        border-top: 1 / @base solid #e4e4e4;
-        padding: 7 / @base 0;
+        border-top: 1px solid #e4e4e4;
+        padding: 7px 0;
 
         &.first {
           border-top: none;
@@ -100,8 +99,8 @@ export default {
         p {
           font-size: 14px;
           color: #2e3030;
-          padding-right: 50 / @base;
-          margin-bottom: 5 / @base;
+          padding-right: 50px;
+          margin-bottom: 5px;
         }
         span {
           font-size: 12px;
@@ -110,9 +109,9 @@ export default {
       }
       .album {
         position: absolute;
-        width: 60 / @base;
-        height: 55 / @base;
-        line-height: 55 / @base;
+        width: 60px;
+        height: 55px;
+        line-height: 55px;
         text-align: center;
         top: 0;
         left: 0;

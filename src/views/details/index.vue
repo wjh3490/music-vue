@@ -145,14 +145,14 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
-    height: 50 / @base;
+    height: 50px;
     width: 100%;
     z-index: 1;
     .top_title {
       position: absolute;
       top: 50%;
       transform: translate3d(0, -50%, 0);
-      left: 46 / @base;
+      left: 46px;
       font-size: 14px;
       color: #fff;
     }
@@ -174,23 +174,23 @@ export default {
   //   h1,
   //   p {
   //     position: absolute;
-  //     left: 15 / @base;
+  //     left: 15px;
   //   }
   //   h1 {
-  //     bottom: 35 / @base;
+  //     bottom: 35px;
   //     width: 80%;
   //     font-weight: 500;
   //     font-size: 24px;
   //   }
   //   p {
-  //     bottom: 22 / @base;
+  //     bottom: 22px;
   //     font-size: 14px;
   //   }
   // }
 }
 .musicIcon {
   position: fixed;
-  bottom: 50 / @base;
+  bottom: 50px;
   transform: translate3d(-50%, 0, 0);
   left: 50%;
   z-index: 9999;

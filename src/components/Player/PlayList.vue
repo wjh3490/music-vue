@@ -127,7 +127,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .playlist {
   position: fixed;
   bottom: 0;
@@ -172,7 +171,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 449 / @base;
+    height: 449px;
     background-color: rgba(95, 95, 95, 0.8);
     z-index: 1002;
     .list-title {
@@ -180,9 +179,9 @@ export default {
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
-      line-height: 50 / @base;
+      line-height: 50px;
       font-size: 14px;
-      border-bottom: 1 / @base solid #ccc;
+      border-bottom: 1px solid #ccc;
       overflow: hidden;
       width: 100%;
       z-index: 1002;
@@ -193,21 +192,21 @@ export default {
     overflow-y: scroll;
     height: 100%;
     width: 100%;
-    padding-bottom: 50 / @base;
+    padding-bottom: 50px;
     li {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 20px 0 14px;
-      border-bottom: 1 / @base solid #ccc;
-      height: 50 / @base;
+      border-bottom: 1px solid #ccc;
+      height: 50px;
       &:last-child {
         border-bottom: none;
       }
       .pic {
-        width: 40 / @base;
-        height: 40 / @base;
-        line-height: 40 / @base;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
         text-align: center;
       }
       img {
@@ -224,7 +223,7 @@ export default {
         }
         p {
           font-size: 14px;
-          margin-bottom: 2 / @base;
+          margin-bottom: 2px;
         }
         span {
           color: #888;

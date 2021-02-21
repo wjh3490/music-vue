@@ -179,11 +179,10 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .search-input {
   width: 100%;
-  height: 28 / @base;
-  padding-left: 15 / @base;
+  height: 28px;
+  padding-left: 15px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 50px;
   &::-webkit-input-placeholder {

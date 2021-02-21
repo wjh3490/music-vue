@@ -12,6 +12,7 @@ import './utils/flexible';
 import './assets/font/iconfont.css';
 import '@/components/Base'
 import MessageBox from './components/MessageBox';
+import './registerServiceWorker'
 // import './registerServiceWorker'
 
 Vue.use(VueLazyload, {
@@ -26,6 +27,6 @@ new Vue({
   components: { App }
 }).$mount('#app');
 //git@github.com:wjh3490/music-vue.git
-  //  <!-- <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
-  //   <script src="<%=js%>"></script>
-  //   <% } %> -->
+//  <!-- <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
+//   <script src="<%=js%>"></script>
+//   <% } %> -->

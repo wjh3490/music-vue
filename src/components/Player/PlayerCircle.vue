@@ -4,7 +4,10 @@
     @click.stop="$emit('update:visibleAllLyric', false)"
     :class="{ rotateY: !visibleAllLyric }"
   >
-    <div class="bgc" :class="[animationStatus, {animation_none: !visibleAllLyric}]">
+    <div
+      class="bgc"
+      :class="[animationStatus, { animation_none: !visibleAllLyric }]"
+    >
       <img v-lazy="$store.getters.currrenSong.picUrl" class="bgc-img" alt />
     </div>
     <p class="currrent_lyric">{{ playingLyric }}</p>
@@ -22,38 +25,38 @@ export default {
     visibleAllLyric: Boolean,
   },
   updated() {
-    console.log('circle')
+    console.log('circle');
   },
-
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
-
 .circle {
   position: absolute;
   transition: all 1s;
   z-index: 1;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* Chrome 和 Safari */
+  -moz-backface-visibility: hidden; /* Firefox */
+  -ms-backface-visibility: hidden;
   width: 100%;
   top: 50%;
   transform: translate(0, -65%) rotateY(0deg);
-  height: 400 / @base;
+  height: 400px;
   left: 0;
   font-size: 0;
   .currrent_lyric {
     font-size: 14px;
     color: #eeee71;
     text-align: center;
-    margin-top: 30 / @base;
-    padding: 0 50 / @base;
+    margin-top: 30px;
+    padding: 0 50px;
   }
   .bgc {
-    width: 300 / @base;
-    height: 300 / @base;
+    width: 300px;
+    height: 300px;
     margin: 0 auto;
-    margin-top: 50 / @base;
-    border: 10 / @base solid rgba(0, 0, 0, 0.25);
+    margin-top: 50px;
+    border: 10px solid rgba(0, 0, 0, 0.25);
     border-radius: 50%;
     overflow: hidden;
     animation: move 20s linear infinite;

@@ -77,6 +77,7 @@ import { vGetSong, vGetLyric } from '../api/songs';
 import MiniPlayer from '@/components/Player/MiniPlayer';
 import NormalPlayer from '@/components/Player/NormalPlayer';
 import PlayList from '@/components/Player/PlayList';
+import { constants } from 'os';
 export default {
   name: 'Player',
   components: { MiniPlayer, NormalPlayer, PlayList },
@@ -195,6 +196,7 @@ export default {
       });
     },
     changeMode(mode) {
+      console.log(mode)
       if (this.mode === mode) return;
       this.setMode(mode);
       this.getNewList(mode);

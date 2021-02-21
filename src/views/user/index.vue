@@ -66,7 +66,6 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .user {
   background-color: #fff;
   .title {
@@ -78,12 +77,12 @@ export default {
     .right {
       width: 50%;
       text-align: center;
-      height: 40 / @base;
-      line-height: 40 / @base;
+      height: 40px;
+      line-height: 40px;
       font-size: 0;
       .user-name {
         display: inline-block;
-        margin-left: 7 / @base;
+        margin-left: 7px;
         font-size: 16px;
         vertical-align: middle;
         color: #1a1a1a;
@@ -100,12 +99,12 @@ export default {
   }
 
   .user-list {
-    padding: 0 30 / @base;
+    padding: 0 30px;
     .user-item {
-      height: 50 / @base;
+      height: 50px;
       color: #2e3030;
-      padding-top: 5 / @base;
-      border-bottom: 1 / @base solid #e4e4e4;
+      padding-top: 5px;
+      border-bottom: 1px solid #e4e4e4;
       .name {
         font-size: 16px;
       }

@@ -116,14 +116,13 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .mini {
   position: fixed;
   left: 0;
   bottom: -2px;
 
   width: 100%;
-  height: 56 / @base;
+  height: 56px;
   background-color: #fff;
   box-shadow: rgba(0, 69, 189, 0.1) 0px 0px 6px 0px;
   z-index: 10;
@@ -133,13 +132,13 @@ export default {
   .circle1 {
     position: relative;
     border-radius: 50%;
-    width: 56 / @base;
-    height: 56 / @base;
+    width: 56px;
+    height: 56px;
     transition: all 0.5s;
     overflow: hidden;
-    transform: translateY(-5 / @base);
+    transform: translateY(-5px);
     &.active {
-      transform: translateY(-1 / @base) scale(0.8);
+      transform: translateY(-1px) scale(0.8);
     }
     .svg {
       width: 100%;
@@ -157,7 +156,7 @@ export default {
       // bottom: 0;
       // margin: auto;
 
-      padding: 3 / @base;
+      padding: 3px;
       overflow: hidden;
       animation: move 20s linear infinite;
       &.animation_pause {
@@ -165,15 +164,15 @@ export default {
         // transform: scale(0.8);
       }
       img {
-        width: 50 / @base;
-        height: 50 / @base;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
       }
     }
   }
 
   .control {
-    width: 98 / @base;
+    width: 98px;
     .mini-icon-commom {
       display: inline-block;
       color: #169af3;
@@ -193,8 +192,8 @@ export default {
   }
 
   .mini-desc {
-    // padding: 6 / @base 120 / @base 0 95 / @base;
-    width: 90 / @base;
+    // padding: 6px 120px 0 95px;
+    width: 90px;
     font-size: 0;
     .mini-player-name {
       font-size: 14px;

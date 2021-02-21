@@ -49,7 +49,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@base: 37.5rem;
 .recommend-list {
   &-title {
     padding: 3% 0;
@@ -64,7 +63,7 @@ export default {
     width: 31%;
     height: 100%;
     padding: 7/4% 0;
-    border-radius: 6 / @base;
+    border-radius: 6px;
   }
   &-pic {
     position: relative;
@@ -74,8 +73,8 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 22 / @base;
-    line-height: 22 / @base;
+    height: 22px;
+    line-height: 22px;
     background: rgba(0, 0, 0, 0.5);
     color: #ccc;
     text-align: center;

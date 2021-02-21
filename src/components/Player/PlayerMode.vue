@@ -64,10 +64,9 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .play-mode {
   position: absolute;
-  left: 35 / @base;
+  left: 35px;
   top: 50%;
   font-size: 0;
   transform: translateY(-50%);
@@ -90,7 +89,7 @@ export default {
     backdrop-filter: blur(20px) brightness(100%);
 
     .mode-item {
-      width: 100 / @base;
+      width: 100px;
       .mode-name {
         vertical-align: middle;
         &.active {

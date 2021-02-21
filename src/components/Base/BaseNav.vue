@@ -44,17 +44,17 @@ export default {
   .nav-item {
     flex: 1;
     text-align: center;
-    height: 44 / @base;
-    line-height: 44 / @base;
+    height: 44px;
+    line-height: 44px;
     color: #f1f1f1;
     span {
-      padding-bottom: 3 / @base;
+      padding-bottom: 3px;
     }
   }
 }
 .router-link-active {
   span {
-    border-bottom: 2 / @base solid #fff;
+    border-bottom: 2px solid #fff;
     color: #f1f1f1;
     font-weight: 700;
   }

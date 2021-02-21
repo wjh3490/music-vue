@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ padding75: playList.length > 0 }">
     <!-- <keep-alive> -->
-      <router-view :key="$route.path" />
+    <router-view :key="$route.path" />
     <!-- </keep-alive> -->
     <Player />
   </div>
@@ -20,6 +20,8 @@ export default {
 </script>
 <style scoped>
 #app {
+  height: 100vh;
   font-size: 12px;
 }
+
 </style>

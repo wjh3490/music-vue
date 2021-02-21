@@ -42,21 +42,20 @@ export default {
 };
 </script>
 <style scoped lang="less">
-@base: 37.5rem;
 .commonCss() {
   .search-name {
-    margin: 15 / @base 0 10 / @base 10 / @base;
+    margin: 15px 0 10px 10px;
     color: #000;
     font-weight: 700;
   }
 }
 .history {
-  padding: 0 30 / @base;
+  padding: 0 30px;
   font-size: 14px;
   position: relative;
   .del {
     position: absolute;
-    right: 10 / @base;
+    right: 10px;
     top: 0px;
     color: #2e3030;
 
@@ -70,18 +69,18 @@ export default {
     }
   }
   .search-list {
-    margin-left: 15 / @base;
+    margin-left: 15px;
     .search-item {
       font-size: 14px;
       color: #2e3030;
-      padding: 5 / @base 0;
+      padding: 5px 0;
     }
   }
   .commonCss();
 }
 
 .hot {
-  padding: 0 30 / @base;
+  padding: 0 30px;
   font-size: 14px;
   .commonCss();
   .search-list {
@@ -89,10 +88,10 @@ export default {
     flex-wrap: wrap;
     // font-size: 14px;
     .search-item {
-      padding: 4 / @base 10 / @base;
+      padding: 4px 10px;
       background: #f2f3f4;
-      margin: 4 / @base;
-      border-radius: 30 / @base;
+      margin: 4px;
+      border-radius: 30px;
       font-size: 12px;
       color: #2e3030;
     }
