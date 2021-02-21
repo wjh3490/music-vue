@@ -1,6 +1,6 @@
 const pxRem = require("postcss-pxtorem")
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "/vue-running" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/music-vue" : "/",
     css:{
         loaderOptions:{
             postcss: {
