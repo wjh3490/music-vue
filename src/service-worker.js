@@ -29,6 +29,33 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 // );
 workbox.routing.registerRoute(
   /^https:\/\/p1\.music\.126\.net/,
-  workbox.strategies.networkFirst()
+  workbox.strategies.networkFirst({
+  cacheName: "images",
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 5 * 24 * 60 * 60 // 设置缓存有效期为5天
+      })
+    ],
+    fetchOptions: {
+      credentials: "include" // 支持跨域
+    }
+  })
+);
+
+workbox.routing.registerRoute(
+  /^http:\/\/139\.9\.230\.159/,
+  workbox.strategies.networkFirst({
+  cacheName: "api",
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为5天
+      })
+    ],
+    fetchOptions: {
+      credentials: "include" // 支持跨域
+    }
+  })
 );
 
