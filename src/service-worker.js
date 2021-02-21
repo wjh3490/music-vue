@@ -5,8 +5,8 @@ workbox.core.setCacheNameDetails({
   suffix: 'v1.0.0'
 });
 // 让我们的service worker尽快的得到更新和获取页面的控制权
-workbox.skipWaiting();
-workbox.clientsClaim();
+// workbox.skipWaiting();
+// workbox.clientsClaim();
 
 /*
  * vue-cli3.0通过workbox-webpack-plagin 来实现相关功能，我们需要加入
