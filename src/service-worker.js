@@ -5,7 +5,7 @@ workbox.core.setCacheNameDetails({
   suffix: 'v1.0.0'
 });
 // 让我们的service worker尽快的得到更新和获取页面的控制权
-workbox.skipWaiting();
+// workbox.skipWaiting();
 workbox.clientsClaim();
 
 /*
