@@ -13,7 +13,7 @@ import './assets/font/iconfont.css';
 import '@/components/Base'
 import MessageBox from './components/MessageBox';
 import './registerServiceWorker'
-// import './registerServiceWorker'
+
 
 Vue.use(VueLazyload, {
   loading: require('./assets/imgs/default.jpg')

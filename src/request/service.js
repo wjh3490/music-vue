@@ -1,7 +1,6 @@
 import axios from 'axios';
-
 const service = axios.create({
-  baseURL: 'http://139.9.230.159:3000',
+  baseURL: 'http://121.4.152.254:8003',
   timeout: 5000
 });
 service.defaults.retry = 4;

@@ -27,7 +27,9 @@ app.use((req, res, next) => {
       'Access-Control-Allow-Origin': req.headers.origin || '*',
       'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type',
       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json; charset=utf-8',
+      'Content-Security-Policy': 'upgrade-insecure-requests'
+
     })
   }
   req.method === 'OPTIONS' ? res.status(204).end() : next()
@@ -83,8 +85,8 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
   })
 })
 
-const port = process.env.PORT || 3000
-const host = process.env.HOST || '127.0.0.1'
+const port = process.env.PORT || 8003
+const host = process.env.HOST || '10.0.12.8'
 
 app.server = app.listen(port, host, () => {
   console.log(`server running @ http://${host}:${port}`)
