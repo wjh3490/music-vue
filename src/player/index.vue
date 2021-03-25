@@ -2,7 +2,7 @@
   <div class="player" v-show="playList.length > 0">
     <transition name="scale">
       <NormalPlayer
-        v-if="fullScreen"
+        v-show="fullScreen"
         :swichMode="swichMode"
         :audio="audio"
         :currentTime="currentTime"
@@ -22,7 +22,7 @@
 
     <transition name="fade2">
       <MiniPlayer
-        v-if="!fullScreen"
+        v-show="!fullScreen"
         @pause="pause"
         @next="next"
         @handlePlayListVisible="handlePlayListVisible"
@@ -97,7 +97,7 @@ export default {
 
   computed: {
     palyStatus({ playing }) {
-      return playing ? 'icon-bofangzanting' : 'icon-bofangsanjiaoxing';
+      return playing ? 'icon-pause-full' : 'icon-bofang';
     },
     animationStatus({ playing }) {
       return playing ? '' : 'animation_pause';
@@ -120,7 +120,7 @@ export default {
     ]),
   },
   updated() {
-    console.log(222);
+    // console.log(222);
   },
 
   mounted() {
@@ -130,25 +130,24 @@ export default {
     async currrenSong(newSong, oldSong) {
       if (!newSong.id) return;
       if (newSong.id === oldSong.id) return;
-
       let res = await vGetSong(newSong.id);
-
-      this.getLyric(newSong.id);
       if (!res.data[0].url) {
         // 如果没有歌曲路径 就直接跳下一首
+        this.songReady = true;
         this.next();
         return;
       }
+      this.getLyric(newSong.id);
       this.src = res.data[0].url;
       this.$nextTick(() => {
         this.audio.play();
       });
       this.setPlaying(true);
 
-      if (this.fullScreen) {
-        this.$refs.normal.scrollToSmooth();
-        this.$refs.normal.LyricScrollY = 0;
-      }
+      // if (this.fullScreen) {
+      this.$refs.normal.scrollToSmooth();
+      this.$refs.normal.LyricScrollY = 0;
+      // }
     },
   },
   methods: {
@@ -196,7 +195,7 @@ export default {
       });
     },
     changeMode(mode) {
-      console.log(mode)
+      console.log(mode);
       if (this.mode === mode) return;
       this.setMode(mode);
       this.getNewList(mode);
@@ -237,7 +236,6 @@ export default {
       this.playing ? this.audio.play() : this.audio.pause();
     },
     next() {
-      console.log(111);
       if (!this.songReady) return;
       let index = this.currrentIndex + 1;
       if (index === this.playList.length) index = 0;
@@ -259,6 +257,6 @@ export default {
 @base: 37.5rem;
 .player {
   position: relative;
-  z-index: 12;
+  z-index: 100;
 }
 </style>

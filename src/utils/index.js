@@ -33,6 +33,9 @@ export function shuffle(arr) {
   return _arr;
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 /**
  * @param {Lrc} lrc
  * @return {Object}
@@ -92,9 +95,6 @@ export function randomColor() {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 var requestAnimFrame = (function() {
   return (
     window.requestAnimationFrame ||

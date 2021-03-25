@@ -1,54 +1,57 @@
 <template>
   <div class="normal-player">
     <div class="normal-player-main">
-      <PlayerTitle />
-      <PlayerLyric
-        ref="lyric"
-        :currentLyric="currentLyric"
-        :visibleAllLyric.sync="visibleAllLyric"
-        :activeLyricIndex="activeLyricIndex"
-      />
+      <PlayerTitle @slide="slide" :index="index" />
+      <swiper
+        :options="swiperOptions"
+        style="height:calc(100% - 40px)"
+        ref="mySwiper"
+      >
+        <swiper-slide>
+          <div class="player-center">
+            <PlayerCircle :playingLyric="currentLyric[activeLyricIndex]" />
+          </div>
+          <div class="normal-player-bottom" @touchmove.stop.prevent="stopEvent">
+            <PlayerProgressBar
+              :duration="duration"
+              :currentTime="currentTime"
+              @progressBar="(currentTime) => (audio.currentTime = currentTime)"
+              :lyricKeys="lyricKeys"
+              :LyricScrollY.sync="LyricScrollY"
+              :debounce.sync="debounce"
+            />
+            <div class="control-wrap">
+              <PlayerMode
+                @changeMode="(mode) => $emit('mode', mode)"
+                :swichMode="swichMode.icon"
+              />
+              <PlayerControl
+                @pause="$emit('pause')"
+                @next="$emit('next')"
+                @pre="$emit('pre')"
+                :palyStatus="palyStatus"
+              />
 
-      <PlayerCircle
-        :animationStatus="animationStatus"
-        :currentLyric="currentLyric"
-        :visibleAllLyric.sync="visibleAllLyric"
-        :playingLyric="currentLyric[activeLyricIndex]"
-      />
-      <div class="bottom">
-        <PlayerMode
-          @changeMode="(mode) => $emit('mode', mode)"
-          :swichMode="swichMode.icon"
-        />
-        <PlayerControl
-          @pause="$emit('pause')"
-          @next="$emit('next')"
-          @pre="$emit('pre')"
-          :palyStatus="palyStatus"
-        />
-
-        <div class="collect" @click="$emit('handlePlayListVisible')">
-          <i
-            class="iconfont icon-iconsMusicyemianbofangmoshiPlayList collect-icon"
-          ></i>
-        </div>
-
-        <div class="like" @click="likeMode" :class="running">
-          <span class="iconfont like-icon" :class="likeClass"></span>
-        </div>
-      </div>
-
-      <PlayerProgressBar
-        :duration="duration"
-        :currentTime="currentTime"
-        @progressBar="(currentTime) => (audio.currentTime = currentTime)"
-        :lyricKeys="lyricKeys"
-        :LyricScrollY.sync="LyricScrollY"
-        :debounce.sync="debounce"
-      />
+              <div class="collect" @click="$emit('handlePlayListVisible')">
+                <i
+                  class="iconfont icon-iconsMusicyemianbofangmoshiPlayList collect-icon"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </swiper-slide>
+        <swiper-slide>
+          <PlayerLyric
+            ref="lyric"
+            :currentLyric="currentLyric"
+            :activeLyricIndex="activeLyricIndex"
+            @pause="$emit('pause')"
+            :palyStatus="palyStatus"
+          />
+        </swiper-slide>
+      </swiper>
     </div>
     <div
-      :class="visibleAllLyric ? '' : 'filterNone'"
       class="blurBg"
       v-lazy:background-image="currrenSong.picUrl"
     ></div>
@@ -62,9 +65,11 @@
 import { mapGetters, mapMutations } from 'vuex';
 import { scrollToEase, scrollToSmooth } from '../../utils/index.js';
 import components from '@/components/Player';
+import 'swiper/dist/css/swiper.css';
+import { swiper, swiperSlide } from 'vue-awesome-swiper';
 export default {
   name: 'NormalPlayer',
-  components,
+  components: { ...components, swiper, swiperSlide },
   props: {
     palyStatus: String,
     animationStatus: String,
@@ -83,6 +88,17 @@ export default {
       activeLyricIndex: '0',
       LyricScrollY: 0,
       debounce: false,
+      swiperOptions: {
+        on: {
+          slideChange: (e) => {
+            this.index = this.swiper.activeIndex;
+          },
+        },
+        loop: false,
+        watchSlidesVisibility: true, // 解决了swiper前面的一个不能提前加载的bug
+      },
+
+      index: 0,
     };
   },
 
@@ -91,10 +107,18 @@ export default {
       const flag = likeList.every((item) => item.id !== currrenSong.id);
       return flag ? 'icon-shoucang1' : 'icon-shoucang active_red';
     },
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    },
+    activeIndex() {
+      this.$nextTick(() => {
+        return this.swiper.activeIndex ? this.swiper.activeIndex : 0;
+      });
+    },
     ...mapGetters(['currrenSong', 'playing', 'fullScreen', 'likeList']),
   },
   updated() {
-    console.log('normal');
+    // console.log('normal');
   },
   watch: {
     currentTime(val) {
@@ -119,6 +143,12 @@ export default {
     this.el = this.$refs.lyric.$refs.lyricList;
   },
   methods: {
+    stopEvent() {},
+    slide(index) {
+      if (this.swiper.activeIndex == index) return;
+      this.swiper.slideTo(index, 200, false);
+    },
+
     scrollAnimate() {
       this.$nextTick(() => {
         const start = this.el.scrollTop;
@@ -159,10 +189,10 @@ export default {
 <style lang="less">
 .normal-player {
   position: fixed;
-  bottom: 0;
   top: 0;
-  right: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 10;
   background-color: #fff;
 }
@@ -171,8 +201,8 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   filter: blur(90px);
   background-size: 100% 100%;
   background-position: center;
@@ -186,60 +216,26 @@ export default {
   height: 100%;
   opacity: 0.6;
   background-color: #292a2b;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 9;
 }
 .normal-player-main {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
   width: 100%;
   height: 100%;
+  z-index: 100;
+  // padding-bottom: 100px;
 }
 
-.bottom {
+.normal-player-bottom {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 20px;
   width: 100%;
-  height: 100px;
-
-  .control {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    i {
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      color: #fff;
-      font-size: 16px;
-      text-align: center;
-      line-height: 30px;
-      vertical-align: middle;
-      &.pause {
-        font-size: 25px;
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
-        margin: 0 10px;
-      }
-      &.next {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
+  // height: 80px;
+  padding: 0 25px;
   .collect {
-    position: absolute;
-    right: 35px;
-    top: 50%;
-    font-size: 0;
-    transform: translateY(-50%);
-
     color: #fff;
     .collect-icon {
       font-size: 24px;
@@ -261,5 +257,18 @@ export default {
       }
     }
   }
+}
+
+.player-center {
+  height: 70%;
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+}
+.control-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 </style>

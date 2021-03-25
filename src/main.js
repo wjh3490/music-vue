@@ -8,6 +8,7 @@ import VueLazyload from 'vue-lazyload';
 
 import './style/base.less';
 import './style/transition.less';
+import './style/font.css';
 import './utils/flexible';
 import './assets/font/iconfont.css';
 import '@/components/Base'
@@ -20,6 +21,11 @@ Vue.use(VueLazyload, {
 });
 Vue.use(MessageBox);
 Vue.config.productionTip = false;
+// import VConsole from 'vconsole'
+
+// if (process.env.NODE_ENV === 'development') {
+//   new VConsole()
+// }
 new Vue({
   render: h => h(App),
   store,

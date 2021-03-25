@@ -8,15 +8,19 @@
       </BaseBack>
       <DetailBackGround />
       <DetailSongList :songs="songs" @player="player" />
-      <transition
-        @before-enter="beforeEnter"
-        @enter="enter"
-        @after-enter="afterEnter"
-      >
-        <div class="musicIcon" v-show="musicIcon">
-          <i class="iconfont icon-yinle"></i>
+      <div>
+        <div v-for="(item, index) in balls" :key="index">
+          <transition
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @after-enter="afterEnter"
+          >
+            <div class="musicIcon ball" v-show="item.show">
+              <i class="iconfont icon-yinle inner inner-hook"></i>
+            </div>
+          </transition>
         </div>
-      </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -40,6 +44,14 @@ export default {
       scrollTop: 0,
       musicIcon: false,
       dom: null,
+      balls: [
+        { show: false },
+        { show: false },
+        { show: false },
+        { show: false },
+        { show: false },
+      ],
+      dropBalls: [],
     };
   },
   computed: {
@@ -90,21 +102,59 @@ export default {
 
       this.songs = Object.freeze(songs);
     },
+    drop(el) {
+      for (let i = 0; i < this.balls.length; i++) {
+        let ball = this.balls[i];
+        if (!ball.show) {
+          ball.show = true;
+          ball.el = el;
+          this.dropBalls.push(ball);
+          return;
+        }
+      }
+    },
 
     beforeEnter(el) {
-      let rect = this.dom.getBoundingClientRect();
-      let y = -(window.innerHeight - rect.y - rect.height / 2 - 50);
-      let x = -150;
-      el.style.transform = `translate3d(${x}px, ${y}px,0)`;
+      let count = this.balls.length;
+      while (count--) {
+        let ball = this.balls[count];
+        if (ball.show) {
+          let rect = ball.el.getBoundingClientRect();
+          let x = 120
+          let y = -(window.innerHeight - rect.top - 50);
+          el.style.display = '';
+          el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+          el.style.transform = `translate3d(0,${y}px,0)`;
+          el.style.transition = 'all .8s';
+          let inner = el.getElementsByClassName('inner-hook')[0];
+          inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+          inner.style.transform = `translate3d(${x}px,0,0)`;
+          inner.style.transition = 'all .8s';
+          console.log(el.style.transform, x);
+        }
+      }
     },
     enter(el, done) {
-      el.offsetWidth;
-      el.style.transform = 'translate3d(0, 0,0)';
-      el.style.transition = 'all .6s cubic-bezier(0.49, -0.29, 0.75, 0.41)';
-      done();
+      let rf = el.offsetHeight;
+      this.$nextTick(() => {
+        el.style.webkitTransform = 'translate3d(0,0,0)';
+        el.style.transform = 'translate3d(0,0,0)';
+        el.style.transition = 'all .8s cubic-bezier(.62,-0.1,.86,.57)';
+        let inner = el.getElementsByClassName('inner-hook')[0];
+        inner.style.webkitTransform = 'translate3d(0,0,0)';
+        inner.style.transform = 'translate3d(0,0,0)';
+        inner.style.transition = 'all .8s linear';
+        el.addEventListener('transitionend', done);
+        // done();
+      });
     },
-    afterEnter() {
-      this.musicIcon = false;
+
+    afterEnter(el) {
+      let ball = this.dropBalls.shift();
+      if (ball) {
+        ball.show = false;
+        el.style.display = 'none';
+      }
     },
     scroll(e) {
       this.percent = Math.min(e.target.scrollTop / 400, 1);
@@ -116,6 +166,7 @@ export default {
       }
     },
     player(index, ele) {
+      this.drop(ele);
       this.musicIcon = true;
       this.dom = ele;
       if (!Object.is(this.songs, this.playList)) {
@@ -190,14 +241,15 @@ export default {
 }
 .musicIcon {
   position: fixed;
-  bottom: 50px;
-  transform: translate3d(-50%, 0, 0);
-  left: 50%;
+  bottom: 35px;
+  left: 100px;
   z-index: 9999;
+  // transition: all 1s cubic-bezier(0.49, -0.29 0.45, 0.41);
 
   i {
-    // font-size: 24px;
+    font-size: 30px;
     color: #169af3;
+    font-weight: 700;
   }
 }
 .out {

@@ -2,7 +2,11 @@
   <div class="recommend">
     <RecommendTitle />
     <BaseNav />
-    <Swiper :swiperList="swiperList" :swiperOptions="swiperOptions" />
+    <Swiper
+      :swiperList="swiperList"
+      :swiperOptions="swiperOptions"
+    
+    />
 
     <RecommendList
       title="热门推荐"
@@ -16,7 +20,7 @@
 
 <script>
 /*eslint-disable */
-import axios from 'axios'
+import axios from 'axios';
 import Swiper from '@/components/Recommend/RecommendSwiper';
 import RecommendList from '@/components/Recommend/RecommendList';
 import RecommendTitle from '@/components/Recommend/RecommendTitle';
@@ -26,7 +30,7 @@ import {
   vGetNewsong,
   vGetBanner,
   vGetDetail,
-  aa
+  aa,
 } from '@/api/recomment.js';
 export default {
   name: 'Recommend',
@@ -65,6 +69,7 @@ export default {
 
   computed: {
     ...mapGetters(['playList']),
+   
   },
 
   created() {

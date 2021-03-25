@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="songList"
-  >
+  <div class="songList">
     <ul>
       <li
         @click.stop.prevent="$emit('player', index, $event.currentTarget)"
@@ -14,9 +12,11 @@
               <img v-lazy="item.picUrl" alt />
             </div>
             <div class="name ellipsis">
-              <span>{{ item.name }}</span>
-              <span>--</span>
-              <span>{{ item.singer }}</span>
+              <!-- <marquee> -->
+                <span>{{ item.name }}</span>
+                <span>--</span>
+                <span>{{ item.singer }}</span>
+              <!-- </marquee> -->
             </div>
           </div>
         </template>
@@ -40,11 +40,11 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'DetailSongList',
   props: {
-    songs: Array
+    songs: Array,
   },
   computed: {
-    ...mapGetters(['currrenSong', 'fullScreen', 'playList'])
-  }
+    ...mapGetters(['currrenSong', 'fullScreen', 'playList']),
+  },
 };
 </script>
 <style scoped lang="less">
@@ -55,7 +55,7 @@ export default {
 .songList {
   border-radius: 5px;
   background: #fff;
- 
+
   ul {
     li {
       font-size: 0;

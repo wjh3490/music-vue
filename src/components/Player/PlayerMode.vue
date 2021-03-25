@@ -36,7 +36,7 @@ export default {
     swichMode: { type: String },
   },
   updated() {
-    console.log('PlayerMode');
+    // console.log('PlayerMode');
   },
   data() {
     return {
@@ -65,11 +65,7 @@ export default {
 </script>
 <style scoped lang="less">
 .play-mode {
-  position: absolute;
-  left: 35px;
-  top: 50%;
-  font-size: 0;
-  transform: translateY(-50%);
+  position: relative;
   z-index: 1200;
   .mode-icon {
     font-size: 24px;
@@ -87,7 +83,6 @@ export default {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(20px) brightness(100%);
-
     .mode-item {
       width: 100px;
       .mode-name {

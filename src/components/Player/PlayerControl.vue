@@ -2,7 +2,7 @@
   <div class="control">
     <i
       @click.stop="listeners.pre"
-      class="pre iconfont icon-next control-icon"
+      class="pre iconfont icon-qianjin control-icon"
     ></i>
     <i
       @click.stop="listeners.pause"
@@ -11,7 +11,7 @@
     ></i>
     <i
       @click.stop="listeners.next"
-      class="next iconfont icon-next  control-icon"
+      class="next iconfont icon-qianjin  control-icon"
     ></i>
   </div>
 </template>
@@ -24,43 +24,34 @@ export default {
       defaule: '',
     },
   },
-  updated() {
-    console.log('PlayerControl');
-  },
 };
 </script>
 
 <style scoped lang="less">
 .control {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
   .control-icon {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    color: #fff;
-    font-size: 16px;
-    text-align: center;
-    line-height: 30px;
-    vertical-align: middle;
     &.pause {
-      font-size: 25px;
+      font-size: 24px;
       width: 50px;
       height: 50px;
       line-height: 50px;
-      margin: 0 10px;
+      border-radius: 50%;
+      text-align: center;
+      margin: 0 30px;
+      color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+    &.pre {
+      transform: rotate(180deg);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 24px;
     }
     &.next {
-      transform: rotate(180deg);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 24px;
     }
   }
-}
-.pause,
-.next,
-.pre {
-  background-color: #20a0ff;
 }
 </style>

@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
+const compression = require('compression')
 const request = require('./util/request')
 const packageJSON = require('./package.json')
 const exec = require('child_process').exec
@@ -53,7 +54,9 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(cache('2 minutes', ((req, res) => res.statusCode === 200)))
 
 // static
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(compression());
+app.use(express.static('dist'))
+// app.use(express.static(path.join(__dirname, 'public')))
 
 // router
 const special = {
@@ -85,8 +88,8 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
   })
 })
 
-const port = 8003
-const host =  '10.0.12.8' // 10.0.12.8
+const port = process.env.PORT || 8003
+const host = process.env.HOST || '127.0.0.1' // 121.4.152.254
 
 app.server = app.listen(port, host, () => {
   console.log(`server running @ http://${host}:${port}`)

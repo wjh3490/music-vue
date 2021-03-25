@@ -36,7 +36,7 @@
               </span>
             </template>
           </div>
-          <div class="name" :class="{ fontActive: item.id === currrenSong.id }">
+          <div class="name ellipsis" :class="{ fontActive: item.id === currrenSong.id }">
             <p class="ellipsis">{{ item.name }}</p>
             <span :class="{ fontActive: item.id === currrenSong.id }">{{
               item.singer
@@ -78,7 +78,7 @@ export default {
     this.scrollItem = this.$refs.scrollItem;
   },
    updated() {
-    console.log('PlayerList')
+    // console.log('PlayerList')
   },
   methods: {
     getActiveItemDistancce() {
@@ -204,13 +204,15 @@ export default {
         border-bottom: none;
       }
       .pic {
+        line-height: 40px;
         width: 40px;
         height: 40px;
-        line-height: 40px;
         text-align: center;
       }
       img {
         height: 100%;
+          width: 40px;
+        height: 40px;
         border-radius: 50%;
         overflow: hidden;
       }
@@ -218,6 +220,7 @@ export default {
         flex: 1;
         color: #fff;
         margin-left: 30px;
+        margin-right: 20px;
         &.fontActive {
           color: #169af3;
         }

@@ -1,83 +1,70 @@
 <template>
-  <div
-    class="circle"
-    @click.stop="$emit('update:visibleAllLyric', false)"
-    :class="{ rotateY: !visibleAllLyric }"
-  >
-    <div
-      class="bgc"
-      :class="[animationStatus, { animation_none: !visibleAllLyric }]"
-    >
-      <img v-lazy="$store.getters.currrenSong.picUrl" class="bgc-img" alt />
+  <div class="circle">
+    <div class="bgc">
+      <img v-lazy="currrenSong.picUrl" class="bgc-img" alt />
     </div>
-    <p class="currrent_lyric">{{ playingLyric }}</p>
-    <div class="no-lyric" v-if="!currentLyric">暂无歌词</div>
+    <div class="song-detail">
+      <p class="song-singer">{{ currrenSong.name }}</p>
+      <p class="song-name">{{ currrenSong.singer }}</p>
+      <div class="currrent_lyric">
+        {{ playingLyric ? playingLyric : '暂无歌词' }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'PlayerCircle',
   props: {
-    currentLyric: [Object, String],
-    animationStatus: String,
     playingLyric: String,
-    visibleAllLyric: Boolean,
+  },
+  computed: {
+    ...mapGetters(['currrenSong']),
   },
   updated() {
-    console.log('circle');
+    // console.log('circle');
   },
 };
 </script>
 <style scoped lang="less">
+.song-detail {
+  padding: 0 44px;
+  margin-top: 8px;
+  .song-singer {
+    font-size: 24px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .song-name {
+    color: rgba(225, 225, 225, 0.8);
+    font-size: 16px;
+    margin: 4px 0;
+  }
+}
 .circle {
-  position: absolute;
-  transition: all 1s;
-  z-index: 1;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden; /* Chrome 和 Safari */
-  -moz-backface-visibility: hidden; /* Firefox */
-  -ms-backface-visibility: hidden;
-  width: 100%;
-  top: 50%;
-  transform: translate(0, -65%) rotateY(0deg);
-  height: 400px;
-  left: 0;
-  font-size: 0;
   .currrent_lyric {
-    font-size: 14px;
-    color: #eeee71;
-    text-align: center;
-    margin-top: 30px;
-    padding: 0 50px;
+    font-size: 16px;
+    color: rgba(225, 225, 225, 0.8);
   }
   .bgc {
-    width: 300px;
-    height: 300px;
+    width: 280px;
+    height: 250px;
+    border-radius: 10px;
     margin: 0 auto;
-    margin-top: 50px;
-    border: 10px solid rgba(0, 0, 0, 0.25);
-    border-radius: 50%;
     overflow: hidden;
-    animation: move 20s linear infinite;
-    &.animation_pause {
-      animation-play-state: paused;
-    }
-    &.animation_none {
-      animation: none;
-    }
     .bgc-img {
       height: 100%;
-      border-radius: 50%;
     }
   }
   .no-lyric {
+    margin-top: 18px;
     font-size: 14px;
     color: #fff;
-    text-align: center;
   }
 }
 .rotateY {
-  transform: translate(0, -65%) rotateY(180deg);
+  transform: rotateY(180deg);
 }
 </style>
