@@ -9,7 +9,7 @@ export function vGetPersonalized() {
 
 export function vGetNewsong() {
   return service({
-    url: '/personalized/newsong',
+    url: '/personalized/newsong?limit=100',
     method: 'get'
   });
 }

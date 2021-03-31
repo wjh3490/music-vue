@@ -1,88 +1,126 @@
 <template>
-  <div class="singers" >
-    <BaseNav />
-    <ul>
-      <li
-        v-for="(item, index) in singerList"
-        :key="index"
-        @click.stop="getSingerDetail(item)"
-        class="singers-item"
-      >
-        <div class="avatar">
-          <img v-lazy="item.img1v1Url" alt class="singers-img" />
-        </div>
-        <div class="name">
-          <span>{{ item.name }}</span>
-        </div>
-      </li>
-    </ul>
+  <div class="singer-container">
+    <BaseBack title="歌手榜" />
+    <nav class="singer-nav">
+      <div class="singer-nav-wrap">
+        <span
+          v-for="item in navList"
+          :key="item.item"
+          @click="handleChange(item.id)"
+          :class="{ active: type == item.id }"
+          class="singer-nav-item"
+          >{{ item.name }}</span
+        >
+      </div>
+      <div
+        class="singer-nav-line"
+        :style="{ transform: `translate3d(${(this.type - 1) * 100}%,0,0)` }"
+      ></div>
+    </nav>
+    <main class="singer-main">
+      <swiper :options="swiperOptions" class="swiper" ref="mySwiper">
+        <SingerList v-for="index in 4" :key="index" ref="singerList" />
+      </swiper>
+    </main>
   </div>
 </template>
-
 <script>
-import { mapMutations, mapGetters } from 'vuex';
-import { vGetSinger } from '@/api/singer';
+/*eslint-disable */
+import 'swiper/dist/css/swiper.css';
+import { swiper } from 'vue-awesome-swiper';
+import SingerList from '@/components/Singer/SingerList';
 export default {
   name: 'Singer',
+  components: { swiper, SingerList },
   data() {
     return {
-      singerList: [],
+      type: 1,
+      navList: [
+        { id: 1, name: '华语' },
+        { id: 2, name: '欧美' },
+        { id: 3, name: '韩国' },
+        { id: 4, name: '日本' },
+      ],
+      swiperOptions: {
+        on: {
+          slideChange: () => {
+            this.type = this.swiper.activeIndex + 1;
+          },
+        },
+        loop: false,
+        watchSlidesVisibility: true,
+      },
     };
   },
   computed: {
-    ...mapGetters(['singer']),
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    },
   },
-  created() {
-    this.getSingers();
+  mounted() {
+    this.$refs.singerList[0].getSingers(1);
+  },
+  watch: {
+    type(val) {
+      this.$refs.singerList[val - 1].getSingers(val);
+    },
   },
   methods: {
-    async getSingers() {
-      const { code, artists } = await vGetSinger();
-      if (code === 200) this.singerList = Object.freeze(artists);
+    handleChange(index) {
+      if (this.type == index) return;
+      this.swiper.slideTo(index - 1, 0, false);
     },
-    getSingerDetail(singer) {
-      const _singer = {
-        id: singer.id,
-        singerPic: singer.picUrl,
-        name: singer.name,
-      };
-
-      this.setSinger(_singer);
-      this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=SingerDetail`
-      );
-    },
-    ...mapMutations(['setSinger']),
   },
 };
 </script>
 <style scoped lang="less">
-@ca: 119px;
-.singers ul .scroller {
-  height: 100vh;
-}
-.singers-item {
-  font-size: 16px;
-  height: 50px;
-  line-height: 50px;
-  padding-left: 60px;
-  position: relative;
-  .name {
-    border-bottom: 1px solid #e4e4e4;
-    height: 100%;
-    line-height: 50px;
+.singer {
+  &-container {
+    padding-top: 90px;
   }
-  .avatar {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    overflow: hidden;
-    .singers-img {
-      width: 38px;
-      height: 38px;
+  &-nav {
+    width: 100%;
+    position: fixed;
+    top: 50px;
+    font-size: 16px;
+    background-color: #fff;
+    z-index: 99;
+    &-wrap {
+      height: 40px;
+      display: flex;
+
+      align-items: center;
+    }
+    &-item {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      &.active {
+        color: #169af3;
+      }
+    }
+    &-line {
+      width: 25%;
+      text-align: center;
+      height: 3px;
+      transition: all 0.3s;
+      &::after {
+        content: '';
+        display: block;
+        height: 100%;
+        width: 30px;
+        margin: 0 auto;
+        background-color: #169af3;
+        border-radius: 3px;
+      }
     }
   }
+  &-main {
+    padding-right: 10px;
+  }
+}
+.swiper {
+  padding-top: 15px;
+  height: calc(100vh - 40px);
 }
 </style>

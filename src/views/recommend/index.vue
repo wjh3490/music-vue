@@ -1,13 +1,9 @@
 <template>
   <div class="recommend">
     <RecommendTitle />
-    <BaseNav />
-    <Swiper
-      :swiperList="swiperList"
-      :swiperOptions="swiperOptions"
-    
-    />
 
+    <Swiper :swiperList="swiperList" :swiperOptions="swiperOptions" />
+    <BaseNav />
     <RecommendList
       title="热门推荐"
       :newsongs="personalized"
@@ -69,7 +65,6 @@ export default {
 
   computed: {
     ...mapGetters(['playList']),
-   
   },
 
   created() {

@@ -1,8 +1,8 @@
 import service from '../request/service'
 
-export function vGetSinger () {
+export function vGetSinger (type) {
   return service({
-    url: '/top/artists?limit=100',
+    url: `/toplist/artist?type=${type}`,
     method: 'get'
   })
 }

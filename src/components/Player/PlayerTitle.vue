@@ -49,7 +49,7 @@ export default {
     align-items: center;
     .activeIndex {
       color: #fff;
-      font-size: 20px;
+      // font-size: 20px;
     }
   }
   &-return {

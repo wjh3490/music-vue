@@ -51,7 +51,7 @@ export default {
   right: 0;
 }
 .swiper {
-  background-color: @color;
+  padding:20px 0
 }
 .swiper /deep/ .swiper-slide {
   position: relative;

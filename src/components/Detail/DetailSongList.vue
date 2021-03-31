@@ -1,35 +1,24 @@
 <template>
   <div class="songList">
+    <div class="allplay">全部播放</div>
     <ul>
       <li
         @click.stop.prevent="$emit('player', index, $event.currentTarget)"
         v-for="(item, index) in songs"
         :key="index"
       >
-        <template v-if="item.id === currrenSong.id">
-          <div class="inner">
-            <div class="img fl">
-              <img v-lazy="item.picUrl" alt />
-            </div>
-            <div class="name ellipsis">
-              <!-- <marquee> -->
-                <span>{{ item.name }}</span>
-                <span>--</span>
-                <span>{{ item.singer }}</span>
-              <!-- </marquee> -->
-            </div>
+        <div class="out">
+          <div class="desc ellipsis">
+            <p
+              class="ellipsis song-name"
+              :class="{ active: item.id == currrenSong.id }"
+            >
+              {{ item.name }}
+            </p>
+            <span>{{ item.singer }}</span>
           </div>
-        </template>
-
-        <template v-else>
-          <div class="out">
-            <div class="desc ellipsis" :class="{ first: index === 0 }">
-              <p class="ellipsis">{{ item.name }}</p>
-              <span>{{ item.singer }}</span>
-            </div>
-            <div class="album">{{ index + 1 }}</div>
-          </div>
-        </template>
+          <div class="album">{{ index + 1 }}</div>
+        </div>
       </li>
     </ul>
   </div>
@@ -42,6 +31,11 @@ export default {
   props: {
     songs: Array,
   },
+  data() {
+    return {
+      showText: false,
+    };
+  },
   computed: {
     ...mapGetters(['currrenSong', 'fullScreen', 'playList']),
   },
@@ -53,10 +47,14 @@ export default {
 }
 
 .songList {
-  border-radius: 5px;
+  width: 100%;
+  border-radius: 20px 20px 0 0;
   background: #fff;
 
   ul {
+    border-radius: 10px;
+    // overflow: hidden;
+
     li {
       font-size: 0;
       padding-left: 60px;
@@ -89,19 +87,22 @@ export default {
           }
         }
       }
+      .song-name {
+        font-size: 16px;
+        color: #2e3030;
+        padding-right: 50px;
+        margin-bottom: 5px;
+      }
       .desc {
-        border-top: 1px solid #e4e4e4;
+        // border-top: 1px solid #e4e4e4;
         padding: 7px 0;
-
+        .active {
+          color: #169af3;
+        }
         &.first {
           border-top: none;
         }
-        p {
-          font-size: 14px;
-          color: #2e3030;
-          padding-right: 50px;
-          margin-bottom: 5px;
-        }
+
         span {
           font-size: 12px;
           color: #757575;
@@ -119,5 +120,18 @@ export default {
       }
     }
   }
+}
+.allplay {
+  height: 50px;
+  position: sticky;
+  top: 50px;
+  z-index: 92;
+  border-radius: 10px 10px 0 0;
+  margin-top:-10px;
+  background-color: #fff;
+  overflow: hidden;
+}
+.isFixed {
+  // overflow: auto;
 }
 </style>

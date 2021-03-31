@@ -133,12 +133,14 @@ export default {
       let res = await vGetSong(newSong.id);
       if (!res.data[0].url) {
         // 如果没有歌曲路径 就直接跳下一首
-        this.songReady = true;
-        this.next();
-        return;
+        // this.songReady = true;
+        this.src = `https://music.163.com/song/media/outer/url?id=${newSong.id}.mp3`;
+        // this.next();
+        // return;
+      } else {
+        this.src = res.data[0].url;
       }
       this.getLyric(newSong.id);
-      this.src = res.data[0].url;
       this.$nextTick(() => {
         this.audio.play();
       });

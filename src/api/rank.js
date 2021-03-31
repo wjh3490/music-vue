@@ -1,8 +1,15 @@
 import service from '../request/service';
 
-export function rankSongs (id) {
+export function rankSongs(id) {
   return service({
-    url: `/top/list?idx=${id}`,
-    method: 'get'
+    url: `playlist/detail?id=${id}`,
+    method: 'get',
+  });
+}
+
+export function rankTopList() {
+  return service({
+    url: `/toplist/detail`,
+    method: 'get',
   });
 }

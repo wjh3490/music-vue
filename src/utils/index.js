@@ -64,7 +64,7 @@ export function parseLyric(lrc) {
   return lrcObj;
 }
 
-export function scrollToEase(el, start, to, duration = 300) {
+export function scrollToEase(el, start, to, scrollTop ='scrollTop', duration = 300) {
   const change = to - start;
 
   const increment = 20;
@@ -73,7 +73,7 @@ export function scrollToEase(el, start, to, duration = 300) {
   var animate = function() {
     currentTime += increment;
     var val = easeOutQuart(currentTime, start, change, duration);
-    el.scrollTop = val;
+    el[scrollTop] = val;
     if (currentTime < duration) {
       requestAnimFrame(animate);
     }

@@ -1,25 +1,19 @@
 <template>
   <div class="detail-container">
-    <div class="inner_item" @scroll="scroll">
-      <BaseBack :isFixed="true" :background="`rgba(22, 154, 243, ${percent})`">
-        <span style="color:#fff;fontSize:14px" v-show="showText">{{
-          $route.query.name
-        }}</span>
-      </BaseBack>
-      <DetailBackGround />
-      <DetailSongList :songs="songs" @player="player" />
-      <div>
-        <div v-for="(item, index) in balls" :key="index">
-          <transition
-            @before-enter="beforeEnter"
-            @enter="enter"
-            @after-enter="afterEnter"
-          >
-            <div class="musicIcon ball" v-show="item.show">
-              <i class="iconfont icon-yinle inner inner-hook"></i>
-            </div>
-          </transition>
-        </div>
+    <BaseBack background="transparent" :title="$route.query.name" color="#fff"/>
+    <DetailBackGround /> 
+    <DetailSongList :songs="songs" @player="player" :showText="showText" />
+    <div>
+      <div v-for="(item, index) in balls" :key="index">
+        <transition
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @after-enter="afterEnter"
+        >
+          <div class="musicIcon ball" v-show="item.show">
+            <i class="iconfont icon-yinle inner inner-hook"></i>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -120,7 +114,7 @@ export default {
         let ball = this.balls[count];
         if (ball.show) {
           let rect = ball.el.getBoundingClientRect();
-          let x = 120
+          let x = 120;
           let y = -(window.innerHeight - rect.top - 50);
           el.style.display = '';
           el.style.webkitTransform = `translate3d(0,${y}px,0)`;
@@ -157,9 +151,10 @@ export default {
       }
     },
     scroll(e) {
+      console.log(e.target.scrollTop);
       this.percent = Math.min(e.target.scrollTop / 400, 1);
       this.scrollTop = e.target.scrollTop;
-      if (e.target.scrollTop > 400) {
+      if (e.target.scrollTop >= 250) {
         this.showText = true;
       } else {
         this.showText = false;
@@ -187,11 +182,15 @@ export default {
 </script>
 <style scoped lang="less">
 @base: 37.5rem;
+.detail-container {
+  width: 100vw;
+  // overflow-x: hidden;
+}
 .inner_item {
-  width: 100%;
-  height: 100vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  // width: 100vw;
+  // height: 100vh;
+  // overflow-y: scroll;
+  // overflow-x: hidden;
   .top {
     position: fixed;
     top: 0;
@@ -208,36 +207,6 @@ export default {
       color: #fff;
     }
   }
-  // .singerPic {
-  //   height: 250px;
-  //   overflow: hidden;
-  //   background-position: center -50px;
-  //   background-repeat: no-repeat;
-  //   background-size: 100% 400px;
-  //   position: relative;
-  //   color: #fff;
-  //   .mask {
-  //     position: absolute;
-  //     width: 100%;
-  //     height: 100%;
-  //     background: rgba(0, 0, 0, 0.1);
-  //   }
-  //   h1,
-  //   p {
-  //     position: absolute;
-  //     left: 15px;
-  //   }
-  //   h1 {
-  //     bottom: 35px;
-  //     width: 80%;
-  //     font-weight: 500;
-  //     font-size: 24px;
-  //   }
-  //   p {
-  //     bottom: 22px;
-  //     font-size: 14px;
-  //   }
-  // }
 }
 .musicIcon {
   position: fixed;

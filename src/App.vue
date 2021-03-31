@@ -1,45 +1,22 @@
 <template>
-  <div id="app" :class="{ padding75: playList.length > 0 }">
-    <!-- <keep-alive> -->
-    <router-view :key="$route.fullPath" />
-    <!-- </keep-alive> -->
+  <div id="app">
+    <keep-alive :include="['Singers']">
+      <router-view :key="$route.fullPath" />
+    </keep-alive>
     <Player />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import Player from './player';
+import axios from 'axios';
 export default {
   name: 'App',
   components: { Player },
-  computed: {
-    ...mapGetters(['playList', 'fullScreen']),
-  },
-  methods: {
-    lock() {
-      // document.addEventListener('touchstart', touch.start);
-      // document.addEventListener(
-      //   'touchmove',
-      //   onTouchMove,
-      //   supportsPassive ? { passive: false } : false
-      // );
-      // document.body.classList.add(parent-hidden);
-    },
-    unlock() {
-      // document.removeEventListener('touchstart', touch.start);
-      // document.removeEventListener('touchmove', onTouchMove);
-      // document.body.classList.remove(parent-hidden);
-    },
-  },
-  watch: {
-    fullScreen(val) {
-      if (val) {
-        document.body.classList.add('parent-hidden');
-      } else {
-        document.body.classList.remove('parent-hidden');
-      }
-    },
+  created() {
+    // axios.get('https://netease-cloud-music-api-gilt.vercel.app/playlist/detail/dynamic?id=2884035'); //
+    axios.get('https://netease-cloud-music-api-gilt.vercel.app/artist/desc?id=5781'); //
+    axios.get('https://netease-cloud-music-api-gilt.vercel.app/artist/detail?id=5781'); //
   },
 };
 </script>

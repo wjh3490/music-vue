@@ -51,11 +51,10 @@
         </swiper-slide>
       </swiper>
     </div>
-    <div
-      class="blurBg"
-      v-lazy:background-image="currrenSong.picUrl"
-    ></div>
-    <div class="blurBgMask"></div>
+
+    <div class="blurBgMask">
+      <div class="blurBg" v-lazy:background-image="currrenSong.picUrl"></div>
+    </div>
   </div>
 </template>
 
@@ -146,7 +145,7 @@ export default {
     stopEvent() {},
     slide(index) {
       if (this.swiper.activeIndex == index) return;
-      this.swiper.slideTo(index, 200, false);
+      this.swiper.slideTo(index, 0, false);
     },
 
     scrollAnimate() {
@@ -198,31 +197,37 @@ export default {
 }
 
 .blurBg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  filter: blur(90px);
+  width: 100%;
+  height: 100%;
+  filter: blur(80px);
   background-size: 100% 100%;
   background-position: center;
-  z-index: -1;
+  background-repeat: no-repeat;
+  background-position: 50% center;
+  background-size: auto 100%;
+  transform: scale(1.5);
+  transform-origin: center center;
   &.filterNone {
     filter: blur(0px);
   }
 }
 .blurBgMask {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0.6;
   background-color: #292a2b;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(37, 42, 64, 0.9);
+  // background-color: rgba(0, 0, 0, 0.9);
   z-index: 9;
 }
 .normal-player-main {
-  position: absolute;
-  top: 0;
-  left: 0;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   z-index: 100;

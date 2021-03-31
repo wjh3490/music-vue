@@ -1,14 +1,15 @@
 <template functional>
-  <ul class="nav-conainer">
+  <nav class="nav-conainer">
     <router-link
-      :to="nav.to"
-      v-for="nav in props.navList"
-      :key="nav.name"
+      :to="item.to"
+      v-for="item in props.navList"
+      :key="item.name"
       class="nav-item"
     >
-      <span>{{ nav.name }}</span>
+      <span class="iconfont nav-icon" :class="item.icon"></span>
+      <span class="nav-name">{{ item.name }}</span>
     </router-link>
-  </ul>
+  </nav>
 </template>
 
 <script>
@@ -18,10 +19,11 @@ export default {
     navList: {
       type: Array,
       default: () => [
-        { name: '推荐', to: '/recommend' },
-        { name: '排行榜', to: '/rank' },
-        { name: '歌手', to: '/singers' },
-        { name: '我', to: '/user' },
+        { icon: 'icon-portrait', name: '歌手', to: '/singers' },
+        { icon: 'icon-paiming', name: '排行榜', to: '/rank' },
+        { icon: 'icon-fenlei', name: '歌单', to: '/playlist' },
+        { icon: 'icon-fenlei', name: '推荐1', to: '/user' },
+        { icon: 'icon-fenlei', name: '推荐2', to: '/user' },
       ],
     },
   },
@@ -32,31 +34,23 @@ export default {
 @base: 37.5rem;
 
 .nav-conainer {
-  position: sticky;
-  top: 0;
   display: flex;
-  z-index: 3;
-  padding-bottom: 1px;
   font-size: 16px;
-  background: #169af3;
-  margin-top: -1px;
+  margin-top: 20px;
   overflow: hidden;
   .nav-item {
     flex: 1;
     text-align: center;
-    height: 44px;
-    line-height: 44px;
-    color: #f1f1f1;
-    span {
-      padding-bottom: 3px;
-    }
+    color: rgba(22, 154, 243, 0.85);
   }
-}
-.router-link-active {
-  span {
-    border-bottom: 2px solid #fff;
-    color: #f1f1f1;
-    font-weight: 700;
+  .nav-icon {
+    font-size: 24px;
+  }
+  .nav-name {
+    display: block;
+    font-size: 13px;
+    color: #000;
+    margin-top:6px;
   }
 }
 </style>
