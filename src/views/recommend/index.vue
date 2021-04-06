@@ -1,36 +1,44 @@
 <template>
   <div class="recommend">
-    <RecommendTitle />
-
-    <Swiper :swiperList="swiperList" :swiperOptions="swiperOptions" />
+    <RecommendSearch />
+    <div class="recommend-swiper">
+      <BaseSwiper
+        :list="swiperList"
+        :options="swiperOptions"
+        :visible="true"
+        v-slot="{ data }"
+      >
+        <img
+          :data-index="data.targetId"
+          :data-src="data.imageUrl"
+          class="swiper-lazy swiper-img"
+        />
+        <div class="my-lazy-preloader"></div>
+      </BaseSwiper>
+    </div>
     <BaseNav />
-    <RecommendList
-      title="热门推荐"
-      :newsongs="personalized"
-      @list="pushDetails"
-    />
-
-    <RecommendList title="新碟上架" :newsongs="newsong" @list="playSong" />
+    <BaseList :list="personalized" @list="pushDetails">
+      <h3 class="recommend-type">热门推荐</h3></BaseList
+    >
+    <BaseList :list="newsong" @list="playSong">
+      <h3 class="recommend-type">新碟上架</h3></BaseList
+    >
   </div>
 </template>
 
 <script>
 /*eslint-disable */
-import axios from 'axios';
-import Swiper from '@/components/Recommend/RecommendSwiper';
-import RecommendList from '@/components/Recommend/RecommendList';
-import RecommendTitle from '@/components/Recommend/RecommendTitle';
+import RecommendSearch from '@/components/Recommend/RecommendSearch';
 import { mapMutations, mapGetters } from 'vuex';
 import {
   vGetPersonalized,
   vGetNewsong,
   vGetBanner,
   vGetDetail,
-  aa,
 } from '@/api/recomment.js';
 export default {
   name: 'Recommend',
-  components: { Swiper, RecommendList, RecommendTitle },
+  components: { RecommendSearch },
   data() {
     return {
       swiperOptions: {
@@ -38,8 +46,8 @@ export default {
           el: '.swiper-pagination',
         },
         on: {
-          click: (e) => {
-            this.getDetail(e.target.offsetParent.dataset.id);
+          tap: (e) => {
+            this.getDetail(e.target.dataset.index);
           },
         },
         loop: true,
@@ -88,19 +96,19 @@ export default {
     },
     async getNewsong() {
       const { code, result } = await vGetNewsong();
-      if (code === 200) {
-        result.forEach((item) => {
-          const song = {
-            id: item.id,
-            name: item.name,
-            picUrl: item.song.album.picUrl,
-            singer: item.song.artists[0].name,
+      if (code == 200) {
+        const list = result.slice(6).reduce((acc, cur) => {
+          const obj = {
+            id: cur.id,
+            picUrl: cur.picUrl,
+            name: cur.name,
+            playCount: cur.song.bMusic && cur.song.bMusic.playTime,
+            singer: cur.song.artists[0]['name'],
           };
-
-          this.newsong.push(song);
-        });
-
-        this.newsong = Object.freeze(this.newsong.splice(0, 9));
+          acc.push(obj);
+          return acc;
+        }, []);
+        this.newsong = list;
       }
     },
     async getDetail(id) {
@@ -120,6 +128,7 @@ export default {
         this.setCurrrentIndex(index);
       } else {
         this.setPlay([song, ...this.playList]);
+        this.setSequenceList(this.playList);
         this.setCurrrentIndex(0);
       }
     },
@@ -151,3 +160,22 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.recommend-type {
+  margin-bottom: 10px;
+}
+.recommend-swiper {
+  margin-top: 20px;
+}
+.recommend /deep/ .swiper-slide {
+  position: relative;
+  width: 90%;
+  padding: 0 1.5%;
+  margin-top: 6px;
+}
+
+.swiper-img {
+  height: 140px;
+  border-radius: 6px;
+}
+</style>

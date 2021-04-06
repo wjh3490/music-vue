@@ -1,49 +1,45 @@
 <template>
-  <swiperSlide class="swiper-item">
-    <ul class="singer-main-wrap">
-      <li
-        v-for="(item, index) in singerList"
-        :key="index"
-        @click.stop="getSingerDetail(item)"
-        class="singer-main-item"
-      >
-        <div class="singer-main-index">
+  <ul class="singer-main-wrap">
+    <li
+      v-for="(item, index) in singerList"
+      :key="index"
+      @click.stop="getSingerDetail(item)"
+      class="singer-main-item"
+    >
+      <div class="singer-main-index">
+        <span
+          class="singer-main-nownum"
+          :class="{ 'singer-main-top3': index <= 2 }"
+          >{{ (index + 1) | formatIndex }}</span
+        >
+        <span class="singer-main-rank">
           <span
-            class="singer-main-nownum"
-            :class="{ 'singer-main-top3': index <= 2 }"
-            >{{ (index + 1) | formatIndex }}</span
+            class="iconfont"
+            :class="(item.lastRank - index) | formatRank"
+          ></span>
+          <span class="singer-main-num"
+            >&nbsp;{{ Math.abs(item.lastRank - index) }}</span
           >
-          <span class="singer-main-rank">
-            <span
-              class="iconfont"
-              :class="(item.lastRank - index) | formatRank"
-            ></span>
-            <span class="singer-main-num"
-              >&nbsp;{{ Math.abs(item.lastRank - index) }}</span
-            >
-          </span>
-        </div>
-        <div class="singer-main-avatar">
-          <img v-lazy="item.img1v1Url" alt class="singer-main-img" />
-        </div>
-        <div class="singer-main-name">
-          <span class="singer-main-singer">{{ item.name }}</span>
-          <span class="singer-main-score">
-            <span class="iconfont icon-redu"></span>
-            <span>&nbsp;{{ item.score }}</span>
-          </span>
-        </div>
-      </li>
-    </ul></swiperSlide
-  >
+        </span>
+      </div>
+      <div class="singer-main-avatar">
+        <img v-lazy="item.img1v1Url" alt class="singer-main-img" />
+      </div>
+      <div class="singer-main-name">
+        <span class="singer-main-singer">{{ item.name }}</span>
+        <span class="singer-main-score">
+          <span class="iconfont icon-redu"></span>
+          <span>&nbsp;{{ item.score }}</span>
+        </span>
+      </div>
+    </li>
+  </ul>
 </template>
 <script>
 import { vGetSinger } from '@/api/singer';
 import { mapMutations, mapGetters } from 'vuex';
-import { swiperSlide } from 'vue-awesome-swiper';
 export default {
   name: 'SingerList',
-  components: { swiperSlide },
   data() {
     return {
       singerList: [],
@@ -90,7 +86,12 @@ export default {
 .singer {
   &-main {
     &-wrap {
+      height: calc(100vh - 90px);
+      padding-top: 15px;
       padding-bottom: 80px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      // padding-bottom: 80px;
     }
     &-item {
       display: flex;

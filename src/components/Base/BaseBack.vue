@@ -4,8 +4,8 @@
       class="iconfont icon-iconfont2 return-left"
       @click="$router.back()"
     ></span>
-    <div class="return-middle">
-      <b>{{ title }}</b>
+    <div class="return-middle ellipsis">
+      <b>歌单</b>
       <slot />
     </div>
     <span class="return-right">
@@ -44,8 +44,8 @@ export default {
   line-height: 50px;
   width: 100%;
   z-index: 99;
-  background-color: #fff;
   color: #000;
+  overflow: hidden;
   &-left,
   &-right {
     height: 100%;

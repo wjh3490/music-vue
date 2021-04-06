@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'Header',
+  name: 'RecommendSearch',
 };
 </script>
 <style scoped lang="less">
@@ -21,7 +21,7 @@ export default {
     justify-content: center;
     padding: 6px 0;
     margin-top: 20px;
-    background: #f2f4f5;
+    background: #e7eaec;
     border-radius: 50px;
     text-align: center;
     color: #b7b3b3;

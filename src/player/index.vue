@@ -44,6 +44,7 @@
     </transition>
 
     <audio
+      id="audio"
       ref="audio"
       :src="src"
       @timeupdate="(e) => (currentTime = e.target.currentTime)"
@@ -197,7 +198,6 @@ export default {
       });
     },
     changeMode(mode) {
-      console.log(mode);
       if (this.mode === mode) return;
       this.setMode(mode);
       this.getNewList(mode);

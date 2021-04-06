@@ -1,17 +1,15 @@
-import service from '../request/service'
-
-export function vGetSong (id) {
+import service from '../request/service';
+export function vGetSong(id) {
   return service({
     url: '/song/url',
     method: 'get',
-    params: {id}
-  })
+    params: { id },
+  });
 }
 
-export function vGetLyric (id) {
+export function vGetLyric(id) {
   return service({
     url: `/lyric?id=${id}`,
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
-

@@ -45,6 +45,11 @@ const router = new VueRouter({
         import(/* webpackChunkName: "playlist" */ '../views/playlist')
     },
     {
+      path: '/playlist/:id',
+      component: () =>
+        import(/* webpackChunkName: "playlist-detail" */ '../views/playlist/playlist-detail')
+    },
+    {
       path: '/details/:id',
       component: () =>
         import(/* webpackChunkName: "detail" */ '../views/details')

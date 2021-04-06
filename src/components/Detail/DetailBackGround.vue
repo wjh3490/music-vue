@@ -1,41 +1,156 @@
 <template>
+import { constants } from 'zlib';
   <div class="singerPic" ref="singerPic">
     <div
       class="wrap"
       :style="{ backgroundImage: `url(${$route.query.singerPic})` }"
     ></div>
+    <main class="detail" :style="{ opacity }">
+      <div class="detail-wrap">
+        <div class="detail-wrap-left">
+          <img :src="$route.query.singerPic" alt="" class="detail-wrap-bgc" />
+        </div>
+        <div class="detail-wrap-right">
+          <div>
+            <p class="detail-wrap-name">{{ $route.query.name }}</p>
+            <div class="detail-wrap-avatar">
+              <img
+                :src="info.creator.avatarUrl"
+                alt=""
+                class="detail-wrap-img"
+              />
+              <span class="detail-wrap-nickname">{{
+                info.creator.nickname
+              }}</span>
+            </div>
+          </div>
+          <p class="detail-wrap-info ellipsis">{{ info.description }}</p>
+        </div>
+      </div>
+      <div class="detail-msg">
+        <div class="detail-msg-icon iconfont icon-shoucang2">
+          <span class="detail-msg-des"> {{ info.subscribedCount }}</span>
+        </div>
+        <div class="detail-msg-icon iconfont icon-pinglun">
+          <span class="detail-msg-des">{{ info.commentCount }}</span>
+        </div>
+        <div class="detail-msg-icon iconfont icon-fenxiang">
+          <span class="detail-msg-des"> 分享</span>
+        </div>
+      </div>
+    </main>
     <slot />
   </div>
 </template>
 <script>
-import pull from '@/directives/pull.js';
 export default {
   name: 'DetailBackGround',
-  directives: {
-    pull,
+  props: {
+    info: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  data() {
+    return {
+      opacity: 1,
+    };
+  },
+  mounted() {
+    document.addEventListener('scroll', (e) => {
+      const p = 210 / e.target.scrollTop;
+      consolle.log( e.target.scrollTop)
+      this.opacity = p;
+    });
   },
 };
 </script>
 <style lang="less" scoped>
+.detail {
+  padding: 0 20px;
+  &-wrap {
+    display: flex;
+    margin-top: 65px;
+    justify-content: space-between;
+    color: #fff;
+    &-left {
+      width: 110px;
+      height: 110px;
+    }
+    &-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-left: 20px;
+      flex: 1;
+    }
+    &-name {
+      color: #fff;
+      font-size: 16px;
+    }
+    &-nickname {
+      font-size: 14px;
+    }
+    &-avatar {
+      display: flex;
+      align-items: center;
+      margin-top: 6px;
+    }
+    &-bgc {
+      height: 100%;
+      border-radius: 8px;
+    }
+
+    &-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    &-info {
+      width: 195px;
+    }
+  }
+
+  &-msg {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-top: 25px;
+    font-size: 18px;
+    &-icon {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+    }
+    &-des {
+      font-size: 16px;
+      margin-left: 3px;
+    }
+  }
+}
 .singerPic {
-  height: 315px;
+  height: 260px;
   width: 100vw;
   position: sticky;
-  top: -265px;
+  top: -210px;
   z-index: 90;
   overflow: hidden;
-
   color: #fff;
   .wrap {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-position: 50%;
+    background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: auto 100%;
+    background-size: cover;
     transform: scale(1.5);
     transform-origin: center center;
-    background-color: rgba(22, 24, 36, 0.6);
-    filter: blur(30px);
+    filter: blur(10px);
     &::after {
       content: ' ';
       position: absolute;
@@ -43,24 +158,8 @@ export default {
       right: 0;
       bottom: 0;
       top: 0;
-      background-color: rgba(0, 0, 0, 0.15);
+      background-color: rgba(0, 0, 0, 0.25);
     }
-  }
-
-  h1,
-  p {
-    position: absolute;
-    left: 15px;
-  }
-  h1 {
-    bottom: 35px15px;
-    width: 80%;
-    font-weight: 500;
-    font-size: 24px;
-  }
-  p {
-    bottom: 22px15px;
-    font-size: 14px;
   }
 }
 </style>

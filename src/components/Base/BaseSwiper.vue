@@ -1,9 +1,23 @@
 <template>
-  <div>
-    <swiper :options="options" style="margin: 0 20px">
-      <swiperSlide> </swiperSlide>
-    </swiper>
-  </div>
+  <swiper :options="options" ref="swiper" v-if="list.length > 0">
+    <swiperSlide
+      :data-id="item.targetId"
+      v-for="(item, index) in list"
+      :key="item.id"
+      ref="swiperSlide"
+    >
+      <slot :data="item" :index="index" />
+    </swiperSlide>
+
+    <template v-if="visible">
+      <div
+        class="swiper-pagination"
+        slot="pagination"
+        v-for="(item1, index) in list"
+        :key="index"
+      ></div>
+    </template>
+  </swiper>
 </template>
 <script>
 import 'swiper/dist/css/swiper.css';
@@ -14,28 +28,35 @@ export default {
   props: {
     options: {
       type: Object,
-      default: {},
+      default: () => {},
+    },
+    list: {
+      type: Array,
+      default: () => [],
+    },
+    visible: {
+      type: Boolean,
+      default: false,
     },
   },
-  data() {
-    return {
-      swiperOptions: {
-        effect: 'coverflow',
-        slidesPerView: '3',
-        spaceBetween: '-20%',
-        centeredSlides: true,
-        loop: true,
-        loopSlides: 2,
-        coverflowEffect: {
-          rotate: 0, // 旋转的角度
-          stretch: 0, // 拉伸   图片间左右的间距和密集度
-          depth: 130, // 深度   切换图片间上下的间距和密集度
-          modifier: 4, // 修正值 该值越大前面的效果越明显
-          slideShadows: false,
-        },
-      },
-    };
+  computed: {
+    swiper() {
+      return this.$refs.swiper.swiper;
+    },
+    swiperSlide() {
+      return this.$refs.swiperSlide;
+    },
   },
 };
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.my-lazy-preloader {
+  background: url('../../assets/imgs/default.jpg') center;
+  background-size: 100%;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+</style>

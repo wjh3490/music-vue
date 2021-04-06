@@ -218,8 +218,7 @@ export default {
   width: 100%;
   height: 100%;
   opacity: 0.6;
-  background-color: #292a2b;
-  background-color: rgba(37, 42, 64, 0.9);
+  background-color: rgba(0, 0, 0, 0.35);
   // background-color: rgba(0, 0, 0, 0.9);
   z-index: 9;
 }

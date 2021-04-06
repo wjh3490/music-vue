@@ -1,6 +1,6 @@
 <template>
   <div class="rank">
-     <BaseBack title="排行榜" />
+    <BaseBack title="排行榜" />
     <div class="rank-wrap">
       <div class="rank-title"><strong>官方榜</strong></div>
       <ul class="rank-items">
@@ -75,7 +75,7 @@ export default {
       other.push({ name: '曲风榜', list: list.splice(index, 7) });
       other.push({ name: '全球榜', list: list.splice(index, 9) });
       other.push({ name: '精选榜', list: list.splice(index, 6) });
-      other.push({ name: '特色榜', list });
+      other.push({ name: '特色榜', list: list.splice(index) });
       this.others = other;
     },
     getRankSongs(item) {

@@ -18,20 +18,18 @@
       ></div>
     </nav>
     <main class="singer-main">
-      <swiper :options="swiperOptions" class="swiper" ref="mySwiper">
-        <SingerList v-for="index in 4" :key="index" ref="singerList" />
-      </swiper>
+      <BaseSwiper :options="swiperOptions" ref="mySwiper" :list="navList">
+        <SingerList ref="singerList" />
+      </BaseSwiper>
     </main>
   </div>
 </template>
 <script>
 /*eslint-disable */
-import 'swiper/dist/css/swiper.css';
-import { swiper } from 'vue-awesome-swiper';
 import SingerList from '@/components/Singer/SingerList';
 export default {
   name: 'Singer',
-  components: { swiper, SingerList },
+  components: { SingerList },
   data() {
     return {
       type: 1,
@@ -52,17 +50,20 @@ export default {
       },
     };
   },
+
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
     },
   },
   mounted() {
-    this.$refs.singerList[0].getSingers(1);
+    this.child = this.$refs.mySwiper.swiperSlide;
+    this.child[0].$children[0].getSingers(1);
   },
+
   watch: {
     type(val) {
-      this.$refs.singerList[val - 1].getSingers(val);
+      this.child[val - 1].$children[0].getSingers(val);
     },
   },
   methods: {
@@ -115,12 +116,6 @@ export default {
       }
     }
   }
-  &-main {
-    padding-right: 10px;
-  }
-}
-.swiper {
-  padding-top: 15px;
-  height: calc(100vh - 40px);
+ 
 }
 </style>
