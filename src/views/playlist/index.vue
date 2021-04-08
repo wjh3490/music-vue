@@ -37,10 +37,10 @@
   </div>
 </template>
 <script>
-/*eslint-disable */
+
 import PlayList from '@/components/Playlist/PlayList';
 import PlayListRecommend from '@/components/Playlist/PlayListRecommend';
-import { getPlaylist, getPlaylistDetail } from '@/api/playlist';
+import { getPlaylist } from '@/api/playlist';
 import { scrollToEase } from '@/utils';
 export default {
   name: 'Playlist',
