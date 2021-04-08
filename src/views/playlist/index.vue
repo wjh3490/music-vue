@@ -39,12 +39,12 @@
 <script>
 /*eslint-disable */
 import PlayList from '@/components/Playlist/PlayList';
-import playListRecommend from '@/components/Playlist/playListRecommend';
+import PlayListRecommend from '@/components/Playlist/PlayListRecommend';
 import { getPlaylist, getPlaylistDetail } from '@/api/playlist';
 import { scrollToEase } from '@/utils';
 export default {
   name: 'Playlist',
-  components: { PlayList, playListRecommend },
+  components: { PlayList, PlayListRecommend },
   data() {
     return {
       type: 0,
@@ -66,7 +66,7 @@ export default {
   computed: {
     currentTabComponent() {
       return function(index) {
-        if (index == 0) return 'playListRecommend';
+        if (index == 0) return 'PlayListRecommend';
         return 'PlayList';
       };
     },

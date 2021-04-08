@@ -12,7 +12,7 @@ import { mapMutations } from 'vuex';
 import PlayListRecommendBanner from './PlayListRecommendBanner';
 import { getRecommendPlaylist } from '@/api/playlist';
 export default {
-  name: 'playListRecommend',
+  name: 'PlayListRecommend',
   components: { PlayListRecommendBanner },
   props: ['id'],
   data() {
