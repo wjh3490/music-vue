@@ -19,7 +19,7 @@ export default {
     navList: {
       type: Array,
       default: () => [
-        { icon: 'icon-portrait', name: '歌手', to: '/singers' },
+        { icon: 'icon-portrait', name: '歌手', to: '/singer' },
         { icon: 'icon-paiming', name: '排行榜', to: '/rank' },
         { icon: 'icon-fenlei', name: '歌单', to: '/playlist' },
         { icon: 'icon-fenlei', name: '推荐1', to: '/user' },

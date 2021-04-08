@@ -1,41 +1,34 @@
 <template>
-import { constants } from 'zlib';
   <div class="singerPic" ref="singerPic">
     <div
       class="wrap"
-      :style="{ backgroundImage: `url(${$route.query.singerPic})` }"
+      :style="{ backgroundImage: `url(${info.coverImgUrl})` }"
     ></div>
     <main class="detail" :style="{ opacity }">
       <div class="detail-wrap">
         <div class="detail-wrap-left">
-          <img :src="$route.query.singerPic" alt="" class="detail-wrap-bgc" />
+          <img :src="info.coverImgUrl" alt="" class="detail-wrap-bgc" />
         </div>
         <div class="detail-wrap-right">
           <div>
-            <p class="detail-wrap-name">{{ $route.query.name }}</p>
+            <p class="detail-wrap-name">{{ info.name }}</p>
             <div class="detail-wrap-avatar">
-              <img
-                :src="info.creator.avatarUrl"
-                alt=""
-                class="detail-wrap-img"
-              />
-              <span class="detail-wrap-nickname">{{
-                info.creator.nickname
-              }}</span>
+              <img :src="info.avatarUrl" alt="" class="detail-wrap-img" />
+              <span class="detail-wrap-nickname">{{ info.nickname }}</span>
             </div>
           </div>
           <p class="detail-wrap-info ellipsis">{{ info.description }}</p>
         </div>
       </div>
       <div class="detail-msg">
-        <div class="detail-msg-icon iconfont icon-shoucang2">
+        <div class="detail-msg-icon iconfont icon-shanchu2">
           <span class="detail-msg-des"> {{ info.subscribedCount }}</span>
         </div>
         <div class="detail-msg-icon iconfont icon-pinglun">
           <span class="detail-msg-des">{{ info.commentCount }}</span>
         </div>
         <div class="detail-msg-icon iconfont icon-fenxiang">
-          <span class="detail-msg-des"> 分享</span>
+          <span class="detail-msg-des"> {{ info.shareCount }}</span>
         </div>
       </div>
     </main>
@@ -57,11 +50,13 @@ export default {
     };
   },
   mounted() {
-    document.addEventListener('scroll', (e) => {
-      const p = 210 / e.target.scrollTop;
-      consolle.log( e.target.scrollTop)
-      this.opacity = p;
+    document.addEventListener('scroll', () => {
+      console.dir(document.documentElement.scrollTop);
+      this.opacity = 1 - document.documentElement.scrollTop / 200;
     });
+  },
+  beforeDestroy() {
+    document.removeEventListener('scroll');
   },
 };
 </script>
@@ -122,11 +117,12 @@ export default {
     &-icon {
       font-size: 24px;
       display: flex;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
     &-des {
       font-size: 16px;
-      margin-left: 3px;
     }
   }
 }

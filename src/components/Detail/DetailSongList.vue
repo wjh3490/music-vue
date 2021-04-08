@@ -1,26 +1,72 @@
 <template>
   <div class="songList">
-    <div class="allplay">全部播放</div>
-    <ul>
-      <li
-        @click.stop.prevent="$emit('player', index, $event.currentTarget)"
-        v-for="(item, index) in songs"
-        :key="index"
-      >
-        <div class="out">
-          <div class="desc ellipsis">
+    <div class="allplay">
+      <div class="allplay-left">
+        <span class="iconfont icon-bofang allplay-icon"></span>
+        <span class="allplay-btn">全部播放</span>
+        <span class="allplay-length">({{ songs.length }})</span>
+      </div>
+      <span class="iconfont icon-xiazai allplay-right"></span>
+    </div>
+
+    <main class="songlist-main">
+      <ul class="songlist-wrap">
+        <li
+          class="songlist-item"
+          @click.stop.prevent="$emit('player', index, $event.currentTarget)"
+          v-for="(item, index) in songs"
+          :key="item.id"
+          :class="{ active: item.id == currrenSong.id }"
+        >
+          <div
+            class="songlist-index"
+            :class="{ active: item.id == currrenSong.id }"
+          >
+            {{ index + 1 }}
+          </div>
+          <div class="ellipsis songlist-name">
             <p
-              class="ellipsis song-name"
+              class="ellipsis songlist-title"
               :class="{ active: item.id == currrenSong.id }"
             >
               {{ item.name }}
             </p>
-            <span>{{ item.singer }}</span>
+            <div
+              class="songlist-album"
+              :class="{ active: item.id == currrenSong.id }"
+            >
+              <div class="songlist-album-icons">
+                <!-- vip -->
+                <span v-if="item.privilege.fee === 1" class="icon vip"
+                  >vip</span
+                >
+                <!-- 试听 -->
+                <span
+                  v-if="/1152|1028|1088|1092/.test(item.privilege.flag)"
+                  class="icon listen"
+                  >试听</span
+                >
+                <!-- 独家 -->
+                <span
+                  v-if="/64|68|1088|1092/.test(item.privilege.flag)"
+                  class="icon only"
+                  >独家</span
+                >
+                <!-- sq -->
+                <span
+                  v-if="item.privilege.maxbr === 999000"
+                  class="iconsq icon sq"
+                  >SQ</span
+                >
+              </div>
+              <div>
+                <span>{{ item.singer }}</span> · <span>{{ item.album }}</span>
+              </div>
+            </div>
           </div>
-          <div class="album">{{ index + 1 }}</div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </main>
   </div>
 </template>
 
@@ -42,82 +88,52 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.scroller {
-  height: 100%;
-}
-
-.songList {
-  width: 100%;
-  border-radius: 20px 20px 0 0;
-  background: #fff;
-
-  ul {
-    border-radius: 10px;
-    // overflow: hidden;
-
-    li {
-      font-size: 0;
-      padding-left: 60px;
-      position: relative;
-      height: 55px;
-      .inner {
+.songlist {
+  &-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    &.active {
+      &::after {
         position: absolute;
-        top: 0;
         left: 0;
-        width: 100%;
+        content: '';
         height: 100%;
-        background-color: #f2f3f4;
-        font-size: 16px;
-        .img {
-          height: 100%;
-          img {
-            height: 100%;
-            width: 60px;
-            vertical-align: middle;
-          }
-        }
-        .name {
-          height: 55px;
-          line-height: 55px;
-          padding-left: 10px;
-          padding-right: 50px;
-          span {
-            // vertical-align: middle;
-            font-size: 14px;
-          }
-        }
+        width: 4px;
+        border-radius: 4px;
+        background-color: #169af3;
       }
-      .song-name {
-        font-size: 16px;
-        color: #2e3030;
-        padding-right: 50px;
-        margin-bottom: 5px;
-      }
-      .desc {
-        // border-top: 1px solid #e4e4e4;
-        padding: 7px 0;
-        .active {
-          color: #169af3;
-        }
-        &.first {
-          border-top: none;
-        }
-
-        span {
-          font-size: 12px;
-          color: #757575;
-        }
-      }
-      .album {
-        position: absolute;
-        width: 60px;
-        height: 55px;
-        line-height: 55px;
-        text-align: center;
-        top: 0;
-        left: 0;
-        font-size: 16px;
-      }
+    }
+  }
+  &-wrap {
+    padding-bottom: 60px;
+  }
+  &-index {
+    font-size: 16px;
+    width: 50px;
+    text-align: center;
+    &.active {
+      color: #169af3;
+    }
+  }
+  &-title {
+    font-size: 18px;
+    color: #2f2a2a;
+    &.active {
+      color: #169af3;
+    }
+  }
+  &-album {
+    margin-top: 6px;
+    color: #a59797f5;
+    display: flex;
+    align-items: center;
+    &.active {
+      color: #169af3;
+    }
+    &-icons {
+      display: flex;
     }
   }
 }
@@ -126,12 +142,46 @@ export default {
   position: sticky;
   top: 50px;
   z-index: 92;
-  border-radius: 10px 10px 0 0;
-  margin-top:-10px;
-  background-color: #fff;
   overflow: hidden;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  &-left {
+    display: flex;
+    align-items: center;
+  }
+  &-icon {
+    font-size: 28px;
+    color: #169af3;
+  }
+  &-btn {
+    margin: 0 6px;
+    font-size: 15px;
+    font-weight: 300;
+  }
+  &-length {
+    font-weight: 300;
+  }
+  &-right {
+    font-size: 22px;
+    color: #9a9696;
+  }
 }
-.isFixed {
-  // overflow: auto;
+.icon {
+  border: 1px solid #169af3;
+  border-radius: 3px;
+  color: #169af3;
+  transform: scale(0.7);
+  width: 28px;
+  height: 17px;
+  line-height: 15px;
+  text-align: center;
+  margin-left: -3px;
+}
+.iconsq {
+  border: 1px solid #f3cd16;
+  color: #f3cd16;
 }
 </style>

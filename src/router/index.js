@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-NProgress.configure({ showSpinner: false })
+NProgress.configure({ showSpinner: false });
 
 Vue.use(VueRouter);
 // const routerList = [];
@@ -19,48 +19,55 @@ const router = new VueRouter({
     { path: '/', redirect: '/recommend' },
     {
       path: '/rank',
-      component: () =>
-        import(/* webpackChunkName: "rank" */ '../views/rank')
+      component: () => import(/* webpackChunkName: "rank" */ '../views/rank'),
     },
-   
+
     {
       path: '/recommend',
       component: () =>
-        import(/* webpackChunkName: "recommend" */ '../views/recommend')
+        import(/* webpackChunkName: "recommend" */ '../views/recommend'),
     },
     {
-      path: '/singers',
-      name:'Singers',
+      path: '/singer',
+      name: 'Singer',
       component: () =>
-        import(/* webpackChunkName: "rank" */ '../views/singers')
+        import(/* webpackChunkName: "rank" */ '../views/singer'),
+    },
+    {
+      path: '/singer/:id',
+      component: () =>
+        import(
+          /* webpackChunkName: "singer-detail" */ '../views/singer/singer-detail'
+        ),
     },
     {
       path: '/user',
-      component: () =>
-        import(/* webpackChunkName: "user" */ '../views/user')
+      component: () => import(/* webpackChunkName: "user" */ '../views/user'),
     },
     {
       path: '/playlist',
       component: () =>
-        import(/* webpackChunkName: "playlist" */ '../views/playlist')
+        import(/* webpackChunkName: "playlist" */ '../views/playlist'),
     },
     {
       path: '/playlist/:id',
       component: () =>
-        import(/* webpackChunkName: "playlist-detail" */ '../views/playlist/playlist-detail')
+        import(
+          /* webpackChunkName: "playlist-detail" */ '../views/playlist/playlist-detail'
+        ),
     },
     {
       path: '/details/:id',
       component: () =>
-        import(/* webpackChunkName: "detail" */ '../views/details')
+        import(/* webpackChunkName: "detail" */ '../views/details'),
     },
     {
       path: '/search',
       component: () =>
-        import(/* webpackChunkName: "search" */ '../views/search')
-    }
+        import(/* webpackChunkName: "search" */ '../views/search'),
+    },
   ],
-  scrollBehavior: () => ({ y: 0 })
+  scrollBehavior: () => ({ y: 0 }),
 });
 
 router.beforeEach((to, from, next) => {
@@ -70,6 +77,5 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done();
 });
-
 
 export default router;

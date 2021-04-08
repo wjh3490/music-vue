@@ -1,6 +1,6 @@
 <template>
   <div class="play-scrollbar">
-    <BaseList :list="list" @list="getSingerDetail"/>
+    <BaseList :list="list" @list="getSingerDetail" />
   </div>
 </template>
 <script>
@@ -45,9 +45,7 @@ export default {
       };
 
       this.setSinger(_singer);
-      this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=RecommendDetail`
-      );
+      this.$router.push(`/playlist/${singer.id}`);
     },
     ...mapMutations(['setSinger']),
   },

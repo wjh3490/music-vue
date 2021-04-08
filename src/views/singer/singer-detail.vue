@@ -25,11 +25,11 @@
 <script>
 /*eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
-import { recommentSongs } from '@/api/recomment';
+import { singerSongs } from '@/api/singer';
 import DetailBackGround from '@/components/Detail/DetailBackGround';
 import DetailSongList from '@/components/Detail/DetailSongList';
 export default {
-  name: 'PlaylistDetail',
+  name: 'SingerDetail',
   components: { DetailSongList, DetailBackGround },
   data() {
     return {
@@ -87,7 +87,7 @@ export default {
           coverImgUrl,
         },
         privileges,
-      } = await recommentSongs(id);
+      } = await singerSongs(id);
       const info = {
         nickname: creator.nickname,
         subscribedCount: subscribedCount,

@@ -199,7 +199,7 @@ export default {
 .blurBg {
   width: 100%;
   height: 100%;
-  filter: blur(80px);
+  filter: blur(50px)  brightness(0.5);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

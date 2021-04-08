@@ -75,7 +75,7 @@ export default {
 
       this.setSinger(_singer);
       this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=SingerDetail`
+        `/singer/${singer.id}`
       );
     },
     ...mapMutations(['setSinger']),

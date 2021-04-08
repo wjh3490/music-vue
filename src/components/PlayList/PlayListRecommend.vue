@@ -44,9 +44,7 @@ export default {
       };
 
       this.setSinger(_singer);
-      this.$router.push(
-        `/playlist/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=RecommendDetail`
-      );
+      this.$router.push(`/playlist/${singer.id}`);
     },
     ...mapMutations(['setSinger']),
   },
