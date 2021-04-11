@@ -10,7 +10,6 @@
 
     <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
       <swiper-slide
-        :data-id="item.targetId"
         v-for="(item, index) in navList"
         :key="item.id"
       >
@@ -20,8 +19,8 @@
   </div>
 </template>
 <script>
-import PlayListMain from '@/components/Playlist/PlayListMain';
-import PlayListRecommend from '@/components/Playlist/PlayListRecommend';
+import PlayListMain from '@/components/Playlist/PlayListMain.vue';
+import PlayListRecommend from '@/components/Playlist/PlayListRecommend.vue';
 import { getPlaylist } from '@/api/playlist';
 export default {
   name: 'Playlist',
