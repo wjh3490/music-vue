@@ -39,6 +39,7 @@ export default {
         loop: false,
         watchSlidesVisibility: true,
       },
+      
     };
   },
   computed: {
