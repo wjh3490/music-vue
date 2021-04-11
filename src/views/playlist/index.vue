@@ -19,8 +19,8 @@
   </div>
 </template>
 <script>
-import PlayListMain from '@/components/Playlist/PlayListMain.vue';
-import PlayListRecommend from '@/components/Playlist/PlayListRecommend.vue';
+import PlayListMain from '@/components/Playlist/PlayListMain';
+import PlayListRecommend from '@/components/Playlist/PlayListRecommend';
 import { getPlaylist } from '@/api/playlist';
 export default {
   name: 'Playlist',
