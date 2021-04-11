@@ -1,13 +1,13 @@
 <template>
   <swiper :options="options" ref="swiper" v-if="list.length > 0">
-    <swiperSlide
+    <swiper-slide
       :data-id="item.targetId"
       v-for="(item, index) in list"
       :key="item.id"
       ref="swiperSlide"
     >
       <slot :data="item" :index="index" />
-    </swiperSlide>
+    </swiper-slide>
 
     <template v-if="visible">
       <div
@@ -20,11 +20,8 @@
   </swiper>
 </template>
 <script>
-import 'swiper/dist/css/swiper.css';
-import { swiper, swiperSlide } from 'vue-awesome-swiper';
 export default {
   name: 'BaseSwiper',
-  components: { swiper, swiperSlide },
   props: {
     options: {
       type: Object,

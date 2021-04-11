@@ -18,7 +18,9 @@
             :class="(item.lastRank - index) | formatRank"
           ></span>
           <span class="singer-main-num"
-            >&nbsp;{{ Math.abs(item.lastRank - index) }}</span
+            >&nbsp;{{
+              item.lastRank - index == 0 ? '' : Math.abs(item.lastRank - index)
+            }}</span
           >
         </span>
       </div>
@@ -74,9 +76,7 @@ export default {
       };
 
       this.setSinger(_singer);
-      this.$router.push(
-        `/singer/${singer.id}`
-      );
+      this.$router.push(`/singer/${singer.id}`);
     },
     ...mapMutations(['setSinger']),
   },

@@ -100,7 +100,7 @@ export default {
       this.info = info;
 
       let songs = [];
-      for (let i = 0; (length = tracks.length), i < length; i++) {
+      for (let i = 0, length = tracks.length; i < length; i++) {
         const song = {
           id: tracks[i]['id'],
           name: tracks[i]['name'],

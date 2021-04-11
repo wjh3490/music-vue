@@ -1,11 +1,16 @@
 <template>
-  <div class="return" :class="{ isFixed }" :style="{ color, background }">
+  <div
+    class="return"
+    :class="{ isFixed }"
+    :style="{ color, background, opacity }"
+   
+  >
     <span
       class="iconfont icon-iconfont2 return-left"
       @click="$router.back()"
     ></span>
     <div class="return-middle ellipsis">
-      <b>歌单</b>
+      <b>{{ title }}</b>
       <slot />
     </div>
     <span class="return-right">
@@ -24,9 +29,14 @@ export default {
     title: String,
     background: {
       type: String,
-      default: '',
+      default: '#fff',
+    },
+    opacity: {
+      type: Number,
+      default: 1,
     },
     color: String,
+    
   },
 };
 </script>

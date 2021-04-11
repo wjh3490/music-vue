@@ -1,6 +1,6 @@
 <template>
   <div class="play-scrollbar play">
-    <PlayListRecommendBanner />
+    <PlayListBanner />
     <main>
       <BaseList :list="list" @list="getSingerDetail" />
     </main>
@@ -9,12 +9,11 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import PlayListRecommendBanner from './PlayListRecommendBanner';
+import PlayListBanner from './PlayListBanner';
 import { getRecommendPlaylist } from '@/api/playlist';
 export default {
   name: 'PlayListRecommend',
-  components: { PlayListRecommendBanner },
-  props: ['id'],
+  components: { PlayListBanner },
   data() {
     return {
       list: [],
@@ -50,4 +49,3 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped></style>

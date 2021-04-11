@@ -7,7 +7,7 @@
 import { getPlaylistDetail } from '@/api/playlist';
 import { mapMutations, mapGetters } from 'vuex';
 export default {
-  name: 'PlayListC',
+  name: 'PlayListMain',
   props: ['id'],
   data() {
     return {

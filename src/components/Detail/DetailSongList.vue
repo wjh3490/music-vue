@@ -1,13 +1,13 @@
 <template>
   <div class="songList">
-    <div class="allplay">
+    <!-- <div class="allplay">
       <div class="allplay-left">
         <span class="iconfont icon-bofang allplay-icon"></span>
         <span class="allplay-btn">全部播放</span>
         <span class="allplay-length">({{ songs.length }})</span>
       </div>
       <span class="iconfont icon-xiazai allplay-right"></span>
-    </div>
+    </div> -->
 
     <main class="songlist-main">
       <ul class="songlist-wrap">

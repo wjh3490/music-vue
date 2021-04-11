@@ -25,7 +25,7 @@ const router = new VueRouter({
     {
       path: '/recommend',
       component: () =>
-        import(/* webpackChunkName: "recommend" */ '../views/recommend'),
+        import(/* webpackChunkName: "recommend" */ '../views/home'),
     },
     {
       path: '/singer',

@@ -26,7 +26,7 @@
 import { vGetNewsong } from '@/api/recomment';
 import { mapMutations, mapGetters } from 'vuex';
 export default {
-  name: 'PlayListRecommendBanner',
+  name: 'PlayListBanner',
   data() {
     return {
       swiperOptions: {

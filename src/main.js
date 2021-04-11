@@ -5,32 +5,29 @@ import App from './App';
 import router from './router';
 import store from './store';
 import VueLazyload from 'vue-lazyload';
+import VueAwesomeSwiper from 'vue-awesome-swiper';
 
+import 'swiper/dist/css/swiper.css'
 import './style/base.less';
 import './style/transition.less';
 import './style/font.css';
 import './utils/flexible';
 import './assets/font/iconfont.css';
-import '@/components/Base'
+import '@/components/Base';
 import MessageBox from './components/MessageBox';
-import './registerServiceWorker'
+import './registerServiceWorker';
 
-
+Vue.use(VueAwesomeSwiper);
 Vue.use(VueLazyload, {
-  loading: require('./assets/imgs/default.jpg')
+  loading: require('./assets/imgs/default.jpg'),
 });
 Vue.use(MessageBox);
 Vue.config.productionTip = false;
-// import VConsole from 'vconsole'
-
-// if (process.env.NODE_ENV === 'development') {
-//   new VConsole()
-// }
 new Vue({
-  render: h => h(App),
+  render: (h) => h(App),
   store,
   router,
-  components: { App }
+  components: { App },
 }).$mount('#app');
 //git@github.com:wjh3490/music-vue.git
 //  <!-- <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>

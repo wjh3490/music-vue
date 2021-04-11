@@ -1,43 +1,15 @@
 <template>
-  <div class="singerPic" ref="singerPic">
-    <div
-      class="wrap"
-      :style="{ backgroundImage: `url(${info.coverImgUrl})` }"
-    ></div>
-    <main class="detail" :style="{ opacity }">
-      <div class="detail-wrap">
-        <div class="detail-wrap-left">
-          <img :src="info.coverImgUrl" alt="" class="detail-wrap-bgc" />
-        </div>
-        <div class="detail-wrap-right">
-          <div>
-            <p class="detail-wrap-name">{{ info.name }}</p>
-            <div class="detail-wrap-avatar">
-              <img :src="info.avatarUrl" alt="" class="detail-wrap-img" />
-              <span class="detail-wrap-nickname">{{ info.nickname }}</span>
-            </div>
-          </div>
-          <p class="detail-wrap-info ellipsis">{{ info.description }}</p>
-        </div>
-      </div>
-      <div class="detail-msg">
-        <div class="detail-msg-icon iconfont icon-shanchu2">
-          <span class="detail-msg-des"> {{ info.subscribedCount }}</span>
-        </div>
-        <div class="detail-msg-icon iconfont icon-pinglun">
-          <span class="detail-msg-des">{{ info.commentCount }}</span>
-        </div>
-        <div class="detail-msg-icon iconfont icon-fenxiang">
-          <span class="detail-msg-des"> {{ info.shareCount }}</span>
-        </div>
-      </div>
-    </main>
+  <div
+    class="singerPic"
+    ref="singerPic"
+    :style="{ backgroundImage: `url(${info.cover})` }"
+  >
     <slot />
   </div>
 </template>
 <script>
 export default {
-  name: 'DetailBackGround',
+  name: 'SingerInfo',
   props: {
     info: {
       type: Object,
@@ -126,14 +98,23 @@ export default {
   }
 }
 .singerPic {
-  height: 260px;
+  position: relative;
+  height: 290px;
   width: 100vw;
-  position: sticky;
-  top: -210px;
   z-index: 90;
   overflow: hidden;
   color: #fff;
-  background-color: #fff;
+  background-size: 100% 100%;
+  border-radius: 0 0 30px 30px;
+  &::after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
   .wrap {
     z-index: -1;
     position: absolute;
@@ -141,12 +122,6 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: cover;
-    transform: scale(1.5);
-    transform-origin: center center;
-    filter: blur(10px);
     &::after {
       content: ' ';
       position: absolute;
