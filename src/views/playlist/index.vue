@@ -8,23 +8,20 @@
       @change="handleChange"
     />
 
-    <!-- <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
-      <swiper-slide
-        v-for="(item, index) in navList"
-        :key="item.id"
-      >
+    <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
+      <swiper-slide v-for="(item, index) in navList" :key="item.id">
         <component :is="currentTabComponent(index)" ref="playlist"></component>
       </swiper-slide>
-    </swiper> -->
+    </swiper>
   </div>
 </template>
 <script>
-// import PlayListMain from '@/components/Playlist/PlayListMain';
-// import PlayListRecommend from '@/components/Playlist/PlayListRecommend';
+import PlayListMain from '@/components/PlayList/PlayListMain';
+import PlayListRecommend from '@/components/PlayList/PlayListRecommend';
 import { getPlaylist } from '@/api/playlist';
 export default {
-  name: 'Playlist',
-  // components: { PlayListMain, PlayListRecommend },
+  name: 'PlayList',
+  components: { PlayListMain, PlayListRecommend },
   data() {
     return {
       active: 0,
@@ -38,7 +35,6 @@ export default {
         loop: false,
         watchSlidesVisibility: true,
       },
-      
     };
   },
   computed: {
