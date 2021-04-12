@@ -5,7 +5,7 @@
       <div class="singer-about-briefDesc">{{ info.briefDesc }}</div>
     </section>
     <section class="singer-about-represent" v-if="info.topicData.length">
-      <h2>代表作</h2>
+      <h2>代表作品</h2>
       <div
         class="singer-about-represent-item"
         v-for="item in info.topicData"
@@ -93,7 +93,7 @@ export default {
 .singer-about {
   padding: 0 10px;
   margin-top: 20px;
-  padding-bottom: 120px;
+  padding-bottom: 70px;
   &-briefDesc {
     color: #a59797f5;
     margin-top: 10px;

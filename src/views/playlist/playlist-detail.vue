@@ -6,7 +6,7 @@
       color="#fff"
     />
     <DetailBackGround :info="info" />
-    <DetailSongList :songs="songs" @player="player" :showText="showText" />
+    <DetailSongList :songs="songs" @player="player" />
     <BaseBall ref="ball" />
   </div>
 </template>
@@ -31,18 +31,10 @@ export default {
         coverImgUrl: '',
         avatarUrl: '',
       },
-      playCount: 0,
-      percent: 0,
     };
   },
   computed: {
-    ...mapGetters([
-      'playList',
-      'currrenSong',
-      'fullScreen',
-      'singer',
-      'currrentIndex',
-    ]),
+    ...mapGetters(['playList']),
   },
   created() {
     this.getPlaylist();
@@ -107,16 +99,7 @@ export default {
       }
       this.setCurrrentIndex(index);
     },
-    ...mapMutations([
-      'setCurrrentIndex',
-      'setPlay',
-      'setFullScreen',
-      'setSequenceList',
-    ]),
+    ...mapMutations(['setCurrrentIndex', 'setPlay', 'setSequenceList']),
   },
 };
 </script>
-<style scoped lang="less">
-
-</style>
->

@@ -180,7 +180,6 @@ export default {
       if (this.active == index) return;
       this.swiper.slideTo(index, 0, false);
     },
-
     ...mapMutations([
       'setCurrrentIndex',
       'setPlay',

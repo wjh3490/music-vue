@@ -15,6 +15,7 @@ import './utils/flexible';
 import './assets/font/iconfont.css';
 import '@/components/Base';
 import MessageBox from './components/MessageBox';
+import BaseBall from './components/ball.js';
 import './registerServiceWorker';
 
 Vue.use(VueAwesomeSwiper);
@@ -22,6 +23,7 @@ Vue.use(VueLazyload, {
   loading: require('./assets/imgs/default.jpg'),
 });
 Vue.use(MessageBox);
+Vue.use(BaseBall);
 Vue.config.productionTip = false;
 new Vue({
   render: (h) => h(App),

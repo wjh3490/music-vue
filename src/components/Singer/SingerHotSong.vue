@@ -4,7 +4,6 @@
     :class="active == 0 ? 'auto-height' : 'fixed-height'"
   >
     <List :songs="songs" @player="player" />
-    <BaseBall ref="ball" />
   </div>
 </template>
 <script>
@@ -59,7 +58,7 @@ export default {
       }, []);
     },
     player(index, ele) {
-      this.$refs.ball.drop(ele);
+      this.$drop(ele);
       if (!Object.is(this.songs, this.playList)) {
         this.setPlay(this.songs);
         this.setSequenceList(this.songs);
