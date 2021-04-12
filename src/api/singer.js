@@ -45,3 +45,9 @@ export function queryArtistAlbum(id) {
     method: 'get',
   });
 }
+export function queryArtistSimi(id) {
+  return service({
+    url: `/simi/artist?id=${id}`,
+    method: 'get',
+  });
+}

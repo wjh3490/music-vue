@@ -24,7 +24,7 @@
           >
             {{ index + 1 }}
           </div>
-          <div class="ellipsis songlist-name">
+          <div class="songlist-name ">
             <p
               class="ellipsis songlist-title"
               :class="{ active: item.id == currrenSong.id }"
@@ -59,7 +59,7 @@
                   >SQ</span
                 >
               </div>
-              <div>
+              <div class="ellipsis songlist-content">
                 <span>{{ item.singer }}</span> · <span>{{ item.album }}</span>
               </div>
             </div>
@@ -106,6 +106,7 @@ export default {
       }
     }
   }
+
   &-wrap {
     padding-bottom: 60px;
   }
@@ -118,11 +119,15 @@ export default {
     }
   }
   &-title {
+    width: 260px;
     font-size: 18px;
     color: #2f2a2a;
-    &.active {
+    w &.active {
       color: #169af3;
     }
+  }
+  &-content {
+    width: 260px;
   }
   &-album {
     margin-top: 6px;

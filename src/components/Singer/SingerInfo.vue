@@ -1,9 +1,21 @@
 <template>
-  <div
-    class="singerPic"
-    ref="singerPic"
-    :style="{ backgroundImage: `url(${info.cover})` }"
-  >
+  <div class="singer-info" :style="{ backgroundImage: `url(${info.cover})` }">
+    <div class="singer-info-wrap">
+      <div class="singer-info-name">{{ info.name }}</div>
+      <div class="singer-info-identify" v-if="info.identifyTag">
+        <img :src="info.identify.imageUrl" alt="" class="singer-info-figure" />
+        <span class="singer-info-identifyTag">{{ info.identifyTag }}</span>
+      </div>
+      <p class="singer-info-desc" v-if="info.identify.imageDesc">
+        {{ info.identify.imageDesc }}
+      </p>
+      <div class="singer-info-action">
+        <span class="singer-info-btn singer-info-follow"> + 关注</span>
+        <span class="singer-info-btn singer-info-twitter iconfont icon-duanxin">
+          私信</span
+        >
+      </div>
+    </div>
     <slot />
   </div>
 </template>
@@ -13,91 +25,12 @@ export default {
   props: {
     info: {
       type: Object,
-      default: () => {},
     },
-  },
-  data() {
-    return {
-      opacity: 1,
-    };
-  },
-  mounted() {
-    document.addEventListener('scroll', () => {
-      this.opacity = 1 - document.documentElement.scrollTop / 200;
-    });
-  },
-  beforeDestroy() {
-    document.removeEventListener('scroll');
   },
 };
 </script>
 <style lang="less" scoped>
-.detail {
-  padding: 0 20px;
-  &-wrap {
-    display: flex;
-    margin-top: 65px;
-    justify-content: space-between;
-    color: #fff;
-    &-left {
-      width: 110px;
-      height: 110px;
-    }
-    &-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      margin-left: 20px;
-      flex: 1;
-    }
-    &-name {
-      color: #fff;
-      font-size: 16px;
-    }
-    &-nickname {
-      font-size: 14px;
-    }
-    &-avatar {
-      display: flex;
-      align-items: center;
-      margin-top: 6px;
-    }
-    &-bgc {
-      height: 100%;
-      border-radius: 8px;
-    }
-
-    &-img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    &-info {
-      width: 195px;
-    }
-  }
-
-  &-msg {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    margin-top: 25px;
-    font-size: 18px;
-    &-icon {
-      font-size: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    &-des {
-      font-size: 16px;
-    }
-  }
-}
-.singerPic {
+.singer-info {
   position: relative;
   height: 290px;
   width: 100vw;
@@ -113,24 +46,55 @@ export default {
     right: 0;
     bottom: 0;
     top: 0;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.15);
   }
-  .wrap {
-    z-index: -1;
+  &-wrap {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    &::after {
-      content: ' ';
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      top: 0;
-      // background-color: rgba(0, 0, 0, 0.25);
-    }
+    bottom: 20px;
+    left: 30px;
+    right: 30px;
+    z-index: 99;
+  }
+  &-name {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  &-identify {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+  }
+  &-identifyTag {
+    font-size: 13px;
+  }
+  &-figure {
+    width: 15px;
+    height: 15px;
+    margin-right: 7px;
+  }
+  &-desc {
+    margin-top: 6px;
+    color: #f0f0f0;
+    font-size: 14px;
+  }
+  &-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  &-btn {
+    font-size: 14px;
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-weight: 600;
+  }
+  &-follow {
+    background-color: #fff;
+    color: #000;
+  }
+  &-twitter {
+    background: rgba(255, 255, 255, 0.3);
   }
 }
 </style>

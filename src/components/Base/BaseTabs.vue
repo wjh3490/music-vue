@@ -17,11 +17,22 @@
           :class="{ active: active == index }"
           class="base-tabs-nav-item"
           ref="li"
+          :style="{ color }"
         >
-          {{ item.name }}
+          <span>{{ item.name }} </span>
+          <span class="base-tabs-nav-icon" v-if="count">{{ count[item.icon] }}</span>
+          <slot />
         </li>
       </ul>
-      <div class="base-tabs-nav-line" :style="lineStyle"></div>
+      <div
+        class="base-tabs-nav-line"
+        :style="{
+          ...lineStyle,
+          background: lineColor,
+          height: lineHeight,
+          width: lineWidth,
+        }"
+      ></div>
     </div>
   </nav>
 </template>
@@ -46,6 +57,24 @@ export default {
     top: {
       type: String,
       default: '1.33rem',
+    },
+    count: {
+      type: Object,
+    },
+    color: {
+      type: String,
+    },
+    lineColor: {
+      type: String,
+      default: '#169af3',
+    },
+    lineHeight: {
+      type: String,
+      default: '3px',
+    },
+    lineWidth: {
+      type: String,
+      default: '30px',
     },
   },
   data() {
@@ -143,10 +172,10 @@ export default {
       word-break: break-all;
       .base-tabs-nav-item {
         display: inline-block;
-        font-weight: 600;
         padding: 0 15px;
         &.active {
-          color: #169af3;
+          color: #000 !important;
+          font-weight: 600;
         }
       }
     }
@@ -156,19 +185,22 @@ export default {
       .base-tabs-nav-item {
         flex: 1;
         text-align: center;
-        font-weight: 600;
         &.active {
-          color: #169af3;
+          color: #000 !important;
+          font-weight: 600;
         }
       }
     }
+    &-icon {
+      font-size: 12px;
+    }
     &-line {
       position: absolute;
-      bottom: 10px;
+      bottom: 14px;
       text-align: center;
-      height: 3px;
-      width: 30px;
-      background-color: #169af3;
+      // height: 3px;
+      // width: 30px;
+      // background-color: #169af3;
       border-radius: 4px;
     }
   }

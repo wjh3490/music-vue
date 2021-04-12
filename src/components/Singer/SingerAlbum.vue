@@ -32,9 +32,6 @@ export default {
       albums: [],
     };
   },
-  created() {
-    this.getDetail();
-  },
   methods: {
     async getDetail() {
       const { hotAlbums } = await queryArtistAlbum(this.$route.params.id);
@@ -47,7 +44,6 @@ export default {
 <style lang="less" scoped>
 .singer-album {
   padding-left: 10px;
-  // height: calc(100vh - 50px);
   overflow-x: hidden;
   &-item {
     display: flex;

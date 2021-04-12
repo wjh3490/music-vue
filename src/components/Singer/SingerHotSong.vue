@@ -3,10 +3,12 @@
     class="singer-songs"
     :class="active == 0 ? 'auto-height' : 'fixed-height'"
   >
-    <List :songs="songs"></List>
+    <List :songs="songs" @player="player" />
+    <BaseBall ref="ball" />
   </div>
 </template>
 <script>
+import { mapMutations, mapGetters } from 'vuex';
 import { queryArtistTop } from '@/api/singer';
 import List from '@/components/Detail/DetailSongList';
 export default {
@@ -23,8 +25,8 @@ export default {
       songs: [],
     };
   },
-  created() {
-    this.getDetail();
+  computed: {
+    ...mapGetters(['playList', 'fullScreen']),
   },
   methods: {
     async getDetail() {
@@ -56,13 +58,26 @@ export default {
         return acc;
       }, []);
     },
+    player(index, ele) {
+      this.$refs.ball.drop(ele);
+      if (!Object.is(this.songs, this.playList)) {
+        this.setPlay(this.songs);
+        this.setSequenceList(this.songs);
+      }
+      this.setCurrrentIndex(index);
+    },
+    ...mapMutations([
+      'setCurrrentIndex',
+      'setPlay',
+      'setFullScreen',
+      'setSequenceList',
+    ]),
   },
 };
 </script>
 
 <style lang="less" scoped>
 .singer-songs {
-  // height: calc(100vh - 50px);
   overflow-x: hidden;
 }
 .auto-height {

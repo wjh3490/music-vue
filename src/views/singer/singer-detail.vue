@@ -10,7 +10,12 @@
       @change="handleChange"
       position="sticky"
       top="1.33rem"
+      :count="info"
       ref="tabs"
+      color="#a7a3a3"
+      lineColor="#000"
+      lineWidth="45px"
+      lineHeight="2px"
     />
 
     <main class="detail-main">
@@ -62,10 +67,10 @@ export default {
       background: '',
       name: '',
       navList: [
-        { id: 1, name: '歌曲' },
-        { id: 2, name: '专辑' },
-        { id: 3, name: '视频' },
-        { id: 4, name: '关于TA' },
+        { id: 1, name: '歌曲', icon: 'musicSize' },
+        { id: 2, name: '专辑', icon: 'albumSize' },
+        { id: 3, name: '视频', icon: 'mvSize' },
+        { id: 4, name: '关于TA', icon: '' },
       ],
       scrollList: {},
       swiperOptions: {
@@ -77,31 +82,15 @@ export default {
         loop: false,
         watchSlidesVisibility: true,
       },
-      songs: [],
       info: {
-        nickname: '',
-        subscribedCount: 0,
-        commentCount: 0,
-        description: 0,
+        cover: '',
+        albumSize: '',
+        identifyTag: '',
+        musicSize: '',
+        mvSize: '',
         name: '',
-        coverImgUrl: '',
-        avatarUrl: '',
+        identify: { imageDesc: '', imageUrl: '' },
       },
-      playCount: 0,
-      showText: false,
-      percent: 0,
-      scrollTop: 0,
-      musicIcon: false,
-      dom: null,
-      info: {},
-      balls: [
-        { show: false },
-        { show: false },
-        { show: false },
-        { show: false },
-        { show: false },
-      ],
-      dropBalls: [],
     };
   },
   computed: {
@@ -121,34 +110,55 @@ export default {
       'currrentIndex',
     ]),
   },
+  created() {
+    this.getSingerInfo();
+  },
   mounted() {
     this.singerDetail = this.$refs.singerDetail;
     this.singerDetail[0].getDetail();
     this.$refs.tabs.init();
-    this.getPlaylist();
+
     document.addEventListener('scroll', this.scroll);
     this.$once('beforeDestory', () =>
       document.addEventListener('scroll', this.scroll)
     );
   },
   methods: {
+    async getSingerInfo() {
+      const { id } = this.$route.params;
+      const {
+        code,
+        data: { artist, identify },
+      } = await queryArtistDetail(id);
+      if (code == 200) {
+        const {
+          cover,
+          albumSize,
+          identifyTag = [],
+          musicSize,
+          mvSize,
+          name,
+        } = artist;
+        this.info = {
+          cover,
+          albumSize,
+          identifyTag: (identifyTag && identifyTag.join(' / ')) || '',
+          musicSize,
+          mvSize,
+          name,
+          identify,
+        };
+      }
+    },
     scroll() {
-      this.background = `rgba(0,0,0,${document.documentElement.scrollTop /
-        150})`;
+      this.background = `rgba(0,0,0,${Math.min(
+        document.documentElement.scrollTop / 150,
+        1
+      )})`;
       if (document.documentElement.scrollTop > 150) {
         this.name = this.info.name;
       } else {
         this.name = '';
-      }
-    },
-    async getPlaylist() {
-      const { id } = this.$route.params;
-      const {
-        code,
-        data: { artist },
-      } = await queryArtistDetail(id);
-      if (code == 200) {
-        this.info = artist;
       }
     },
     getArtist(artist) {
@@ -156,58 +166,6 @@ export default {
         acc.push(cur.name);
         return acc;
       }, []);
-    },
-    drop(el) {
-      for (let i = 0; i < this.balls.length; i++) {
-        let ball = this.balls[i];
-        if (!ball.show) {
-          ball.show = true;
-          ball.el = el;
-          this.dropBalls.push(ball);
-          return;
-        }
-      }
-    },
-    beforeEnter(el) {
-      let count = this.balls.length;
-      while (count--) {
-        let ball = this.balls[count];
-        if (ball.show) {
-          let rect = ball.el.getBoundingClientRect();
-          let x = 120;
-          let y = -(window.innerHeight - rect.top - 50);
-          el.style.display = '';
-          el.style.webkitTransform = `translate3d(0,${y}px,0)`;
-          el.style.transform = `translate3d(0,${y}px,0)`;
-          el.style.transition = 'all .8s';
-          let inner = el.getElementsByClassName('inner-hook')[0];
-          inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
-          inner.style.transform = `translate3d(${x}px,0,0)`;
-          inner.style.transition = 'all .8s';
-          console.log(el.style.transform, x);
-        }
-      }
-    },
-    enter(el, done) {
-      let rf = el.offsetHeight;
-      this.$nextTick(() => {
-        el.style.webkitTransform = 'translate3d(0,0,0)';
-        el.style.transform = 'translate3d(0,0,0)';
-        el.style.transition = 'all .8s cubic-bezier(.62,-0.1,.86,.57)';
-        let inner = el.getElementsByClassName('inner-hook')[0];
-        inner.style.webkitTransform = 'translate3d(0,0,0)';
-        inner.style.transform = 'translate3d(0,0,0)';
-        inner.style.transition = 'all .8s linear';
-        el.addEventListener('transitionend', done);
-        // done();
-      });
-    },
-    afterEnter(el) {
-      let ball = this.dropBalls.shift();
-      if (ball) {
-        ball.show = false;
-        el.style.display = 'none';
-      }
     },
     handleChange(index, old) {
       this.singerDetail[index].getDetail();
@@ -222,17 +180,7 @@ export default {
       if (this.active == index) return;
       this.swiper.slideTo(index, 0, false);
     },
-    // player(index, ele) {
-    //   this.drop(ele);
-    //   this.musicIcon = true;
-    //   this.dom = ele;
-    //   if (!Object.is(this.songs, this.playList)) {
-    //     this.setPlay(this.songs);
-    //     this.setSequenceList(this.songs);
-    //   }
-    //   this.setCurrrentIndex(index);
-    //   // this.setFullScreen(true)
-    // },
+
     ...mapMutations([
       'setCurrrentIndex',
       'setPlay',
