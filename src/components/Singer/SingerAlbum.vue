@@ -45,6 +45,7 @@ export default {
 .singer-album {
   padding-left: 10px;
   overflow-x: hidden;
+  padding-bottom: 70px;
   &-item {
     display: flex;
     margin-bottom: 6px;

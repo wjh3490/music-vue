@@ -19,7 +19,7 @@ export function queryArtistDetail(id) {
     url: `/artist/detail?id=${id}`,
     method: 'get',
   });
-} 
+}
 
 export function queryArtistDesc(id) {
   return service({
@@ -48,6 +48,12 @@ export function queryArtistAlbum(id) {
 export function queryArtistSimi(id) {
   return service({
     url: `/simi/artist?id=${id}`,
+    method: 'get',
+  });
+}
+export function queryArtistMv(id) {
+  return service({
+    url: `artist/mv?id=${id}`,
     method: 'get',
   });
 }

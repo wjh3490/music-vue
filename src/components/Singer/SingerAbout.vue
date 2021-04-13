@@ -1,5 +1,8 @@
 <template>
-  <div class="singer-about">
+  <div
+    class="singer-about"
+    :class="active == 3 ? 'auto-height' : 'fixed-height'"
+  >
     <section class="singer-about-info" v-if="info.briefDesc">
       <h2>歌手资料</h2>
       <div class="singer-about-briefDesc">{{ info.briefDesc }}</div>
@@ -60,6 +63,12 @@
 import { queryArtistDesc, queryArtistSimi } from '@/api/singer';
 export default {
   name: 'SingerAbout',
+  props: {
+    active: {
+      type: [String, Number],
+      default: '0',
+    },
+  },
   data() {
     return {
       info: { topicData: [], briefDesc: '' },
@@ -104,6 +113,7 @@ export default {
     &-main {
       height: 136px;
       overflow: hidden;
+      margin-top: 10px;
     }
     &-scroller {
       height: 146px;
@@ -161,5 +171,11 @@ export default {
       font-size: 13px;
     }
   }
+}
+.auto-height {
+  height: auto;
+}
+.fixed-height {
+  height: calc(100vh - 50px);
 }
 </style>

@@ -10,11 +10,8 @@ export function filterNum(val) {
 }
 
 export function format(interval) {
-  interval = interval | 0;
+  interval = (interval / 1000) | 0;
   let minute = (interval / 60) | 0;
   let second = (interval % 60).toString().padStart(2, '0');
-  // minute = minute < 10 ? "0" + minute : minute;
-  // second = second < 10 ? '0' + second : second
-  // second = second.padStart(2, '0')
   return minute + ':' + second;
 }

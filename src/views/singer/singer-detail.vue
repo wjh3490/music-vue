@@ -168,6 +168,7 @@ export default {
       }, []);
     },
     handleChange(index, old) {
+      console.log(index, old);
       this.singerDetail[index].getDetail();
       if (document.documentElement.scrollTop < 240) {
         this.scrollList = {};

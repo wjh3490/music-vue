@@ -1,7 +1,7 @@
 <template>
   <div class="base-list-container">
     <slot />
-    <ul class="base-list-main">
+    <ul class="base-list-main" :class="list.length % 3 == 2 ? 'base-list-last' : ''">
       <li
         v-for="(item, index) in list"
         :key="index"
@@ -26,18 +26,6 @@
 <script>
 export default {
   name: 'BaseList',
-  filters: {
-    filterNum(val) {
-      let num;
-      if (val >= 10000) {
-        num = `${(val / 10000).toFixed(1)}万`;
-      }
-      if (val >= 100000000) {
-        num = `${(val / 100000000).toFixed(1)}亿`;
-      }
-      return num;
-    },
-  },
   props: {
     list: {
       type: Array,
@@ -57,6 +45,13 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+  }
+  &-last {
+    &::after {
+      content: '';
+      width: 109px;
+      margin-bottom: 20px;
+    }
   }
   &-item {
     width: 109px;
