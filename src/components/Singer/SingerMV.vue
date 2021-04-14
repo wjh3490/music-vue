@@ -20,7 +20,7 @@
       </div>
 
       <div class="singer-mv-info">
-        <p class="singer-mv-name">
+        <p class="singer-mv-name ellipsis">
           {{ item.name }}
         </p>
         <p class="singer-mv-count">

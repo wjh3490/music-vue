@@ -4,15 +4,18 @@
     :class="active == 1 ? 'auto-height' : 'fixed-height'"
   >
     <ul class="singer-album-wrap">
-      <li v-for="item in albums" :key="item.id" class="singer-album-item">
+      
+      <router-link tag="li" :to="`/album/${item.id}`" v-for="item in albums" :key="item.id" class="singer-album-item">
         <div class="singer-album-left">
           <img :src="item.picUrl" alt="" class="singer-album-figure" />
         </div>
         <div class="singer-album-right">
-          <p class="singer-album-name">{{ item.name }}</p>
-          <p class="singer-album-publishTime">{{ item.publishTime }}</p>
+          <p class="singer-album-name ellipsis">{{ item.name }}</p>
+          <p class="singer-album-publishTime">
+            {{ item.publishTime | parseTime('{y}-{m}-{d}') }}
+          </p>
         </div>
-      </li>
+      </router-link>
     </ul>
   </div>
 </template>

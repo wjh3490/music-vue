@@ -12,12 +12,26 @@
         <div class="detail-wrap-right">
           <div>
             <p class="detail-wrap-name">{{ info.name }}</p>
-            <div class="detail-wrap-avatar">
+            <div class="detail-wrap-avatar" v-if="info.avatarUrl">
               <img :src="info.avatarUrl" alt="" class="detail-wrap-img" />
               <span class="detail-wrap-nickname">{{ info.nickname }}</span>
             </div>
+              <router-link :to="`/singer/${info.id}`" class="detail-wrap-singername">
+                <span class=""
+                  >歌手 :
+                  <span class="detail-wrap-artist">{{
+                    info.nickname
+                  }}</span></span
+                >
+                <span class="iconfont icon-iconfont2 return-left"></span>
+              </router-link>
           </div>
-          <p class="detail-wrap-info ellipsis">{{ info.description }}</p>
+          <div class="detail-wrap-container">
+            <p class="detail-wrap-info ellipsis" v-if="info.publishTime">
+              发行时间: {{ info.publishTime | parseTime('{y}-{m}-{d}') }}
+            </p>
+            <p class="detail-wrap-info ellipsis">{{ info.description }}</p>
+          </div>
         </div>
       </div>
       <div class="detail-msg">
@@ -85,6 +99,15 @@ export default {
     &-nickname {
       font-size: 14px;
     }
+    &-singername {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      color: #fff;
+    }
+    &-artist {
+      font-size: 14px;
+    }
     &-avatar {
       display: flex;
       align-items: center;
@@ -94,7 +117,6 @@ export default {
       height: 100%;
       border-radius: 8px;
     }
-
     &-img {
       width: 28px;
       height: 28px;
@@ -103,6 +125,9 @@ export default {
     }
     &-info {
       width: 195px;
+    }
+    &-container {
+      font-size: 14px;
     }
   }
 
@@ -138,15 +163,16 @@ export default {
     z-index: -1;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 0px;
     width: 100%;
     height: 100%;
     background-position: 0 0;
     background-repeat: no-repeat;
     background-size: cover;
     transform: scale(1.5);
+    // background-size: 150% 150%;
     transform-origin: center center;
-    filter: blur(10px);
+    filter: blur(30px);
     &::after {
       content: ' ';
       position: absolute;
@@ -154,8 +180,13 @@ export default {
       right: 0;
       bottom: 0;
       top: 0;
-      // background-color: rgba(0, 0, 0, 0.25);
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
+}
+.return-left {
+  font-size: 12px;
+  margin-left: 4px;
+  transform: rotate(180deg);
 }
 </style>

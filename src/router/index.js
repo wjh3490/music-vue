@@ -30,8 +30,7 @@ const router = new VueRouter({
     {
       path: '/singer',
       name: 'Singer',
-      component: () =>
-        import(/* webpackChunkName: "rank" */ '../views/singer'),
+      component: () => import(/* webpackChunkName: "rank" */ '../views/singer'),
     },
     {
       path: '/singer/:id',
@@ -60,6 +59,10 @@ const router = new VueRouter({
       path: '/details/:id',
       component: () =>
         import(/* webpackChunkName: "detail" */ '../views/details'),
+    },
+    {
+      path: '/album/:id',
+      component: () => import(/* webpackChunkName: "album" */ '../views/album'),
     },
     {
       path: '/search',

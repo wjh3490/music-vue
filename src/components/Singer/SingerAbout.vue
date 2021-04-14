@@ -21,11 +21,12 @@
         />
         <div class="singer-about-represent-right">
           <p class="singer-about-represent-mainTitle">{{ item.mainTitle }}</p>
-          <p class="singer-about-represent-tag">
+          <p class="singer-about-represent-tag ellipsis">
             标签: {{ item.tags.join(',') }}
           </p>
-          <span class="singer-about-represent-read"
-            >{{ item.categoryName }}, 阅读 {{ item.readCount }}</span
+          <span class="singer-about-represent-read "
+            >{{ item.categoryName || ''}}, 阅读
+            {{ item.readCount | filterNum }}</span
           >
         </div>
       </div>
@@ -46,12 +47,14 @@
               :key="item.id"
               class="singer-about-samilar-item"
             >
-              <img
-                v-lazy="item.img1v1Url"
-                alt=""
-                class="singer-about-samilar-figure"
-              />
-              <span class="singer-about-samilar-name">{{ item.name }}</span>
+              <router-link :to="`/singer/${item.id}`">
+                <img
+                  v-lazy="item.img1v1Url"
+                  alt=""
+                  class="singer-about-samilar-figure"
+                />
+                <span class="singer-about-samilar-name">{{ item.name }}</span>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -166,6 +169,7 @@ export default {
       margin-top: 5px;
     }
     &-tag {
+      width: 220px;
       color: #a59797f5;
       margin-top: 5px;
       font-size: 13px;
