@@ -1,12 +1,11 @@
 export function filterNum(val) {
-  let num;
   if (val >= 10000) {
-    num = `${(val / 10000).toFixed(1)}万`;
+    val = `${(val / 10000).toFixed(1)}万`;
   }
   if (val >= 100000000) {
-    num = `${(val / 100000000).toFixed(1)}亿`;
+    val = `${(val / 100000000).toFixed(1)}亿`;
   }
-  return num;
+  return val;
 }
 
 export function format(interval) {

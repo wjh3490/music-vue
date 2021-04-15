@@ -1,24 +1,20 @@
 <template>
-  <div class="detail-container">
-    <BaseBack
-      background="transparent"
-      :title="$route.query.name"
-      color="#fff"
-    />
-    <DetailBackGround :info="info" />
-    <DetailSongList :songs="songs" @player="player" />
+  <div class="rank-detail">
+    <BaseBack background="transparent" :title="title" color="#fff" />
+    <PlayListBackGround :info="info" :opacity="opacity" />
+    <PlayListSongList :songs="songs" @player="player" />
     <BaseBall ref="ball" />
   </div>
 </template>
+
 <script>
-/*eslint-disable */
+import { rankSongs } from '@/api/rank';
 import { mapMutations, mapGetters } from 'vuex';
-import { recommentSongs } from '@/api/recomment';
-import DetailBackGround from '@/components/Detail/DetailBackGround';
-import DetailSongList from '@/components/Detail/DetailSongList';
+import PlayListBackGround from '@/components/PlayList/PlayListBackGround';
+import PlayListSongList from '@/components/PlayList/PlayListSongList';
 export default {
   name: 'PlaylistDetail',
-  components: { DetailSongList, DetailBackGround },
+  components: { PlayListSongList, PlayListBackGround },
   data() {
     return {
       songs: [],
@@ -31,6 +27,8 @@ export default {
         coverImgUrl: '',
         avatarUrl: '',
       },
+      opacity: 1,
+      title: '歌单',
     };
   },
   computed: {
@@ -39,33 +37,36 @@ export default {
   created() {
     this.getPlaylist();
   },
+  mounted() {
+    document.addEventListener('scroll', this.handldeScroll);
+  },
   methods: {
     async getPlaylist() {
       const { id } = this.$route.params;
       const {
-        code,
         playlist: {
           tracks,
           creator,
           subscribedCount,
           commentCount,
           description,
+          shareCount,
           name,
           coverImgUrl,
         },
         privileges,
-      } = await recommentSongs(id);
+      } = await rankSongs(id);
       const info = {
         nickname: creator.nickname,
-        subscribedCount: subscribedCount,
-        commentCount: commentCount,
-        description: description,
-        name: name,
-        coverImgUrl: coverImgUrl,
         avatarUrl: creator.avatarUrl,
+        subscribedCount,
+        shareCount,
+        commentCount,
+        description,
+        name: name,
+        coverImgUrl,
       };
       this.info = info;
-
       let songs = [];
       for (let i = 0, length = tracks.length; i < length; i++) {
         const song = {
@@ -98,6 +99,14 @@ export default {
         this.setSequenceList(this.songs);
       }
       this.setCurrrentIndex(index);
+    },
+    handldeScroll() {
+      this.opacity = 1 - document.documentElement.scrollTop / 200;
+      if (document.documentElement.scrollTop > 150) {
+        this.title = this.info.name;
+      } else {
+        this.title = '歌单';
+      }
     },
     ...mapMutations(['setCurrrentIndex', 'setPlay', 'setSequenceList']),
   },

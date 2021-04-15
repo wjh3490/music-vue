@@ -16,14 +16,13 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   routes: [
-    { path: '/', redirect: '/recommend' },
+    { path: '/', redirect: '/home' },
     {
       path: '/rank',
       component: () => import(/* webpackChunkName: "rank" */ '../views/rank'),
     },
-
     {
-      path: '/recommend',
+      path: '/home',
       component: () =>
         import(/* webpackChunkName: "recommend" */ '../views/home'),
     },
@@ -54,11 +53,6 @@ const router = new VueRouter({
         import(
           /* webpackChunkName: "playlist-detail" */ '../views/playlist/playlist-detail'
         ),
-    },
-    {
-      path: '/details/:id',
-      component: () =>
-        import(/* webpackChunkName: "detail" */ '../views/details'),
     },
     {
       path: '/album/:id',

@@ -3,16 +3,16 @@
     class="singer-songs"
     :class="active == 0 ? 'auto-height' : 'fixed-height'"
   >
-    <List :songs="songs" @player="player" />
+    <PlayListSongList :songs="songs" @player="player" />
   </div>
 </template>
 <script>
 import { mapMutations, mapGetters } from 'vuex';
 import { queryArtistTop } from '@/api/singer';
-import List from '@/components/Detail/DetailSongList';
+import PlayListSongList from '@/components/PlayList/PlayListSongList';
 export default {
   name: 'SingerHotSong',
-  components: { List },
+  components: { PlayListSongList },
   props: {
     active: {
       type: [String, Number],

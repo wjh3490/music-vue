@@ -5,8 +5,8 @@
       :title="$route.query.name"
       color="#fff"
     />
-    <DetailBackGround :info="info" />
-    <DetailSongList :songs="songs" @player="player" />
+    <PlayListBackGround :info="info" />
+    <PlayListSongList :songs="songs" @player="player" />
     <BaseBall ref="ball" />
   </div>
 </template>
@@ -14,12 +14,11 @@
 /*eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
 import { getAlbum } from '@/api/album';
-
-import DetailBackGround from '@/components/Detail/DetailBackGround';
-import DetailSongList from '@/components/Detail/DetailSongList';
+import PlayListBackGround from '@/components/PlayList/PlayListBackGround';
+import PlayListSongList from '@/components/PlayList/PlayListSongList';
 export default {
   name: 'Album',
-  components: { DetailSongList, DetailBackGround },
+  components: { PlayListSongList, PlayListBackGround },
   data() {
     return {
       songs: [],
@@ -45,9 +44,9 @@ export default {
       const { id } = this.$route.params;
       const { code, songs, album } = await getAlbum(id);
       const info = {
-        nickname: album.artist.name,
-        subscribedCount: album.info.likedCount,
-        commentCount: album.info.commentCount,
+        artist: album.artist.name,
+        subscribedCount: album.info.likedCount || 0,
+        commentCount: album.info.commentCount || 0,
         description: album.description,
         name: album.name,
         coverImgUrl: album.picUrl,

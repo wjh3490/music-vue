@@ -73,7 +73,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'DetailSongList',
+  name: 'PlaylistSongList',
   props: {
     songs: Array,
   },

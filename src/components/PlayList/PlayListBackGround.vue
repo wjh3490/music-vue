@@ -1,9 +1,6 @@
 <template>
   <div class="singerPic" ref="singerPic">
-    <div
-      class="wrap"
-      :style="{ backgroundImage: `url(${info.coverImgUrl})` }"
-    ></div>
+    <img class="wrap" :src="info.coverImgUrl" alt="" />
     <main class="detail" :style="{ opacity }">
       <div class="detail-wrap">
         <div class="detail-wrap-left">
@@ -16,15 +13,17 @@
               <img :src="info.avatarUrl" alt="" class="detail-wrap-img" />
               <span class="detail-wrap-nickname">{{ info.nickname }}</span>
             </div>
-              <router-link :to="`/singer/${info.id}`" class="detail-wrap-singername">
-                <span class=""
-                  >歌手 :
-                  <span class="detail-wrap-artist">{{
-                    info.nickname
-                  }}</span></span
-                >
-                <span class="iconfont icon-iconfont2 return-left"></span>
-              </router-link>
+            <router-link
+              :to="`/singer/${info.id}`"
+              class="detail-wrap-singername"
+              v-if="info.artist"
+            >
+              <span class=""
+                >歌手 :
+                <span class="detail-wrap-artist">{{ info.artist }}</span></span
+              >
+              <span class="iconfont icon-iconfont2 return-left"></span>
+            </router-link>
           </div>
           <div class="detail-wrap-container">
             <p class="detail-wrap-info ellipsis" v-if="info.publishTime">
@@ -36,13 +35,17 @@
       </div>
       <div class="detail-msg">
         <div class="detail-msg-icon iconfont icon-shanchu2">
-          <span class="detail-msg-des"> {{ info.subscribedCount }}</span>
+          <span class="detail-msg-des">
+            {{ info.subscribedCount | filterNum }}</span
+          >
         </div>
         <div class="detail-msg-icon iconfont icon-pinglun">
-          <span class="detail-msg-des">{{ info.commentCount }}</span>
+          <span class="detail-msg-des">{{
+            info.commentCount | filterNum
+          }}</span>
         </div>
         <div class="detail-msg-icon iconfont icon-fenxiang">
-          <span class="detail-msg-des"> {{ info.shareCount }}</span>
+          <span class="detail-msg-des"> {{ info.shareCount | filterNum }}</span>
         </div>
       </div>
     </main>
@@ -51,36 +54,28 @@
 </template>
 <script>
 export default {
-  name: 'DetailBackGround',
+  name: 'PlaylistBackGround',
   props: {
     info: {
       type: Object,
       default: () => {},
     },
-  },
-  data() {
-    return {
-      opacity: 1,
-    };
-  },
-  mounted() {
-    document.addEventListener('scroll', () => {
-      this.opacity = 1 - document.documentElement.scrollTop / 200;
-    });
-  },
-  beforeDestroy() {
-    document.removeEventListener('scroll');
+    opacity: {
+      type: [String, Number],
+      default: 1,
+    },
   },
 };
 </script>
 <style lang="less" scoped>
 .detail {
   padding: 0 20px;
+  padding-top: 65px;
   &-wrap {
     display: flex;
-    margin-top: 65px;
     justify-content: space-between;
     color: #fff;
+
     &-left {
       width: 110px;
       height: 110px;
@@ -170,9 +165,9 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     transform: scale(1.5);
-    // background-size: 150% 150%;
     transform-origin: center center;
     filter: blur(30px);
+    -webkit-filter: blur(30px);
     &::after {
       content: ' ';
       position: absolute;

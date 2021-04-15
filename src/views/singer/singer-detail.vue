@@ -40,7 +40,6 @@
 import { mapMutations, mapGetters } from 'vuex';
 import { queryArtistDetail, queryArtistDesc, queryArtist } from '@/api/singer';
 import SingerInfo from '@/components/Singer/SingerInfo';
-import DetailSongList from '@/components/Detail/DetailSongList';
 import SingerAbout from '@/components/Singer/SingerAbout';
 import SingerAlbum from '@/components/Singer/SingerAlbum';
 import SingerHotSong from '@/components/Singer/SingerHotSong';
@@ -58,7 +57,6 @@ export default {
     SingerAlbum,
     SingerHotSong,
     SingerMV,
-    DetailSongList,
     SingerInfo,
   },
   data() {

@@ -4,7 +4,9 @@
     <div class="rank-wrap">
       <div class="rank-title"><strong>官方榜</strong></div>
       <ul class="rank-items">
-        <li
+        <router-link
+          :to="`/playlist/${item.id}`"
+          tag="li"
           class="rank-item"
           v-for="(item, index) in rank"
           :key="index"
@@ -23,7 +25,7 @@
           <div class="rank-item-left">
             <img v-lazy="item.coverImgUrl" :alt="item.name" class="rank-img" />
           </div>
-        </li>
+        </router-link>
       </ul>
     </div>
 
@@ -33,15 +35,13 @@
           <strong>{{ item.name }}</strong>
         </div>
         <div class="others-items">
-          <div
-            v-for="item1 in item.list"
+          <router-link  :to="`/playlist/${item1.id}`"  v-for="item1 in item.list"
             :key="item1.id"
             class="others-item ellipsis"
-            @click="getRankSongs(item1)"
-          >
+            @click="getRankSongs(item1)">
             <img v-lazy="item1.coverImgUrl" alt="" class="others-img" />
             <p class="others-name ellipsis">{{ item1.name }}</p>
-          </div>
+         </router-link>
         </div>
       </div>
     </div>
