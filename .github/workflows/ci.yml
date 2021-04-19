@@ -24,7 +24,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@4.1.1 # 使用别人写好的 actions
         with:
           branch: gh-pages
-          folder: site
+          folder: dist
           ssh-key: ${{ secrets.VUE_MUSIC }}
           build-script: npm install && npm run build
       
