@@ -21,10 +21,10 @@ jobs:
           npm run build
 
       - name: Deploy # 将打包内容发布到 github page
-        uses: JamesIves/github-pages-deploy-action@3.5.9 # 使用别人写好的 actions
+        uses: JamesIves/github-pages-deploy-action@master # 使用别人写好的 actions
         env:
           ACCESS_TOKEN: ${{ secrets.VUE_MUSIC }} # VUE_ADMIN_TEMPLATE 是我的 secret 名称，需要替换成你的
-          BRANCH: gh-pages
+          BRANCH: test
           FOLDER: dist
           BUILD_SCRIPT: npm install && npm run build
       
