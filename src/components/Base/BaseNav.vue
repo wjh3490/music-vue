@@ -22,8 +22,8 @@ export default {
         { icon: 'icon-portrait', name: '歌手', to: '/singer' },
         { icon: 'icon-paiming', name: '排行榜', to: '/rank' },
         { icon: 'icon-fenlei', name: '歌单', to: '/playlist' },
-        { icon: 'icon-fenlei', name: '推荐1', to: '/user' },
-        { icon: 'icon-fenlei', name: '推荐2', to: '/user' },
+        { icon: 'icon-Live-1', name: '电台', to: '' },
+        { icon: 'icon-zhibojiankan', name: '直播', to: '' },
       ],
     },
   },
@@ -31,8 +31,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@base: 37.5rem;
-
 .nav-conainer {
   display: flex;
   font-size: 16px;
@@ -50,7 +48,10 @@ export default {
     display: block;
     font-size: 13px;
     color: #000;
-    margin-top:6px;
+    margin-top: 6px;
+  }
+  .icon-Live-1 {
+    font-size: 24px;
   }
 }
 </style>

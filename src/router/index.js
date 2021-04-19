@@ -59,6 +59,18 @@ const router = new VueRouter({
       component: () => import(/* webpackChunkName: "album" */ '../views/album'),
     },
     {
+      path: '/mall',
+      component: () => import(/* webpackChunkName: "mall" */ '../views/mall'),
+    }, 
+    {
+      path: '/mall-category',
+      component: () => import(/* webpackChunkName: "mall-category" */ '../views/mall/mall-category'),
+    },
+    {
+      path: '/songs/:id?',
+      component: () => import(/* webpackChunkName: "songs" */ '../views/songs'),
+    },
+    {
       path: '/search',
       component: () =>
         import(/* webpackChunkName: "search" */ '../views/search'),

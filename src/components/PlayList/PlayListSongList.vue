@@ -25,17 +25,35 @@
             {{ index + 1 }}
           </div>
           <div class="songlist-name ">
-            <p
+            <div
               class="ellipsis songlist-title"
               :class="{ active: item.id == currrenSong.id }"
             >
-              {{ item.name }}
-            </p>
+              <span>
+                {{ item.name }}
+              </span>
+
+              <span style="color:#a59797f5" v-if="item.alia">
+                ({{ item.alia }})</span
+              >
+            </div>
             <div
               class="songlist-album"
               :class="{ active: item.id == currrenSong.id }"
             >
               <div class="songlist-album-icons">
+                <!-- sq -->
+                <span
+                  v-if="item.privilege.maxbr === 999000"
+                  class="iconsq icon sq"
+                  >SQ</span
+                >
+                <!-- 独家 -->
+                <span
+                  v-if="/64|68|1088|1092/.test(item.privilege.flag)"
+                  class="icon only"
+                  >独家</span
+                >
                 <!-- vip -->
                 <span v-if="item.privilege.fee === 1" class="icon vip"
                   >vip</span
@@ -45,18 +63,6 @@
                   v-if="/1152|1028|1088|1092/.test(item.privilege.flag)"
                   class="icon listen"
                   >试听</span
-                >
-                <!-- 独家 -->
-                <span
-                  v-if="/64|68|1088|1092/.test(item.privilege.flag)"
-                  class="icon only"
-                  >独家</span
-                >
-                <!-- sq -->
-                <span
-                  v-if="item.privilege.maxbr === 999000"
-                  class="iconsq icon sq"
-                  >SQ</span
                 >
               </div>
               <div class="ellipsis songlist-content">
@@ -121,8 +127,8 @@ export default {
   &-title {
     width: 260px;
     font-size: 18px;
-    color: #2f2a2a;
-    w &.active {
+    // color: #a59797f5;
+    &.active {
       color: #169af3;
     }
   }

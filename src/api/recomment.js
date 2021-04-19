@@ -3,37 +3,40 @@ import service from '../request/service';
 export function vGetPersonalized() {
   return service({
     url: '/personalized',
-    method: 'get'
+    method: 'get',
   });
 }
 
 export function vGetNewsong() {
   return service({
     url: '/personalized/newsong?limit=100',
-    method: 'get'
+    method: 'get',
   });
 }
 
 export function vGetBanner() {
   return service({
     url: '/banner',
-    method: 'get'
+    method: 'get',
   });
 }
 
 export function recommentSongs(id) {
   return service({
     url: `/playlist/detail?id=${id}`,
-    method: 'get'
+    method: 'get',
   });
 }
 
 export function vGetDetail(id) {
   return service({
     url: `/song/detail?ids=${id}`,
-    method: 'get'
+    method: 'get',
   });
 }
-//https://platform.xuanyu.com.cn/promotions/seckill/time-line
-
-
+export function recommendSongs() {
+  return service({
+    url: '/recommend/songs',
+    method: 'get',
+  });
+}

@@ -9,8 +9,8 @@ export function filterNum(val) {
 }
 
 export function format(interval) {
-  interval = (interval / 1000) | 0;
-  let minute = (interval / 60) | 0;
+  interval = ~~interval;
+  let minute = ~~(interval / 60);
   let second = (interval % 60).toString().padStart(2, '0');
   return minute + ':' + second;
 }

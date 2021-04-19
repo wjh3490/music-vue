@@ -19,13 +19,9 @@
 
 <script>
 /*eslint-disable */
-import { format } from '@/filters';
 import progress from '@/directives/progress.js';
 export default {
   name: 'PlayerProgressBar',
-  filters: {
-    format,
-  },
   updated() {
     // console.log('PlayerProgressBar')
   },
@@ -49,7 +45,7 @@ export default {
   computed: {
     percent(vm) {
       if (this.isMove) return;
-      return (this.currentTime / this.duration) * 100 || 0;
+      return( (this.currentTime / this.duration) * 100).toFixed(2) || 0;
     },
   },
 };

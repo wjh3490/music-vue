@@ -38,6 +38,7 @@ export default {
           id: songs[i]['id'],
           name: songs[i]['name'],
           album: songs[i]['al']['name'],
+          alia:songs[i]['alia'].join(' '),
           singer: this.getArtist(songs[i]['ar']).join('/'),
           picUrl: songs[i]['al']['picUrl'],
           privilege: {

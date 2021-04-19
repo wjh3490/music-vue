@@ -20,7 +20,9 @@
           :style="{ color }"
         >
           <span>{{ item.name }} </span>
-          <span class="base-tabs-nav-icon" v-if="count">{{ count[item.icon] }}</span>
+          <slot>
+            <span class="base-tabs-nav-icon" v-if="count">{{ count[item.icon] }}</span>
+          </slot>
           <slot />
         </li>
       </ul>

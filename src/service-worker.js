@@ -1,9 +1,10 @@
+/*eslint-disable*/
 workbox.core.setCacheNameDetails({
   prefix: 'music',
-  suffix: 'v1.0.0'
+  suffix: 'v1.0.0',
 });
 // 让我们的service worker尽快的得到更新和获取页面的控制权
-workbox.core.skipWaiting(); 
+workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
 /*
@@ -29,23 +30,22 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 workbox.routing.registerRoute(
   /^https:\/\/p1\.music\.126\.net/,
   workbox.strategies.networkFirst({
-  cacheName: "images",
+    cacheName: 'images',
     plugins: [
-     new workbox.expiration.Plugin({
-        maxAgeSeconds: 5 * 24 * 60 * 60 // 设置缓存有效期为5天
-      })
+      new workbox.expiration.Plugin({
+        maxAgeSeconds: 5 * 24 * 60 * 60, // 设置缓存有效期为5天
+      }),
     ],
   })
 );
 workbox.routing.registerRoute(
-  /^http:\/\/121\.4\.152\.254/,
+  /^https:\/\/netease-cloud-music-api-gilt\.vercel\.app/,
   workbox.strategies.networkFirst({
-  cacheName: "api",
+    cacheName: 'api',
     plugins: [
       new workbox.expiration.Plugin({
-        maxAgeSeconds: 24 * 60 * 60 // 设置缓存有效期为1天
-      })
+        maxAgeSeconds: 24 * 60 * 60, // 设置缓存有效期为1天
+      }),
     ],
   })
 );
-

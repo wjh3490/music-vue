@@ -1,6 +1,7 @@
 <template>
   <div class="recommend">
     <RecommendSearch />
+    <!-- 轮播图 -->
     <div class="recommend-swiper">
       <BaseSwiper
         :list="swiperList"
@@ -16,13 +17,46 @@
         <div class="my-lazy-preloader"></div>
       </BaseSwiper>
     </div>
+    <!-- 导航栏 -->
     <BaseNav />
-    <BaseList :list="personalized" @list="pushDetails">
-      <h3 class="recommend-type">热门推荐</h3></BaseList
+    <!-- 推荐歌单 -->
+    <HomePlayList :list="personalized" v-if="personalized.length">
+      <HomeMore title="推荐歌单" link="/playlist" />
+    </HomePlayList>
+    <!-- 排行榜 -->
+    <HomeTopList :list="toplists" v-if="toplists.length">
+      <HomeMore title="排行榜" link="/rank" />
+    </HomeTopList>
+    <!--  新歌  新碟  数字专辑  -->
+    <HomeNewSong
+      v-if="newsong.length"
+      :products="products"
+      :songs="newsong"
+      :albums="albums"
+      :tabs="tabs"
+      :activeTab="activeTab"
     >
-    <BaseList :list="newsong" @list="playSong">
-      <h3 class="recommend-type">新碟上架</h3></BaseList
-    >
+      <HomeMore :link="link" :more="more">
+        <div class="home-newsong-tabs">
+          <div
+            class="home-newsong-tab"
+            v-for="tab in tabs"
+            :key="tab.tabIndex"
+            @click="handleChange(tab)"
+          >
+            <strong
+              class="home-newsong-tabs-name"
+              :class="{ 'home-newsong-active': activeTab == tab.tabIndex }"
+              >{{ tab.name }}</strong
+            >
+            <span
+              class="home-newsong-tabs-line"
+              v-if="tab.tabIndex != 3"
+            ></span>
+          </div>
+        </div>
+      </HomeMore>
+    </HomeNewSong>
   </div>
 </template>
 
@@ -36,9 +70,21 @@ import {
   vGetBanner,
   vGetDetail,
 } from '@/api/recomment.js';
+import { rankTopList } from '@/api/rank';
+import { getAlbumNewset, getAlbumList } from '@/api/album';
+import HomeTopList from '@/components/Home/HomeTopList';
+import HomeMore from '@/components/Home/HomeMore';
+import HomeNewSong from '@/components/Home/HomeNewSong';
+import HomePlayList from '@/components/Home/HomePlayList';
 export default {
-  name: 'Recommend',
-  components: { RecommendSearch },
+  name: 'Home',
+  components: {
+    RecommendSearch,
+    HomeTopList,
+    HomeMore,
+    HomeNewSong,
+    HomePlayList,
+  },
   data() {
     return {
       swiperOptions: {
@@ -65,9 +111,20 @@ export default {
         slidesPerView: 'auto',
         centeredSlides: true,
       },
+      tabs: [
+        { link: '/songs/0', more: '更多新歌', tabIndex: 1, name: '新歌' },
+        { link: '/songs/1', more: '更多新碟', tabIndex: 2, name: '新碟' },
+        { link: '/mall', more: '更多数专', tabIndex: 3, name: '数字专辑' },
+      ],
+      activeTab: 1,
+      more: '更多新歌',
+      link: '/songs/0',
       swiperList: [],
       personalized: [],
       newsong: [],
+      toplists: [],
+      albums: [],
+      products: [],
     };
   },
 
@@ -75,40 +132,100 @@ export default {
     ...mapGetters(['playList']),
   },
 
-  created() {
+  async created() {
+    await getAlbumNewset();
     this.getSwiperList();
     this.getPersonalized();
     this.getNewsong();
+    this.getTopList();
+    this.getNewAlbum();
+    this.getAlbumList();
   },
   methods: {
+    async getTopList() {
+      const { list } = await rankTopList();
+      const toplists = list.filter((item) => item.tracks && item.tracks.length);
+      this.toplists = toplists;
+    },
     async getSwiperList() {
       const { code, banners } = await vGetBanner();
-
       if (code === 200) {
-        this.swiperList = Object.freeze(banners);
+        this.swiperList = banners;
       }
     },
     async getPersonalized() {
       const { code, result } = await vGetPersonalized();
       if (code === 200) {
-        this.personalized = Object.freeze(result.splice(0, 15));
+        this.personalized = result.splice(0, 6);
+      }
+    },
+    async getNewAlbum() {
+      const { code, albums } = await getAlbumNewset();
+      if (code == 200) {
+        const list = albums.slice(0, 6).reduce((acc, cur) => {
+          const album = {
+            id: cur.id,
+            name: cur.name,
+            picUrl: cur.picUrl,
+            album: this.getArtist(cur.artists).join('、'),
+            artists: '',
+            privilege: {
+              pl: '',
+              fee: '',
+              flag: '',
+              maxbr: '',
+            },
+          };
+          acc.push(album);
+          return acc;
+        }, []);
+        this.albums = this.splitList(list, 3);
+      }
+    },
+    async getAlbumList() {
+      const { code, products } = await getAlbumList();
+      if (code == 200) {
+        const list = products.slice(0, 9).reduce((acc, cur) => {
+          const product = {
+            id: cur.albumId,
+            name: cur.albumName,
+            picUrl: cur.coverUrl,
+            album: cur.artistName,
+            artists: '',
+            privilege: {
+              pl: '',
+              fee: '',
+              flag: '',
+              maxbr: '',
+            },
+          };
+          acc.push(product);
+          return acc;
+        }, []);
+        this.products = this.splitList(list, 3);
       }
     },
     async getNewsong() {
       const { code, result } = await vGetNewsong();
       if (code == 200) {
-        const list = result.slice(6).reduce((acc, cur) => {
-          const obj = {
+        const list = result.slice(0, 6).reduce((acc, cur) => {
+          const song = {
             id: cur.id,
-            picUrl: cur.picUrl,
             name: cur.name,
-            playCount: cur.song.bMusic && cur.song.bMusic.playTime,
-            singer: cur.song.artists[0]['name'],
+            picUrl: cur.picUrl,
+            album: cur.song.album.name,
+            artists: this.getArtist(cur.song.artists).join('、'),
+            privilege: {
+              pl: cur.song.privilege['pl'],
+              fee: cur.song.privilege['fee'],
+              flag: cur.song.privilege['flag'],
+              maxbr: cur.song.privilege['maxbr'],
+            },
           };
-          acc.push(obj);
+          acc.push(song);
           return acc;
         }, []);
-        this.newsong = list;
+        this.newsong = this.splitList(list, 3);
       }
     },
     async getDetail(id) {
@@ -132,6 +249,12 @@ export default {
         this.setCurrrentIndex(0);
       }
     },
+    handleChange(tab) {
+      if (tab.tabIndex == this.activeTab) return;
+      this.activeTab = tab.tabIndex;
+      this.more = tab.more;
+      this.link = tab.link;
+    },
     playSong(item, index) {
       if (!Object.is(this.newsong, this.playList)) {
         this.setPlay(this.newsong);
@@ -139,16 +262,19 @@ export default {
       }
       this.setCurrrentIndex(index);
     },
-    pushDetails(singer) {
-      const _singer = {
-        id: singer.id,
-        singerPic: singer.picUrl,
-        name: singer.name,
-      };
-      this.setSinger(_singer);
-      this.$router.push(
-        `/details/${singer.id}?singerPic=${singer.picUrl}&name=${singer.name}&componentName=RecommendDetail`
-      );
+    splitList(list, length) {
+      let index = 0;
+      let newArray = [];
+      while (index < list.length) {
+        newArray.push(list.slice(index, (index += length)));
+      }
+      return newArray;
+    },
+    getArtist(artist) {
+      return artist.reduce((acc, cur) => {
+        acc.push(cur.name);
+        return acc;
+      }, []);
     },
     ...mapMutations([
       'setCurrrentIndex',
@@ -167,7 +293,7 @@ export default {
 .recommend-swiper {
   margin-top: 20px;
 }
-.recommend /deep/ .swiper-slide {
+.recommend-swiper /deep/ .swiper-slide {
   position: relative;
   width: 90%;
   padding: 0 1.5%;
@@ -177,5 +303,32 @@ export default {
 .swiper-img {
   height: 140px;
   border-radius: 6px;
+}
+
+.icon-youjiantou {
+  font-size: 12px;
+}
+.home-newsong {
+  &-tabs {
+    display: flex;
+    align-items: center;
+    color: #999;
+    &-name {
+      font-size: 18px;
+    }
+    &-line {
+      margin: 0 8px;
+      height: 13px;
+      width: 1px;
+      background: #999;
+    }
+  }
+  &-tab {
+    display: flex;
+    align-items: center;
+  }
+  &-active {
+    color: #333;
+  }
 }
 </style>

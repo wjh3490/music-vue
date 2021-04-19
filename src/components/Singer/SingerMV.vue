@@ -15,7 +15,7 @@
         </div>
         <div class="singer-mv-desc">
           <span>{{ item.publishTime }}</span>
-          <span>{{ item.duration | format }}</span>
+          <span>{{ (item.duration / 1000) | format }}</span>
         </div>
       </div>
 

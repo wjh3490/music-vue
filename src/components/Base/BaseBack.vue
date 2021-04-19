@@ -3,15 +3,15 @@
     class="return"
     :class="{ isFixed }"
     :style="{ color, background, opacity }"
-   
   >
     <span
       class="iconfont icon-iconfont2 return-left"
       @click="$router.back()"
     ></span>
     <div class="return-middle ellipsis">
-      <b>{{ title }}</b>
-      <slot />
+      <slot>
+        <b>{{ title }}</b>
+      </slot>
     </div>
     <span class="return-right">
       <slot name="right" />
@@ -36,7 +36,6 @@ export default {
       default: 1,
     },
     color: String,
-    
   },
 };
 </script>
