@@ -8,7 +8,7 @@
       </router-link>
       <router-link to="/mall-category" class="mall-nav-item">
         <span class="iconfont icon-category1 mall-nav-icon"></span>
-        <p class="mall-nav-title">语种分格馆</p>
+        <p class="mall-nav-title">语种风格馆</p>
       </router-link>
       <div v class="mall-nav-item">
         <span class="iconfont icon-yigoumai mall-nav-icon"></span>
