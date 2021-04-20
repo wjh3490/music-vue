@@ -22,7 +22,7 @@ jobs:
 
       - name: Deploy # 将打包内容发布到 github page
         uses: JamesIves/github-pages-deploy-action@4.1.1 # 使用别人写好的 actions
-        env:
+        with:
           ACCESS_TOKEN: ${{ secrets.VUE_MUSIC }} # VUE_ADMIN_TEMPLATE 是我的 secret 名称，需要替换成你的
           BRANCH: test
           FOLDER: dist
