@@ -97,8 +97,8 @@ export default {
   },
 
   computed: {
-    palyStatus({ playing }) {
-      return playing ? 'icon-pause-full' : 'icon-bofang';
+    palyStatus({ playing, fullScreen }) {
+      return playing ? 'icon-zanting11' : 'icon-bofang';
     },
     animationStatus({ playing }) {
       return playing ? '' : 'animation_pause';

@@ -29,6 +29,7 @@
             :is="currentTabComponent(item.id)"
             ref="singerDetail"
             :active="active"
+            :cover="info.cover"
           ></component>
         </swiper-slide>
       </swiper>
@@ -158,12 +159,6 @@ export default {
       } else {
         this.name = '';
       }
-    },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
     },
     handleChange(index, old) {
       console.log(index, old);

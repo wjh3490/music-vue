@@ -6,17 +6,30 @@
       v-if="props.songs.length"
       v-show="props.activeTab == 1"
     >
-      <swiper-slide v-for="(item, index) in props.songs" :key="'s' + index">
+      <swiper-slide
+        v-for="(item, index) in props.songs"
+        :key="'s' + index"
+        style="width: 9.2rem"
+      >
         <div class="home-newsong">
           <ul>
-            <li class="home-newsong-item" v-for="song in item" :key="song.id">
+            <li
+              @click="listeners.player(song.id)"
+              class="home-newsong-item"
+              v-for="song in item"
+              :key="song.id"
+            >
               <figure class="home-newsong-figure">
                 <img v-lazy="song.picUrl" alt="" class="home-newsong-img" />
+                <span
+                  class="iconfont home-newsong-icon"
+                  :class="props.palyStatus(song.id)"
+                ></span>
               </figure>
               <div class="home-newsong-right ellipsis">
                 <div class="ellipsis">
                   <span class="home-newsong-name ">{{ song.name }}</span>
-                  <span> — {{ song.artists }} </span>
+                  <span> - {{ song.artists }} </span>
                 </div>
                 <div class="ellipsis home-newsong-album">{{ song.album }}</div>
               </div>
@@ -31,7 +44,11 @@
       v-if="props.albums.length"
       v-show="props.activeTab == 2"
     >
-      <swiper-slide v-for="(item, index) in props.albums" :key="'b' + index">
+      <swiper-slide
+        v-for="(item, index) in props.albums"
+        :key="'b' + index"
+        style="width: 9.2rem"
+      >
         <div class="home-newsong">
           <ul>
             <li class="home-newsong-item" v-for="song in item" :key="song.id">
@@ -41,9 +58,11 @@
               <div class="home-newsong-right ellipsis">
                 <div class="ellipsis">
                   <span class="home-newsong-name ">{{ song.name }}</span>
-                  <span v-if="song.artists"> - {{ song.artists }} </span>
+                  <!-- <span v-if="song.artists"> - {{ song.artists }} </span> -->
                 </div>
-                <div class="ellipsis home-newsong-album">{{ song.album }}</div>
+                <div class="ellipsis home-newsong-album">
+                  {{ song.artists }}
+                </div>
               </div>
             </li>
           </ul>
@@ -66,9 +85,11 @@
               <div class="home-newsong-right ellipsis">
                 <div class="ellipsis">
                   <span class="home-newsong-name ">{{ song.name }}</span>
-                  <span v-if="song.artists"> - {{ song.artists }} </span>
+                  <!-- <span v-if="song.artists"> - {{ song.artists }} </span> -->
                 </div>
-                <div class="ellipsis home-newsong-album">{{ song.album }}</div>
+                <div class="ellipsis home-newsong-album">
+                  {{ song.artists }}
+                </div>
               </div>
             </li>
           </ul>
@@ -103,6 +124,7 @@ export default {
       }),
     },
     activeTab: [String, Number],
+    palyStatus: Function,
   },
 };
 </script>
@@ -130,6 +152,17 @@ export default {
   }
   &-album {
     margin-top: 6px;
+  }
+  &-figure {
+    position: relative;
+  }
+  &-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    color: #fff;
+    font-size: 24px;
   }
 }
 .home-newsong /deep/ .swiper-slide {

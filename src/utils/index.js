@@ -5,12 +5,12 @@
  */
 
 /*eslint-disable */
-export function filterList (list, currrenSong) {
-  let data = list.slice()
+export function filterList(list, currrenSong) {
+  let data = list.slice();
   if (data.length === 0) {
     data.push(currrenSong);
   } else {
-    let flag = data.find(ele => ele.id === currrenSong.id);
+    let flag = data.find((ele) => ele.id === currrenSong.id);
     if (!flag) {
       data.unshift(currrenSong);
     }
@@ -64,7 +64,13 @@ export function parseLyric(lrc) {
   return lrcObj;
 }
 
-export function scrollToEase(el, start, to, scrollTop ='scrollTop', duration = 300) {
+export function scrollToEase(
+  el,
+  start,
+  to,
+  scrollTop = 'scrollTop',
+  duration = 300
+) {
   const change = to - start;
 
   const increment = 20;
@@ -84,7 +90,7 @@ export function scrollToEase(el, start, to, scrollTop ='scrollTop', duration = 3
 export function scrollToSmooth(el, to, flag = false) {
   el.scrollTo({
     top: to,
-    behavior: flag ? 'smooth' : 'instant'
+    behavior: flag ? 'smooth' : 'instant',
   });
 }
 
@@ -108,4 +114,20 @@ var requestAnimFrame = (function() {
 
 function easeOutQuart(t, b, c, d) {
   return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+}
+
+export function splitList(list, length) {
+  let index = 0;
+  let newArray = [];
+  while (index < list.length) {
+    newArray.push(list.slice(index, (index += length)));
+  }
+  return newArray;
+}
+
+export function getArtist(artists) {
+  return artists.reduce((acc, cur) => {
+    acc.push(cur.name);
+    return acc;
+  }, []);
 }

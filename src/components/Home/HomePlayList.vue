@@ -46,20 +46,21 @@ export default {
     color: #333;
   }
   &-main {
-    height: 142px;
+    height: 150px;
     overflow: hidden;
   }
   &-scroll {
     overflow-x: scroll;
-    margin-left: 15px;
-    height: 150px;
+    overflow-y: hidden;
+    padding: 0 15px;
+    height: 160px;
   }
   &-wrap {
-    display: flex;
     white-space: nowrap;
   }
   &-item {
     width: 110px;
+    display: inline-block;
     margin-right: 10px;
   }
   &-img {
@@ -68,7 +69,9 @@ export default {
     border-radius: 8px;
   }
   &-name {
+    margin-top: 6px;
     white-space: normal;
+    height: 38px;
   }
 }
 </style>

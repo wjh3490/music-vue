@@ -30,6 +30,7 @@ import { mapMutations } from 'vuex';
 import { vGetNewsong } from '@/api/recomment.js';
 import PlayListSongList from '@/components/PlayList/PlayListSongList';
 import SongsNewAlbum from '@/components/Songs/SongsNewAlbum';
+import { Song } from '@/utils/config';
 export default {
   name: 'Songs',
   components: { PlayListSongList, SongsNewAlbum },
@@ -44,7 +45,7 @@ export default {
   },
   methods: {
     async getNewSong() {
-      const { code, result } = await vGetNewsong();
+      const { code, result } = await vGetNewsong({ limit: 30 });
       if (code == 200) {
         let list = [];
         for (let i = 0, length = result.length; i < length; i++) {
@@ -52,7 +53,7 @@ export default {
             id: result[i]['id'],
             name: result[i]['name'],
             album: result[i]['song']['name'],
-            singer: this.getArtist(result[i]['song']['artists']).join('/'),
+            singer: result[i]['song']['artists'],
             picUrl: result[i]['picUrl'],
             privilege: {
               pl: result[i]['song']['privilege']['pl'] || '',
@@ -61,7 +62,7 @@ export default {
               maxbr: result[i]['song']['privilege']['maxbr'] || '',
             },
           };
-          list.push(song);
+          list.push(new Song(song));
         }
         this.songs = list;
       }

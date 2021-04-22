@@ -12,6 +12,7 @@ import { rankSongs } from '@/api/rank';
 import { mapMutations, mapGetters } from 'vuex';
 import PlayListBackGround from '@/components/PlayList/PlayListBackGround';
 import PlayListSongList from '@/components/PlayList/PlayListSongList';
+import { Song } from '@/utils/config';
 export default {
   name: 'PlaylistDetail',
   components: { PlayListSongList, PlayListBackGround },
@@ -73,7 +74,7 @@ export default {
           id: tracks[i]['id'],
           name: tracks[i]['name'],
           album: tracks[i]['al']['name'],
-          singer: this.getArtist(tracks[i]['ar']).join('/'),
+          artists: tracks[i]['ar'],
           picUrl: tracks[i]['al']['picUrl'],
           privilege: {
             pl: privileges[i]['pl'],
@@ -82,18 +83,12 @@ export default {
             maxbr: privileges[i]['maxbr'],
           },
         };
-        songs.push(song);
+        songs.push(new Song(song));
       }
       this.songs = songs;
     },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
-    },
     player(index, ele) {
-      this.$refs.ball.drop(ele);
+      this.$drop(ele);
       if (!Object.is(this.songs, this.playList)) {
         this.setPlay(this.songs);
         this.setSequenceList(this.songs);

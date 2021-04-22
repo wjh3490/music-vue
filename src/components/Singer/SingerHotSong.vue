@@ -9,6 +9,7 @@
 <script>
 import { mapMutations, mapGetters } from 'vuex';
 import { queryArtistTop } from '@/api/singer';
+import { Song } from '@/utils/config';
 import PlayListSongList from '@/components/PlayList/PlayListSongList';
 export default {
   name: 'SingerHotSong',
@@ -18,6 +19,7 @@ export default {
       type: [String, Number],
       default: '0',
     },
+    cover: String,
   },
   data() {
     return {
@@ -38,9 +40,9 @@ export default {
           id: songs[i]['id'],
           name: songs[i]['name'],
           album: songs[i]['al']['name'],
-          alia:songs[i]['alia'].join(' '),
-          singer: this.getArtist(songs[i]['ar']).join('/'),
-          picUrl: songs[i]['al']['picUrl'],
+          alia: songs[i]['alia'].join(' '),
+          artists: songs[i]['ar'],
+          picUrl: this.cover,
           privilege: {
             pl: songs[i]['privilege']['pl'],
             fee: songs[i]['privilege']['fee'],
@@ -48,15 +50,9 @@ export default {
             maxbr: songs[i]['privilege']['maxbr'],
           },
         };
-        list.push(song);
+        list.push(new Song(song));
       }
       this.songs = list;
-    },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
     },
     player(index, ele) {
       this.$drop(ele);

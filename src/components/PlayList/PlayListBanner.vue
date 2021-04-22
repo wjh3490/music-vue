@@ -25,6 +25,7 @@
 <script>
 import { vGetNewsong } from '@/api/recomment';
 import { mapMutations, mapGetters } from 'vuex';
+import { Song } from '@/utils/config';
 export default {
   name: 'PlayListBanner',
   data() {
@@ -78,22 +79,34 @@ export default {
     handlePlay(item) {
       let index = this.playList.findIndex((item1) => item1.id === item.id);
       if (index >= 0) {
-        this.setPlaying(!this.playing);
-        this.playing ? this.audio.play() : this.audio.pause();
+        if (item.id == this.currrenSong.id) {
+          this.setPlaying(!this.playing);
+          this.playing ? this.audio.play() : this.audio.pause();
+        } else {
+          this.setCurrrentIndex(index);
+        }
       } else {
         const song = {
           id: item.id,
           name: item.name,
           picUrl: item.picUrl,
           singer: item.song.artists[0]['name'],
+          album: item.song.album.name,
+          alia: item.song.album.alias,
+          privilege: {
+            pl: item.song.privilege['pl'],
+            fee: item.song.privilege['fee'],
+            flag: item.song.privilege['flag'],
+            maxbr: item.song.privilege['maxbr'],
+          },
         };
-        this.setPlay([song, ...this.playList]);
+        this.setPlay([new Song(song), ...this.playList]);
         this.setSequenceList(this.playList);
         this.setCurrrentIndex(0);
       }
     },
     async getRecommendSongs() {
-      const { code, result } = await vGetNewsong();
+      const { code, result } = await vGetNewsong({ limit: 30 });
       if (code == 200) {
         this.recommendSongs = result.slice(0, 5);
       }

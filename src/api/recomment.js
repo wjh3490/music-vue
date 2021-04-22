@@ -2,15 +2,16 @@ import service from '../request/service';
 
 export function vGetPersonalized() {
   return service({
-    url: '/personalized',
+    url: '/personalized?limit=6',
     method: 'get',
   });
 }
 
-export function vGetNewsong() {
+export function vGetNewsong(params) {
   return service({
-    url: '/personalized/newsong?limit=100',
+    url: '/personalized/newsong',
     method: 'get',
+    params,
   });
 }
 

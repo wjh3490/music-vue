@@ -33,15 +33,9 @@ export default {
   align-items: center;
   .control-icon {
     &.pause {
-      font-size: 24px;
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
-      border-radius: 50%;
-      text-align: center;
+      font-size: 40px;
       margin: 0 30px;
-      color: rgba(255, 255, 255, 0.8);
-      background-color: rgba(0, 0, 0, 0.25);
+      color: rgba(255, 255, 255, 0.7);
     }
     &.pre {
       transform: rotate(180deg);

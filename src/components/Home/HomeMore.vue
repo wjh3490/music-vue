@@ -16,8 +16,14 @@
 export default {
   name: 'HomeMore',
   props: {
-    title: String,
-    link: String,
+    title: {
+      type: String,
+      default: '',
+    },
+    link: {
+      type: String,
+      default: '',
+    },
     more: {
       type: String,
       default: '更多',

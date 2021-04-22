@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="detail-msg">
-        <div class="detail-msg-icon iconfont icon-shanchu2">
+        <div class="detail-msg-icon iconfont icon-shoucang21">
           <span class="detail-msg-des">
             {{ info.subscribedCount | filterNum }}</span
           >

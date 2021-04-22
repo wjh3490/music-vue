@@ -66,7 +66,7 @@
                 >
               </div>
               <div class="ellipsis songlist-content">
-                <span>{{ item.singer }}</span> · <span>{{ item.album }}</span>
+                <span>{{ item.artists }}</span> · <span>{{ item.album }}</span>
               </div>
             </div>
           </div>

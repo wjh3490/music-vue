@@ -2,7 +2,7 @@
   <section class="home-toplist">
     <slot />
     <swiper :options="props.options" v-if="props.list.length">
-      <swiper-slide v-for="(item, index) in props.list" :key="item.id">
+      <swiper-slide v-for="(item, index) in props.list" :key="item.id" style="width: 9.2rem">
         <router-link
           :to="`/playlist/${item.id}`"
           tag="div"

@@ -2,7 +2,7 @@
   <div class="mall">
     <BaseBack title="数字专辑" />
     <nav class="mall-nav">
-      <router-link to="/mall-category" class="mall-nav-item">
+      <router-link to="/mall-shop" class="mall-nav-item">
         <span class="iconfont icon-icon mall-nav-icon"></span>
         <p class="mall-nav-title">畅销榜</p>
       </router-link>
@@ -170,7 +170,8 @@ export default {
 
 <style lang="less" scoped>
 .mall {
-  padding-top: 80px;
+  padding-bottom: 60px;
+  padding-top: 100px;
   &-rank {
     display: flex;
     align-items: center;
@@ -192,6 +193,10 @@ export default {
     &-item {
       text-align: center;
       font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     &-title {
       margin-top: 6px;

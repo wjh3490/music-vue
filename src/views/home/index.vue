@@ -9,11 +9,19 @@
         :visible="true"
         v-slot="{ data }"
       >
-        <img
-          :data-index="data.targetId"
-          :data-src="data.imageUrl"
-          class="swiper-lazy swiper-img"
-        />
+        <div class="recommend-swiper-wrap" @click="handleAction(data)">
+          <img
+            :data-index="data.targetId"
+            :data-src="data.imageUrl"
+            class="swiper-lazy swiper-img"
+          />
+          <span
+            class="recommend-swiper-title"
+            :style="{ backgroundColor: colors[data.titleColor] }"
+            >{{ data.typeTitle }}</span
+          >
+        </div>
+
         <div class="my-lazy-preloader"></div>
       </BaseSwiper>
     </div>
@@ -35,6 +43,8 @@
       :albums="albums"
       :tabs="tabs"
       :activeTab="activeTab"
+      @player="player"
+      :palyStatus="palyStatus"
     >
       <HomeMore :link="link" :more="more">
         <div class="home-newsong-tabs">
@@ -57,11 +67,29 @@
         </div>
       </HomeMore>
     </HomeNewSong>
+    <!-- 独家放送  -->
+    <HomePlayList :list="videos">
+      <HomeMore title="独家放送" link="" />
+    </HomePlayList>
+    <!-- 电台  -->
+    <HomePlayList :list="list">
+      <HomeMore>
+        <div>
+          <span>广播电台</span>
+          <span>24小时播客</span>
+        </div>
+      </HomeMore>
+    </HomePlayList>
+    <!-- 热门MV  -->
+    <HomePlayList :list="mvs" v-if="mvs.length">
+      <HomeMore title="热门MV" link="" />
+    </HomePlayList>
   </div>
 </template>
 
 <script>
 /*eslint-disable */
+
 import RecommendSearch from '@/components/Recommend/RecommendSearch';
 import { mapMutations, mapGetters } from 'vuex';
 import {
@@ -72,10 +100,13 @@ import {
 } from '@/api/recomment.js';
 import { rankTopList } from '@/api/rank';
 import { getAlbumNewset, getAlbumList } from '@/api/album';
+import { getVideos, getMVs, getDjs, getDjToplist } from '@/api/video';
 import HomeTopList from '@/components/Home/HomeTopList';
 import HomeMore from '@/components/Home/HomeMore';
 import HomeNewSong from '@/components/Home/HomeNewSong';
 import HomePlayList from '@/components/Home/HomePlayList';
+import { splitList, getArtist } from '@/utils';
+import { Song } from '@/utils/config';
 export default {
   name: 'Home',
   components: {
@@ -90,11 +121,6 @@ export default {
       swiperOptions: {
         pagination: {
           el: '.swiper-pagination',
-        },
-        on: {
-          tap: (e) => {
-            this.getDetail(e.target.dataset.index);
-          },
         },
         loop: true,
         autoplay: {
@@ -117,6 +143,7 @@ export default {
         { link: '/mall', more: '更多数专', tabIndex: 3, name: '数字专辑' },
       ],
       activeTab: 1,
+      icon: 'icon-bofang31',
       more: '更多新歌',
       link: '/songs/0',
       swiperList: [],
@@ -125,21 +152,41 @@ export default {
       toplists: [],
       albums: [],
       products: [],
+      videos: [],
+      mvs: [],
+      djs: [],
+      djToplist: [],
+      list: [],
     };
   },
 
   computed: {
-    ...mapGetters(['playList']),
+    palyStatus({ playing, currrenSong }) {
+      return function(id) {
+        if (currrenSong.id == id) {
+          return playing ? 'icon-pause-full' : 'icon-bofang31';
+        } else {
+          return 'icon-bofang31';
+        }
+      };
+    },
+    ...mapGetters(['playList', 'playing', 'currrenSong']),
   },
 
   async created() {
-    await getAlbumNewset();
     this.getSwiperList();
-    this.getPersonalized();
-    this.getNewsong();
     this.getTopList();
+
+    this.getNewsong();
     this.getNewAlbum();
     this.getAlbumList();
+
+    this.Batchs();
+    this.colors = {
+      blue: '#169af3',
+      red: '#ff3a3a',
+    };
+    this.$nextTick(() => (this.audio = document.getElementById('audio')));
   },
   methods: {
     async getTopList() {
@@ -153,100 +200,123 @@ export default {
         this.swiperList = banners;
       }
     },
-    async getPersonalized() {
-      const { code, result } = await vGetPersonalized();
-      if (code === 200) {
-        this.personalized = result.splice(0, 6);
-      }
-    },
     async getNewAlbum() {
-      const { code, albums } = await getAlbumNewset();
+      const { code, albums } = await getAlbumNewset({ limit: 6 });
       if (code == 200) {
         const list = albums.slice(0, 6).reduce((acc, cur) => {
-          const album = {
-            id: cur.id,
-            name: cur.name,
-            picUrl: cur.picUrl,
-            album: this.getArtist(cur.artists).join('、'),
-            artists: '',
-            privilege: {
-              pl: '',
-              fee: '',
-              flag: '',
-              maxbr: '',
-            },
-          };
-          acc.push(album);
+          const { id, name, picUrl, artists } = cur;
+          acc.push(
+            new Song({
+              id,
+              name,
+              picUrl,
+              artists,
+            })
+          );
           return acc;
         }, []);
-        this.albums = this.splitList(list, 3);
+        this.albums = splitList(list, 3);
       }
     },
     async getAlbumList() {
-      const { code, products } = await getAlbumList();
+      const { code, products } = await getAlbumList({ limit: 9 });
+
       if (code == 200) {
-        const list = products.slice(0, 9).reduce((acc, cur) => {
-          const product = {
-            id: cur.albumId,
-            name: cur.albumName,
-            picUrl: cur.coverUrl,
-            album: cur.artistName,
-            artists: '',
-            privilege: {
-              pl: '',
-              fee: '',
-              flag: '',
-              maxbr: '',
-            },
-          };
-          acc.push(product);
+        const list = products.reduce((acc, cur) => {
+          const { albumId, albumName, coverUrl, artistName } = cur;
+          acc.push(
+            new Song({
+              id: albumId,
+              name: albumName,
+              picUrl: coverUrl,
+              artists: [{ name: artistName }],
+            })
+          );
           return acc;
         }, []);
-        this.products = this.splitList(list, 3);
+        this.products = splitList(list, 3);
       }
     },
     async getNewsong() {
-      const { code, result } = await vGetNewsong();
+      const { code, result } = await vGetNewsong({ limit: 30, offset: 1 });
       if (code == 200) {
-        const list = result.slice(0, 6).reduce((acc, cur) => {
-          const song = {
-            id: cur.id,
-            name: cur.name,
-            picUrl: cur.picUrl,
-            album: cur.song.album.name,
-            artists: this.getArtist(cur.song.artists).join('、'),
-            privilege: {
-              pl: cur.song.privilege['pl'],
-              fee: cur.song.privilege['fee'],
-              flag: cur.song.privilege['flag'],
-              maxbr: cur.song.privilege['maxbr'],
-            },
-          };
-          acc.push(song);
+        const list = result.reduce((acc, cur) => {
+          const { id, name, picUrl, song } = cur;
+          acc.push(
+            new Song({
+              id,
+              name,
+              picUrl,
+              artists: song['artists'],
+              album: song.album.name,
+              privilege: {
+                pl: song.privilege['pl'],
+                fee: song.privilege['fee'],
+                flag: song.privilege['flag'],
+                maxbr: song.privilege['maxbr'],
+              },
+            })
+          );
           return acc;
         }, []);
-        this.newsong = this.splitList(list, 3);
+        this.newsong = splitList(list, 3);
       }
     },
-    async getDetail(id) {
-      const { songs } = await vGetDetail(id);
-      if (!songs.length) {
-        return;
-      }
-      const song = {
-        id: songs[0].id,
-        name: songs[0].name,
-        picUrl: songs[0].al.picUrl,
-        singer: songs[0].ar[0].name,
-      };
-      let index = this.playList.findIndex((item) => item.id === song.id);
-
+    async Batchs() {
+      const apis = [
+        getDjs(),
+        getDjToplist(),
+        vGetPersonalized(),
+        getVideos(),
+        getMVs(),
+      ];
+      const res = await Promise.all(apis);
+      this.djs = res[0]['djRadios'];
+      this.djToplist = res[1]['toplist'];
+      this.personalized = res[2]['result'];
+      this.videos = res[3]['result'];
+      this.mvs = res[4]['data'].map((item) => ({
+        picUrl: item.cover,
+        name: item.name,
+      }));
+      this.list = res[0]['djRadios'];
+    },
+    async player(id) {
+      const index = this.playList.findIndex((item) => item.id == id);
       if (index >= 0) {
-        this.setCurrrentIndex(index);
+        if (id == this.currrenSong.id) {
+          this.setPlaying(!this.playing);
+          this.playing ? this.audio.play() : this.audio.pause();
+        } else {
+          this.setCurrrentIndex(index);
+        }
       } else {
-        this.setPlay([song, ...this.playList]);
+        const { songs, privileges } = await vGetDetail(id);
+        const song = {
+          id: songs[0]['id'],
+          name: songs[0]['name'],
+          picUrl: songs[0]['al']['picUrl'],
+          artists: songs[0]['ar'],
+          album: songs[0]['al']['name'],
+          alia: songs[0]['alia'].join(''),
+          privilege: {
+            pl: privileges[0]['pl'],
+            fee: privileges[0]['fee'],
+            flag: privileges[0]['flag'],
+            maxbr: privileges[0]['maxbr'],
+          },
+        };
+        this.setPlay([new Song(song), ...this.playList]);
         this.setSequenceList(this.playList);
         this.setCurrrentIndex(0);
+      }
+    },
+    handleAction(obj) {
+      if (obj.targetType == 1) {
+        this.player(obj.targetId);
+      }
+      if (obj.targetType == 10) {
+        this.$router.push(`/album/${obj.targetId}`);
       }
     },
     handleChange(tab) {
@@ -254,27 +324,6 @@ export default {
       this.activeTab = tab.tabIndex;
       this.more = tab.more;
       this.link = tab.link;
-    },
-    playSong(item, index) {
-      if (!Object.is(this.newsong, this.playList)) {
-        this.setPlay(this.newsong);
-        this.setSequenceList(this.newsong);
-      }
-      this.setCurrrentIndex(index);
-    },
-    splitList(list, length) {
-      let index = 0;
-      let newArray = [];
-      while (index < list.length) {
-        newArray.push(list.slice(index, (index += length)));
-      }
-      return newArray;
-    },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
     },
     ...mapMutations([
       'setCurrrentIndex',
@@ -290,6 +339,9 @@ export default {
 .recommend-type {
   margin-bottom: 10px;
 }
+.recommend {
+  padding-bottom: 70px;
+}
 .recommend-swiper {
   margin-top: 20px;
 }
@@ -302,9 +354,22 @@ export default {
 
 .swiper-img {
   height: 140px;
-  border-radius: 6px;
 }
-
+.recommend-swiper {
+  &-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  &-title {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 1px 6px;
+    color: #fff;
+    border-radius: 8px 0 0 0;
+  }
+}
 .icon-youjiantou {
   font-size: 12px;
 }

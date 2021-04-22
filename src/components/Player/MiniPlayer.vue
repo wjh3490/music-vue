@@ -35,7 +35,7 @@
       <i
         @click.stop="$emit('pause')"
         class="pause iconfont mini-control-icon mini-icon-commom"
-        :class="palyStatus"
+        :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
       ></i>
       <i
         @click.stop="$emit('next')"

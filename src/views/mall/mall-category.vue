@@ -7,6 +7,8 @@
       lineHeight="0.053rem"
       @change="handleChange"
       @tabs="(index) => (active = index)"
+      position="relative"
+      top="0"
       ref="tabs"
     />
     <MallArea :list="albums" className="mall-category-style"></MallArea>
@@ -59,6 +61,6 @@ export default {
 </style>
 <style lang="less" scoped>
 .mall-category {
-  padding-top: 100px;
+  padding: 60px 0;
 }
 </style>
