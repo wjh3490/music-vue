@@ -1,4 +1,4 @@
-importScripts("/music-vue/precache-manifest.f370d1b5dd5c0cf20353afb605f276f0.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/music-vue/precache-manifest.c79b97e2a042351141997ae2ed494af0.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /*eslint-disable*/
 workbox.core.setCacheNameDetails({

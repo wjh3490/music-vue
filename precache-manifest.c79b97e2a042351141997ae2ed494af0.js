@@ -4,12 +4,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/css/album.95efc668.css"
   },
   {
-    "revision": "994cc13b87b417c63781",
-    "url": "/music-vue/css/app.40af6986.css"
+    "revision": "138a40dfa17ba8c1f0c9",
+    "url": "/music-vue/css/app.68b3d9c4.css"
   },
   {
-    "revision": "6485c400137b0574434a",
-    "url": "/music-vue/css/chunk-vendors.add8ea24.css"
+    "revision": "61bfab13d59c0810574b",
+    "url": "/music-vue/css/chunk-vendors.5ba8d039.css"
   },
   {
     "revision": "c6e21c36c6632e738c46",
@@ -36,8 +36,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/css/rank.3cf3bbfb.css"
   },
   {
-    "revision": "05af124691cefcde5aeb",
-    "url": "/music-vue/css/recommend.2753fb6a.css"
+    "revision": "7b7e02d48c9ff81cf19e",
+    "url": "/music-vue/css/recommend.4eb3b0c7.css"
   },
   {
     "revision": "e3c16b72be90f46633e4",
@@ -80,7 +80,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/img/type_cd.5e34b1b3.png"
   },
   {
-    "revision": "51c81d58846a00dc2e667ebc4e544b86",
+    "revision": "d336bf3e3105aa1d05d68e90035d416f",
     "url": "/music-vue/index.html"
   },
   {
@@ -88,12 +88,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/js/album.62ad98c6.js"
   },
   {
-    "revision": "994cc13b87b417c63781",
-    "url": "/music-vue/js/app.e2c36c5b.js"
+    "revision": "138a40dfa17ba8c1f0c9",
+    "url": "/music-vue/js/app.a71e4dcb.js"
   },
   {
-    "revision": "6485c400137b0574434a",
-    "url": "/music-vue/js/chunk-vendors.f203c495.js"
+    "revision": "61bfab13d59c0810574b",
+    "url": "/music-vue/js/chunk-vendors.c7f307c2.js"
   },
   {
     "revision": "c6e21c36c6632e738c46",
@@ -120,8 +120,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/js/rank.ce92d1ce.js"
   },
   {
-    "revision": "05af124691cefcde5aeb",
-    "url": "/music-vue/js/recommend.53908683.js"
+    "revision": "7b7e02d48c9ff81cf19e",
+    "url": "/music-vue/js/recommend.6d0b2511.js"
   },
   {
     "revision": "e3c16b72be90f46633e4",
