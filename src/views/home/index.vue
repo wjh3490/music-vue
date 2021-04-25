@@ -28,9 +28,9 @@
     <!-- 导航栏 -->
     <BaseNav />
     <!-- 推荐歌单 -->
-    <HomePlayList :list="personalized" v-if="personalized.length">
+    <HomeList :list="personalized" v-if="personalized.length">
       <HomeMore title="推荐歌单" link="/playlist" />
-    </HomePlayList>
+    </HomeList>
     <!-- 排行榜 -->
     <HomeTopList :list="toplists" v-if="toplists.length">
       <HomeMore title="排行榜" link="/rank" />
@@ -68,22 +68,31 @@
       </HomeMore>
     </HomeNewSong>
     <!-- 独家放送  -->
-    <HomePlayList :list="videos">
+    <HomeList :list="videos">
       <HomeMore title="独家放送" link="" />
-    </HomePlayList>
+    </HomeList>
     <!-- 电台  -->
-    <HomePlayList :list="list">
+    <HomeList :list="list" round>
       <HomeMore>
-        <div>
-          <span>广播电台</span>
-          <span>24小时播客</span>
+        <div class="home-newsong-tabs">
+          <div class="home-newsong-tab" v-for="tab in radio" :key="tab.tabIndex">
+            <strong
+              class="home-newsong-tabs-name"
+              :class="{ 'home-newsong-active': activeRadio == tab.tabIndex }"
+              >{{ tab.name }}</strong
+            >
+            <span
+              class="home-newsong-tabs-line"
+              v-if="tab.tabIndex != 2"
+            ></span>
+          </div>
         </div>
       </HomeMore>
-    </HomePlayList>
+    </HomeList>
     <!-- 热门MV  -->
-    <HomePlayList :list="mvs" v-if="mvs.length">
+    <HomeList :list="mvs" v-if="mvs.length">
       <HomeMore title="热门MV" link="" />
-    </HomePlayList>
+    </HomeList>
   </div>
 </template>
 
@@ -104,7 +113,7 @@ import { getVideos, getMVs, getDjs, getDjToplist } from '@/api/video';
 import HomeTopList from '@/components/Home/HomeTopList';
 import HomeMore from '@/components/Home/HomeMore';
 import HomeNewSong from '@/components/Home/HomeNewSong';
-import HomePlayList from '@/components/Home/HomePlayList';
+import HomeList from '@/components/Home/HomeList';
 import { splitList, getArtist } from '@/utils';
 import { Song } from '@/utils/config';
 export default {
@@ -114,7 +123,7 @@ export default {
     HomeTopList,
     HomeMore,
     HomeNewSong,
-    HomePlayList,
+    HomeList,
   },
   data() {
     return {
@@ -142,8 +151,12 @@ export default {
         { link: '/songs/1', more: '更多新碟', tabIndex: 2, name: '新碟' },
         { link: '/mall', more: '更多数专', tabIndex: 3, name: '数字专辑' },
       ],
+      radio: [
+        { tabIndex: 1, name: '广播电台' },
+        { tabIndex: 2, name: '24小时播客' },
+      ],
       activeTab: 1,
-      icon: 'icon-bofang31',
+      activeRadio: 1,
       more: '更多新歌',
       link: '/songs/0',
       swiperList: [],

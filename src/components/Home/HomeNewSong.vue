@@ -51,20 +51,25 @@
       >
         <div class="home-newsong">
           <ul>
-            <li class="home-newsong-item" v-for="song in item" :key="song.id">
+            <router-link
+              tag="li"
+              :to="`/album/${song.id}`"
+              class="home-newsong-item"
+              v-for="song in item"
+              :key="song.id"
+            >
               <figure class="home-newsong-figure">
                 <img v-lazy="song.picUrl" alt="" class="home-newsong-img" />
               </figure>
               <div class="home-newsong-right ellipsis">
                 <div class="ellipsis">
                   <span class="home-newsong-name ">{{ song.name }}</span>
-                  <!-- <span v-if="song.artists"> - {{ song.artists }} </span> -->
                 </div>
                 <div class="ellipsis home-newsong-album">
                   {{ song.artists }}
                 </div>
               </div>
-            </li>
+            </router-link>
           </ul>
         </div>
       </swiper-slide>
@@ -75,7 +80,11 @@
       v-if="props.products.length"
       v-show="props.activeTab == 3"
     >
-      <swiper-slide v-for="(item, index) in props.products" :key="'p' + index">
+      <swiper-slide
+        v-for="(item, index) in props.products"
+        :key="'p' + index"
+        style="width: 9.2rem"
+      >
         <div class="home-newsong">
           <ul>
             <li class="home-newsong-item" v-for="song in item" :key="song.id">

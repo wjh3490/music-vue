@@ -4,7 +4,7 @@
       <p class="lyric-singer">
         <marquee behavior="" direction="">{{ currrenSong.name }}</marquee>
       </p>
-      <p class="lyric-name">{{ currrenSong.singer }}</p>
+      <p class="lyric-name">{{ currrenSong.artists }}</p>
     </div>
     <div class="lyric-item" ref="lyricList">
       <div class="empty" ref="empty"></div>
@@ -39,7 +39,7 @@ export default {
     palyStatus: String,
   },
   computed: {
-    ...mapGetters(['currrenSong']),
+    ...mapGetters(['currrenSong', 'playing']),
   },
 };
 </script>
@@ -99,7 +99,6 @@ export default {
         opacity: 1;
         transition: all 0.2s;
         font-size: 20px;
-        // transform: translate3d(25px, 0, 0) scale(1.2);
       }
     }
   }
@@ -118,15 +117,11 @@ export default {
   opacity: 0;
 }
 .pause {
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
+  font-size: 40px;
   border-radius: 50%;
   text-align: center;
   margin-right: 30px;
   color: rgba(255, 255, 255, 0.8);
-  background-color: rgba(0, 0, 0, 0.25);
 }
 .pause-wrap {
   position: absolute;

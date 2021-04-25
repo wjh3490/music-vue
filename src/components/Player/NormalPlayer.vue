@@ -64,11 +64,9 @@
 import { mapGetters, mapMutations } from 'vuex';
 import { scrollToEase, scrollToSmooth } from '../../utils/index.js';
 import components from '@/components/Player';
-import 'swiper/dist/css/swiper.css';
-import { swiper, swiperSlide } from 'vue-awesome-swiper';
 export default {
   name: 'NormalPlayer',
-  components: { ...components, swiper, swiperSlide },
+  components,
   props: {
     palyStatus: String,
     animationStatus: String,
@@ -199,17 +197,14 @@ export default {
 .blurBg {
   width: 100%;
   height: 100%;
-  filter: blur(50px)  brightness(0.5);
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-position: 50% center;
-  background-size: auto 100%;
   transform: scale(1.5);
   transform-origin: center center;
-  &.filterNone {
-    filter: blur(0px);
-  }
+  filter: blur(65px);
+  opacity: 0.6;
 }
 .blurBgMask {
   position: absolute;
@@ -218,26 +213,19 @@ export default {
   width: 100%;
   height: 100%;
   opacity: 0.6;
-  background-color: rgba(0, 0, 0, 0.35);
-  // background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.75);
   z-index: 9;
 }
 .normal-player-main {
-  // position: absolute;
-  // top: 0;
-  // left: 0;
   position: relative;
   width: 100%;
   height: 100%;
   z-index: 100;
-  // padding-bottom: 100px;
 }
-
 .normal-player-bottom {
   position: absolute;
   bottom: 20px;
   width: 100%;
-  // height: 80px;
   padding: 0 25px;
   .collect {
     color: #fff;

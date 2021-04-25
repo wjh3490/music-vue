@@ -17,12 +17,12 @@
     </section>
 
     <section class="mini-desc ellipsis">
-      <p class=" mini-player-name ellipsis">{{ currrenSong.name }}</p>
-      <p class=" mini-player-singer ellipsis">{{ currrenSong.singer }}</p>
+      <p class=" mini-player-name ellipsis">{{ currrenSong.name }} - {{ currrenSong.artists }}</p>
+      <!-- <p class=" mini-player-singer ellipsis"></p> -->
     </section>
 
     <div class="control">
-      <div class="audio-icon unselectable">
+      <!-- <div class="audio-icon unselectable">
         <template v-for="item in audioIcon">
           <div
             :class="{ active: !playing }"
@@ -31,7 +31,7 @@
             :key="item.time"
           ></div>
         </template>
-      </div>
+      </div> -->
       <i
         @click.stop="$emit('pause')"
         class="pause iconfont mini-control-icon mini-icon-commom"
@@ -143,7 +143,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 140px;
+      width: 100px;
       .mini-icon-commom {
         display: inline-block;
         color: #169af3;

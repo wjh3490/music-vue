@@ -11,7 +11,12 @@
             class="home-playlist-item"
           >
             <figure class="home-playlist-figure">
-              <img v-lazy="item.picUrl" alt="" class="home-playlist-img" />
+              <img
+                :class="{ 'home-playlist-round': props.round }"
+                v-lazy="item.picUrl"
+                alt=""
+                class="home-playlist-img"
+              />
             </figure>
             <p class="home-playlist-name clamp">{{ item.name }}</p>
           </router-link>
@@ -22,11 +27,15 @@
 </template>
 <script>
 export default {
-  name: 'HomePlayList',
+  name: 'HomeList',
   props: {
     list: {
       type: Array,
       default: () => [],
+    },
+    round: {
+      type: Boolean,
+      default: false,
     },
   },
 };
@@ -52,26 +61,36 @@ export default {
   &-scroll {
     overflow-x: scroll;
     overflow-y: hidden;
-    padding: 0 15px;
+    padding-left: 15px;
+    padding-right: 5px;
     height: 160px;
   }
   &-wrap {
     white-space: nowrap;
+    display: inline-block;
   }
   &-item {
     width: 110px;
     display: inline-block;
     margin-right: 10px;
+    vertical-align: middle;
   }
   &-img {
     width: 110px;
     height: 110px;
     border-radius: 8px;
   }
+  &-figure {
+    height: 110px;
+  }
   &-name {
     margin-top: 6px;
     white-space: normal;
     height: 38px;
+    text-align: center;
+  }
+  &-round {
+    border-radius: 50%;
   }
 }
 </style>

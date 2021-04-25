@@ -5,7 +5,7 @@
     </div>
     <div class="song-detail">
       <p class="song-singer">{{ currrenSong.name }}</p>
-      <p class="song-name">{{ currrenSong.singer }}</p>
+      <p class="song-name">{{ currrenSong.artists }}</p>
       <div class="currrent_lyric">
         {{ playingLyric ? playingLyric : '暂无歌词' }}
       </div>

@@ -33,7 +33,7 @@ export default {
   align-items: center;
   .control-icon {
     &.pause {
-      font-size: 40px;
+      font-size: 50px;
       margin: 0 30px;
       color: rgba(255, 255, 255, 0.7);
     }
