@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "15170f5350a1f7cb6c1a",
+    "revision": "4b1f927f0c9d83667cf4",
     "url": "/music-vue/css/app.7519e74d.css"
   },
   {
@@ -28,8 +28,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/css/rank.fa30b7b7.css"
   },
   {
-    "revision": "8c26a59bea0c5939b323",
-    "url": "/music-vue/css/recommend.1f4277f2.css"
+    "revision": "7b433d8c3d4c19ac22fa",
+    "url": "/music-vue/css/recommend.2ad77007.css"
   },
   {
     "revision": "dab05ae9e1fa15e2a57b",
@@ -68,7 +68,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/img/type_cd.5e34b1b3.png"
   },
   {
-    "revision": "0564291f4d723163c6d1b84a37c87527",
+    "revision": "b58700d58acf26684b10faf40fa3a041",
     "url": "/music-vue/index.html"
   },
   {
@@ -76,8 +76,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/js/album.94f67f3d.js"
   },
   {
-    "revision": "15170f5350a1f7cb6c1a",
-    "url": "/music-vue/js/app.ad7af804.js"
+    "revision": "4b1f927f0c9d83667cf4",
+    "url": "/music-vue/js/app.c43f1d68.js"
   },
   {
     "revision": "34511c48973e54f0a8da",
@@ -108,8 +108,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/js/rank.66b1f419.js"
   },
   {
-    "revision": "8c26a59bea0c5939b323",
-    "url": "/music-vue/js/recommend.b8360615.js"
+    "revision": "7b433d8c3d4c19ac22fa",
+    "url": "/music-vue/js/recommend.d394647a.js"
   },
   {
     "revision": "dab05ae9e1fa15e2a57b",
