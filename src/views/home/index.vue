@@ -313,7 +313,7 @@ export default {
           picUrl: songs[0]['al']['picUrl'],
           artists: songs[0]['ar'],
           album: songs[0]['al']['name'],
-          alia: songs[0]['alia'].join(''),
+          alia: songs[0]['alia'],
           privilege: {
             pl: privileges[0]['pl'],
             fee: privileges[0]['fee'],
