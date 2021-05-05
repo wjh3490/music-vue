@@ -40,6 +40,7 @@ export default {
         if (!this.body.classList.contains('lock-scroll')) {
           this.body.style.top = -this.y + 'px';
           this.body.classList.add('lock-scroll');
+          
         }
       }
     },
