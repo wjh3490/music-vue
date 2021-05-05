@@ -14,7 +14,7 @@ import './style/font.css';
 import './utils/flexible';
 import './assets/font/iconfont.css';
 
-import '@/components/base';
+import '@/components/Base';
 import '@/components/gloabl';
 import './registerServiceWorker';
 
