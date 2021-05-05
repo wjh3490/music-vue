@@ -1,20 +1,20 @@
-/*eslint-disable */
 let touchstart, touchmove, touchend, click, ball, timeId;
 export default {
   inserted(el, binding, vnode) {
     ball = vnode.context.$refs.progressBall;
-
+    const audio = document.getElementById('audio')
     const context = vnode.context;
+    console.log(context);
     const progress = el.children[0];
     const parentClientWidth = document.body.clientWidth * 0.7;
 
     ball = context.$refs.progressBall;
     let touch = {
       startX: 0,
-      left: 0
+      left: 0,
     };
 
-    const getPercent = deltaX => {
+    const getPercent = (deltaX) => {
       const offsetWidth = Math.min(
         parentClientWidth,
         Math.max(0, touch.left + deltaX)
@@ -22,22 +22,27 @@ export default {
       return offsetWidth / parentClientWidth;
     };
 
-    const handleLyric = currentTime => {
+    const handleLyric = (currentTime) => {
       const filterLyric = context.lyricKeys.filter(
-        item => item <= Math.floor(currentTime)
+        (item) => item <= Math.floor(currentTime)
       );
-      context.$listeners.progressBar(currentTime);
-      context.$listeners['update:LyricScrollY'](filterLyric.length);
-      context.$listeners['update:debounce'](true);
+     
+      audio.currentTime = currentTime
+      // context.$store.commit('setCurrentTime', currentTime);
+      // context.$listeners['update:LyricScrollY'](filterLyric.length);
+      // context.$listeners['update:debounce'](true);
+      context.$store.commit('setLyricScrollY', filterLyric.length);
+      context.$store.commit('setDebounce', true);
+
     };
 
-    touchstart = e => {
+    touchstart = (e) => {
       e.stopPropagation();
       touch.startX = e.touches[0].clientX;
       touch.left = progress.clientWidth;
     };
 
-    touchmove = e => {
+    touchmove = (e) => {
       e.stopPropagation();
       context.isMove = true;
       context.visible = true;
@@ -49,19 +54,18 @@ export default {
       context.tip = percent * context.duration;
     };
 
-    touchend = e => {
+    touchend = (e) => {
       e.stopPropagation();
       const deltaX = e.changedTouches[0].clientX - touch.startX;
       const percent = getPercent(deltaX);
       const currentTime = percent * context.duration;
-      
-      handleLyric(currentTime);
 
+      handleLyric(currentTime);
       context.visible = false;
-     timeId =  setTimeout(() => (context.isMove = false), 50);
+      timeId = setTimeout(() => (context.isMove = false), 50);
     };
 
-    click = e => {
+    click = (e) => {
       e.preventDefault();
       e.stopPropagation();
       const offsetX = el.getBoundingClientRect().left;
@@ -75,8 +79,8 @@ export default {
 
   unbind(el) {
     eventListener('removeEventListener', el);
-    clearTimeout(timeId)
-  }
+    clearTimeout(timeId);
+  },
 };
 
 function eventListener(name, el) {

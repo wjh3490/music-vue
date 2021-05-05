@@ -35,7 +35,7 @@ export function queryArtist(id) {
 }
 export function queryArtistTop(id) {
   return service({
-    url: `/artist/songs?id=${id}`,
+    url: `/artist/top/song?id=${id}`,
     method: 'get',
   });
 }
@@ -45,9 +45,21 @@ export function queryArtistAlbum(id) {
     method: 'get',
   });
 }
-export function queryArtistSimi(id) {
+export function queryArtistSimi(id, limit) {
   return service({
-    url: `/simi/artist?id=${id}`,
+    url: `/simi/artist?id=${id}&limit=${limit}`,
+    method: 'get',
+  });
+}
+export function querySongSimi(id, limit) {
+  return service({
+    url: `/simi/song?id=${id}&limit=${limit}`,
+    method: 'get',
+  });
+} 
+export function queryPlaylistSimi(id, limit) {
+  return service({
+    url: `/simi/playlist?id=${id}&limit=${limit}`,
     method: 'get',
   });
 }

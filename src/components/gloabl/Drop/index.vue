@@ -15,7 +15,7 @@
 </template>
 <script>
 export default {
-  name: 'BaseBall',
+  name: 'Drop',
   data() {
     return {
       balls: [

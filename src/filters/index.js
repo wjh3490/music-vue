@@ -1,5 +1,5 @@
 export function filterNum(val) {
-  if (val >= 10000) {
+  if (val >= 10000 && val < 100000000) {
     val = `${(val / 10000).toFixed(1)}万`;
   }
   if (val >= 100000000) {

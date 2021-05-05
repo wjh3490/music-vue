@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'RecommendSearch',
+  name: 'HomeSearch',
 };
 </script>
 <style scoped lang="less">

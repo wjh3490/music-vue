@@ -18,22 +18,11 @@
 </template>
 
 <script>
-/*eslint-disable */
+import { mapGetters } from 'vuex';
 import progress from '@/directives/progress.js';
 export default {
   name: 'PlayerProgressBar',
-  updated() {
-    // console.log('PlayerProgressBar')
-  },
   directives: { progress },
-  props: {
-    duration: Number,
-    currentTime: Number,
-    lyricKeys: [Array, String],
-    LyricScrollY: Number,
-    debounce: Boolean,
-  },
-
   data() {
     return {
       tip: 0,
@@ -41,12 +30,12 @@ export default {
       isMove: false,
     };
   },
-
   computed: {
-    percent(vm) {
-      if (this.isMove) return;
-      return( (this.currentTime / this.duration) * 100).toFixed(2) || 0;
+    percent({ isMove, currentTime, duration }) {
+      if (isMove) return;
+      return ((currentTime / duration) * 100).toFixed(2) || 0;
     },
+    ...mapGetters(['duration', 'currentTime', 'lyricKeys']),
   },
 };
 </script>

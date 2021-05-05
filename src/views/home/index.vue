@@ -1,6 +1,6 @@
 <template>
   <div class="recommend">
-    <RecommendSearch />
+    <HomeSearch />
     <!-- 轮播图 -->
     <div class="recommend-swiper">
       <BaseSwiper
@@ -75,7 +75,11 @@
     <HomeList :list="list" round>
       <HomeMore>
         <div class="home-newsong-tabs">
-          <div class="home-newsong-tab" v-for="tab in radio" :key="tab.tabIndex">
+          <div
+            class="home-newsong-tab"
+            v-for="tab in radio"
+            :key="tab.tabIndex"
+          >
             <strong
               class="home-newsong-tabs-name"
               :class="{ 'home-newsong-active': activeRadio == tab.tabIndex }"
@@ -97,9 +101,6 @@
 </template>
 
 <script>
-/*eslint-disable */
-
-import RecommendSearch from '@/components/Recommend/RecommendSearch';
 import { mapMutations, mapGetters } from 'vuex';
 import {
   vGetPersonalized,
@@ -110,16 +111,17 @@ import {
 import { rankTopList } from '@/api/rank';
 import { getAlbumNewset, getAlbumList } from '@/api/album';
 import { getVideos, getMVs, getDjs, getDjToplist } from '@/api/video';
+import HomeSearch from '@/components/Home/HomeSearch';
 import HomeTopList from '@/components/Home/HomeTopList';
 import HomeMore from '@/components/Home/HomeMore';
 import HomeNewSong from '@/components/Home/HomeNewSong';
 import HomeList from '@/components/Home/HomeList';
-import { splitList, getArtist } from '@/utils';
+import { splitList } from '@/utils';
 import { Song } from '@/utils/config';
 export default {
   name: 'Home',
   components: {
-    RecommendSearch,
+    HomeSearch,
     HomeTopList,
     HomeMore,
     HomeNewSong,

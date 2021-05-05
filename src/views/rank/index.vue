@@ -5,7 +5,7 @@
       <div class="rank-title"><strong>官方榜</strong></div>
       <ul class="rank-items">
         <router-link
-          :to="`/playlist/${item.id}`"
+          :to="`/playlist/${item.id}?type=1`"
           tag="li"
           class="rank-item"
           v-for="(item, index) in rank"
@@ -14,7 +14,7 @@
         >
           <div class="rank-item-right">
             <p
-              class="rank-item-track"
+              class="rank-item-track ellipsis"
               v-for="(track, index) in item.tracks"
               :key="track.first"
             >
@@ -35,13 +35,19 @@
           <strong>{{ item.name }}</strong>
         </div>
         <div class="others-items">
-          <router-link  :to="`/playlist/${item1.id}`"  v-for="item1 in item.list"
+          <router-link
+            :to="`/playlist/${item1.id}?type=1`"
+            v-for="item1 in item.list"
             :key="item1.id"
             class="others-item ellipsis"
-            @click="getRankSongs(item1)">
+            @click="getRankSongs(item1)"
+          >
             <img v-lazy="item1.coverImgUrl" alt="" class="others-img" />
             <p class="others-name ellipsis">{{ item1.name }}</p>
-         </router-link>
+            <span class="others-updateFrequency ellipsis">{{
+              item1.updateFrequency
+            }}</span>
+          </router-link>
         </div>
       </div>
     </div>
@@ -131,6 +137,7 @@ export default {
     }
     &-track {
       color: #000;
+      width: 205px;
     }
   }
 }
@@ -155,8 +162,19 @@ export default {
     align-content: center;
   }
   &-item {
+    position: relative;
     width: 108px;
     margin-top: 15px;
+  }
+  &-updateFrequency {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    color: #fff;
+    padding: 0px 6px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 12px
   }
   &-name {
     text-align: center;

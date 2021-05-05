@@ -5,7 +5,7 @@
       <div class="home-playlist-scroll">
         <ul class="home-playlist-wrap">
           <router-link
-            :to="`/playlist/${item.id}`"
+            :to="`/playlist/${item.id}?type=0`"
             v-for="item in props.list"
             :key="item.id"
             class="home-playlist-item"

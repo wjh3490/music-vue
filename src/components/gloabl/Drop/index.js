@@ -1,4 +1,4 @@
-import component from './Base/BaseBall.vue';
+import component from './index.vue';
 
 export default function(Vue) {
   const Constructor = Vue.extend(component);

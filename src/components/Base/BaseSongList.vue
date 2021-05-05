@@ -13,7 +13,9 @@
       <ul class="songlist-wrap">
         <li
           class="songlist-item"
-          @click.stop.prevent="$emit('player', index, $event.currentTarget)"
+          @click.stop.prevent="
+            $emit('player', index, $event.currentTarget, item)
+          "
           v-for="(item, index) in songs"
           :key="item.id"
           :class="{ active: item.id == currrenSong.id }"
@@ -33,7 +35,11 @@
                 {{ item.name }}
               </span>
 
-              <span style="color:#a59797f5" v-if="item.alia">
+              <span
+                class="songlist-alia"
+                :class="{ active: item.id == currrenSong.id }"
+                v-if="item.alia"
+              >
                 ({{ item.alia }})</span
               >
             </div>
@@ -41,30 +47,7 @@
               class="songlist-album"
               :class="{ active: item.id == currrenSong.id }"
             >
-              <div class="songlist-album-icons">
-                <!-- sq -->
-                <span
-                  v-if="item.privilege.maxbr === 999000"
-                  class="iconsq icon sq"
-                  >SQ</span
-                >
-                <!-- 独家 -->
-                <span
-                  v-if="/64|68|1088|1092/.test(item.privilege.flag)"
-                  class="icon only"
-                  >独家</span
-                >
-                <!-- vip -->
-                <span v-if="item.privilege.fee === 1" class="icon vip"
-                  >vip</span
-                >
-                <!-- 试听 -->
-                <span
-                  v-if="/1152|1028|1088|1092/.test(item.privilege.flag)"
-                  class="icon listen"
-                  >试听</span
-                >
-              </div>
+              <BasePrivilege :privilege="item.privilege" />
               <div class="ellipsis songlist-content">
                 <span>{{ item.artists }}</span> · <span>{{ item.album }}</span>
               </div>
@@ -79,7 +62,7 @@
 <script>
 import { mapGetters } from 'vuex';
 export default {
-  name: 'PlaylistSongList',
+  name: 'BaseSongList',
   props: {
     songs: Array,
   },
@@ -124,10 +107,16 @@ export default {
       color: #169af3;
     }
   }
+
   &-title {
     width: 260px;
     font-size: 18px;
-    // color: #a59797f5;
+    &.active {
+      color: #169af3;
+    }
+  }
+  &-alia {
+    color: #a59797f5;
     &.active {
       color: #169af3;
     }

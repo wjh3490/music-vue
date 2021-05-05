@@ -1,36 +1,31 @@
 <template>
   <div class="album-container">
-    <BaseBack
-      background="transparent"
-      :title="$route.query.name"
-      color="#fff"
-    />
-    <PlayListBackGround :info="info" />
-    <PlayListSongList :songs="songs" @player="player" />
-    <BaseBall ref="ball" />
+    <BaseBack background="transparent" :title="title" color="#fff" />
+    <BaseBackGround :info="info" :opacity="opacity"/>
+    <BaseSongList :songs="songs" @player="player" />
   </div>
 </template>
 <script>
 /*eslint-disable */
 import { mapMutations, mapGetters } from 'vuex';
 import { getAlbum } from '@/api/album';
-import PlayListBackGround from '@/components/PlayList/PlayListBackGround';
-import PlayListSongList from '@/components/PlayList/PlayListSongList';
+import { Song } from '@/utils/config';
 export default {
   name: 'Album',
-  components: { PlayListSongList, PlayListBackGround },
   data() {
     return {
-      songs: [],
+      songs: [], opacity: 1,
       info: {
         nickname: '',
         subscribedCount: 0,
         commentCount: 0,
+        shareCount: 0,
         description: 0,
         name: '',
         coverImgUrl: '',
         avatarUrl: '',
       },
+      title:'专辑'
     };
   },
   computed: {
@@ -39,19 +34,24 @@ export default {
   created() {
     this.getPlaylist();
   },
+  mounted() {
+    document.addEventListener('scroll', this.handldeScroll);
+  },
   methods: {
     async getPlaylist() {
       const { id } = this.$route.params;
       const { code, songs, album } = await getAlbum(id);
       const info = {
-        artist: album.artist.name,
+        artist: (album.artists || []).map((item) => item.name).join('/'),
+        alias: (album.alias || []).join('/'),
         subscribedCount: album.info.likedCount || 0,
         commentCount: album.info.commentCount || 0,
+        shareCount: album.info.shareCount || 0,
         description: album.description,
         name: album.name,
         coverImgUrl: album.picUrl,
         publishTime: album.publishTime,
-        id: album.artist.id
+        id: album.artist.id,
       };
       this.info = info;
 
@@ -61,16 +61,18 @@ export default {
           id: songs[i]['id'],
           name: songs[i]['name'],
           album: songs[i]['al']['name'],
-          singer: this.getArtist(songs[i]['ar']).join('/'),
+          artists: songs[i]['ar'],
           picUrl: songs[i]['al']['picUrl'],
+          publishTime: album.publishTime,
+          alia: songs[i]['alia'] || [],
           privilege: {
             pl: songs[i]['privilege']['pl'],
-            fee: songs[i]['privilege']['fee'],
+            fee: songs[i]['fee'],
             flag: songs[i]['privilege']['flag'],
             maxbr: songs[i]['privilege']['maxbr'],
           },
         };
-        list.push(song);
+        list.push(new Song(song));
       }
       this.songs = list;
     },
@@ -80,13 +82,25 @@ export default {
         return acc;
       }, []);
     },
-    player(index, ele) {
-      this.$refs.ball.drop(ele);
+    player(index, ele, item) {
+      if (item.fee == 1) {
+        this.$toast({ message: '此歌曲为vip歌曲, 因合作方要求,暂时无法播放' });
+      }
+      this.$drop(ele);
+
       if (!Object.is(this.songs, this.playList)) {
         this.setPlay(this.songs);
         this.setSequenceList(this.songs);
       }
       this.setCurrrentIndex(index);
+    },
+    handldeScroll() {
+      this.opacity = 1 - document.documentElement.scrollTop / 200;
+      if (document.documentElement.scrollTop > 150) {
+        this.title = this.info.name;
+      } else {
+        this.title = "专辑";
+      }
     },
     ...mapMutations(['setCurrrentIndex', 'setPlay', 'setSequenceList']),
   },

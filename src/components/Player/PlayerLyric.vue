@@ -7,39 +7,92 @@
       <p class="lyric-name">{{ currrenSong.artists }}</p>
     </div>
     <div class="lyric-item" ref="lyricList">
-      <div class="empty" ref="empty"></div>
-      <div class="no-lyric" v-if="!currentLyric">暂无歌词</div>
-      <p
+      <div class="empty1" ref="empty"></div>
+      <div class="no-lyric" v-if="!lyricKeys.length">暂无歌词</div>
+      <div
         ref="lyricLine"
         v-for="(key, value) in currentLyric"
         :key="value"
+        class="lyrics"
         :class="{ 'active-lyric': value == activeLyricIndex }"
       >
-        {{ key }}
-      </p>
+        <p>
+          {{ key['lyric'] }}
+        </p>
+        <p v-if="key['tlyric']">{{ key['tlyric'] }}</p>
+      </div>
+
       <div class="empty"></div>
     </div>
-    <div class="pause-wrap">
+    <div class="pause-wrap" @click.stop="setPlaying(!playing)">
       <i
-        @click.stop="$emit('pause')"
         class="pause iconfont  control-icon"
-        :class="palyStatus"
+        :class="playing ? 'icon-zanting11' : 'icon-bofang'"
       ></i>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { scrollToEase, scrollToSmooth } from '@/utils/index.js';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'PlayerLyric',
-  props: {
-    currentLyric: [Object, String],
-    activeLyricIndex: String,
-    palyStatus: String,
-  },
   computed: {
-    ...mapGetters(['currrenSong', 'playing']),
+    ...mapGetters([
+      'currentTime',
+      'currrenSong',
+      'playing',
+      'fullScreen',
+      'currentLyric',
+      'lyricKeys',
+      'LyricScrollY',
+      'debounce',
+      'activeLyricIndex',
+    ]),
+  },
+  watch: {
+    currentTime(val) {
+      if (!this.lyricKeys.length) return;
+      if (!this.fullScreen) return;
+      if (this.lyricKeys[this.LyricScrollY] > Math.floor(val)) {
+        if (this.debounce) {
+          this.setActiveLyricIndex(this.lyricKeys[this.LyricScrollY - 1]);
+          this.scrollAnimate(this.LyricScrollY);
+          this.setDebounce(false);
+        }
+        return;
+      }
+      let filterLyric = [];
+      filterLyric = this.lyricKeys.filter((item) => item <= Math.floor(val));
+      this.setLyricScrollY(filterLyric.length);
+      this.setActiveLyricIndex(filterLyric.pop());
+      this.scrollAnimate(this.LyricScrollY);
+    },
+  },
+  mounted() {
+    this.el = this.$refs.lyricList;
+  },
+  methods: {
+    scrollAnimate() {
+      this.$nextTick(() => {
+        const activeLyric = document.querySelector('.active-lyric');
+        if (!activeLyric) return;
+        const start = this.el.scrollTop;
+        const { offsetTop, offsetHeight } = activeLyric;
+        scrollToEase(this.el, start, offsetTop - 100 - offsetHeight);
+      });
+    },
+    scrollToSmooth() {
+      scrollToSmooth(this.el, 0);
+    },
+    ...mapMutations([
+      'setActiveLyricIndex',
+      'setDebounce',
+      'setLyricScrollY',
+      'setPlaying',
+      'setDebounce',
+    ]),
   },
 };
 </script>
@@ -60,14 +113,15 @@ export default {
 }
 .lyric {
   width: 100%;
-  height: calc(100% - 30px);
-  margin-top: 30px;
+  height: calc(100% - 26px);
+  margin-top: 26px;
   width: 100%;
   position: relative;
 
   .lyric-item {
-    height: 70%;
+    height: 65%;
     width: 100%;
+    margin-top: 16px;
     overflow-x: hidden;
     overflow-y: scroll;
     padding-right: 7px;
@@ -77,8 +131,8 @@ export default {
     -webkit-mask-image: linear-gradient(
       to bottom,
       rgba(255, 255, 255, 0) 0,
-      rgba(255, 255, 255, 0.6) 15%,
-      rgba(255, 255, 255, 1) 25%,
+      rgba(255, 255, 255, 0.6) 10%,
+      rgba(255, 255, 255, 1) 20%,
       rgba(255, 255, 255, 1) 75%,
       rgba(255, 255, 255, 0.6) 85%,
       rgba(255, 255, 255, 0) 100%
@@ -87,18 +141,23 @@ export default {
     .empty {
       height: 80px;
     }
-
+    .empty1 {
+      height: 40px;
+    }
     p {
+      padding: 3px 50px;
+    }
+    .lyrics {
       font-size: 16px;
-      padding: 8px 50px;
       text-align: left;
       color: rgba(225, 225, 225, 0.8);
+      padding-bottom: 8px;
       &.active-lyric {
         color: rgba(238, 238, 113, 0.75);
         font-weight: 700;
         opacity: 1;
         transition: all 0.2s;
-        font-size: 20px;
+        font-size: 18px;
       }
     }
   }

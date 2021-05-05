@@ -127,7 +127,7 @@ export default {
       const { id } = this.$route.params;
       const {
         code,
-        data: { artist, identify },
+        data: { artist, identify = { imageDesc: '', imageUrl: '' }},
       } = await queryArtistDetail(id);
       if (code == 200) {
         const {

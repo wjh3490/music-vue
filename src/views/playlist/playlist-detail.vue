@@ -1,21 +1,21 @@
 <template>
   <div class="rank-detail">
     <BaseBack background="transparent" :title="title" color="#fff" />
-    <PlayListBackGround :info="info" :opacity="opacity" />
-    <PlayListSongList :songs="songs" @player="player" />
-    <BaseBall ref="ball" />
+    <BaseBackGround :info="info" :opacity="opacity" />
+    <BaseSongList :songs="songs" @player="player" />
   </div>
 </template>
 
 <script>
 import { rankSongs } from '@/api/rank';
 import { mapMutations, mapGetters } from 'vuex';
-import PlayListBackGround from '@/components/PlayList/PlayListBackGround';
-import PlayListSongList from '@/components/PlayList/PlayListSongList';
 import { Song } from '@/utils/config';
+const mapName = {
+  0: '歌单',
+  1: '排行榜',
+};
 export default {
   name: 'PlaylistDetail',
-  components: { PlayListSongList, PlayListBackGround },
   data() {
     return {
       songs: [],
@@ -29,7 +29,7 @@ export default {
         avatarUrl: '',
       },
       opacity: 1,
-      title: '歌单',
+      title: mapName[this.$route.query.type],
     };
   },
   computed: {
@@ -54,6 +54,8 @@ export default {
           shareCount,
           name,
           coverImgUrl,
+          updateTime,
+          playCount,
         },
         privileges,
       } = await rankSongs(id);
@@ -66,6 +68,8 @@ export default {
         description,
         name: name,
         coverImgUrl,
+        updateTime,
+        playCount,
       };
       this.info = info;
       let songs = [];
@@ -76,9 +80,11 @@ export default {
           album: tracks[i]['al']['name'],
           artists: tracks[i]['ar'],
           picUrl: tracks[i]['al']['picUrl'],
+          publishTime: tracks[i]['publishTime'],
+          alia: tracks[i]['alia'],
           privilege: {
             pl: privileges[i]['pl'],
-            fee: privileges[i]['fee'],
+            fee: tracks[i]['fee'],
             flag: privileges[i]['flag'],
             maxbr: privileges[i]['maxbr'],
           },
@@ -87,7 +93,10 @@ export default {
       }
       this.songs = songs;
     },
-    player(index, ele) {
+    player(index, ele, item) {
+      if (item.fee == 1) {
+        this.$toast({ message: '此歌曲为vip歌曲, 因合作方要求,暂时无法播放' });
+      }
       this.$drop(ele);
       if (!Object.is(this.songs, this.playList)) {
         this.setPlay(this.songs);
@@ -100,10 +109,15 @@ export default {
       if (document.documentElement.scrollTop > 150) {
         this.title = this.info.name;
       } else {
-        this.title = '歌单';
+        this.title = mapName[this.$route.query.type];
       }
     },
-    ...mapMutations(['setCurrrentIndex', 'setPlay', 'setSequenceList']),
+    ...mapMutations([
+      'setFullScreen',
+      'setCurrrentIndex',
+      'setPlay',
+      'setSequenceList',
+    ]),
   },
 };
 </script>

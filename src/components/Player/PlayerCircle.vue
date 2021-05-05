@@ -7,7 +7,17 @@
       <p class="song-singer">{{ currrenSong.name }}</p>
       <p class="song-name">{{ currrenSong.artists }}</p>
       <div class="currrent_lyric">
-        {{ playingLyric ? playingLyric : '暂无歌词' }}
+        {{
+          currentLyric[activeLyricIndex]
+            ? currentLyric[activeLyricIndex]['lyric']
+            : '暂无歌词'
+        }}
+      </div>
+      <div
+        class="currrent_lyric"
+        v-if="currentLyric[activeLyricIndex] && currentLyric[activeLyricIndex]['tlyric']"
+      >
+        {{ currentLyric[activeLyricIndex]['tlyric'] }}
       </div>
     </div>
   </div>
@@ -17,14 +27,8 @@
 import { mapGetters } from 'vuex';
 export default {
   name: 'PlayerCircle',
-  props: {
-    playingLyric: String,
-  },
   computed: {
-    ...mapGetters(['currrenSong']),
-  },
-  updated() {
-    // console.log('circle');
+    ...mapGetters(['currrenSong', 'currentLyric', 'activeLyricIndex']),
   },
 };
 </script>
@@ -45,7 +49,7 @@ export default {
 }
 .circle {
   .currrent_lyric {
-    font-size: 16px;
+    font-size: 14px;
     color: rgba(225, 225, 225, 0.8);
   }
   .bgc {

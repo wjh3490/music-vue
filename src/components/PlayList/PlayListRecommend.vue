@@ -43,7 +43,7 @@ export default {
       };
 
       this.setSinger(_singer);
-      this.$router.push(`/playlist/${singer.id}`);
+      this.$router.push(`/playlist/${singer.id}?type=0`);
     },
     ...mapMutations(['setSinger']),
   },

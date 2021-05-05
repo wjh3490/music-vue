@@ -4,17 +4,24 @@
     :class="active == 1 ? 'auto-height' : 'fixed-height'"
   >
     <ul class="singer-album-wrap">
-      
-      <router-link tag="li" :to="`/album/${item.id}`" v-for="item in albums" :key="item.id" class="singer-album-item">
+      <router-link
+        tag="li"
+        :to="`/album/${item.id}`"
+        v-for="item in albums"
+        :key="item.id"
+        class="singer-album-item"
+      >
         <div class="singer-album-left">
-          <img :src="item.picUrl" alt="" class="singer-album-figure" />
+          <img v-lazy="item.picUrl" alt="" class="singer-album-figure" />
         </div>
         <div class="singer-album-right">
           <p class="singer-album-name ellipsis">{{ item.name }}</p>
           <p class="singer-album-publishTime">
-            {{ item.publishTime | parseTime('{y}-{m}-{d}') }}
+            <span>{{ item.publishTime | parseTime('{y}-{m}-{d}') }}</span>
+            <span class="singer-album-size">{{ item.size }}首</span>
           </p>
         </div>
+        <span class="iconfont icon-youjiantou"></span>
       </router-link>
     </ul>
   </div>
@@ -47,17 +54,24 @@ export default {
 <style lang="less" scoped>
 .singer-album {
   padding-left: 10px;
+  padding-right: 10px;
   overflow-x: hidden;
   padding-bottom: 70px;
   &-item {
     display: flex;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
   }
   &-left {
-    background: url('../../assets/imgs/digital-album.png') center right
-      no-repeat;
-    padding-right: 15px;
-    background-size: 15px 100%;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  &-right {
+    flex: 1;
   }
   &-figure {
     width: 60px;
@@ -67,9 +81,14 @@ export default {
     font-size: 16px;
   }
   &-publishTime {
-    margin-top: 7px;
+    margin-top: 4px;
     color: #888;
     font-size: 13px;
+    display: flex;
+    align-items: center;
+  }
+  &-size {
+    margin-left: 10px;
   }
 }
 .auto-height {

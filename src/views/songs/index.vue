@@ -15,7 +15,7 @@
         >
       </nav>
     </BaseBack>
-    <PlayListSongList
+    <BaseSongList
       :songs="songs"
       @player="player"
       v-show="activeIndex == 0"
@@ -28,12 +28,11 @@
 <script>
 import { mapMutations } from 'vuex';
 import { vGetNewsong } from '@/api/recomment.js';
-import PlayListSongList from '@/components/PlayList/PlayListSongList';
 import SongsNewAlbum from '@/components/Songs/SongsNewAlbum';
 import { Song } from '@/utils/config';
 export default {
   name: 'Songs',
-  components: { PlayListSongList, SongsNewAlbum },
+  components: { SongsNewAlbum },
   data() {
     return {
       songs: [],
@@ -54,7 +53,7 @@ export default {
             name: result[i]['name'],
             album: result[i]['song']['name'],
             singer: result[i]['song']['artists'],
-            picUrl: result[i]['picUrl'],
+            picUrl: '',
             privilege: {
               pl: result[i]['song']['privilege']['pl'] || '',
               fee: result[i]['song']['privilege']['fee'] || '',

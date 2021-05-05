@@ -4,7 +4,7 @@
     <swiper :options="props.options" v-if="props.list.length">
       <swiper-slide v-for="(item, index) in props.list" :key="item.id" style="width: 9.2rem">
         <router-link
-          :to="`/playlist/${item.id}`"
+          :to="`/playlist/${item.id}?type=1`"
           tag="div"
           class="home-toplist-main"
           :style="{ backgroundColor: props.colors[index] }"

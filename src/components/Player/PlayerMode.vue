@@ -3,19 +3,19 @@
     <slot />
     <i
       class="iconfont mode-icon"
-      :class="swichMode"
+      :class="modeList[mode]['icon']"
       @click="visibleMode = !visibleMode"
     ></i>
     <transition name="slide">
       <ul v-show="visibleMode" class="mode-list">
         <li
-          @click="handleMode(index)"
+          @click="changeMode(index)"
           class="mode-item"
           v-for="(item, index) in modeList"
           :key="item.icon"
         >
           <i
-            class="iconfont icon-iconsMusicyemianbofangmoshiRepeat mode-icon"
+            class="iconfont  mode-icon"
             :class="[{ active: mode === index }, item.icon]"
           ></i>
           <span :class="{ active: mode === index }" class="mode-name">{{
@@ -28,38 +28,35 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
+
 export default {
   name: 'PlayerMode',
-  props: {
-    // visibleMode: { type: Boolean },
-    swichMode: { type: String },
-  },
-  updated() {
-    // console.log('PlayerMode');
-  },
   data() {
     return {
       visibleMode: false,
+      modeIcon: '',
       modeList: [
         { icon: 'icon-iconsMusicyemianbofangmoshiRepeat', name: '顺序播放' },
         {
-          icon: 'icon-iconsMusicyemianbofangmoshiAlrepeatOne',
+          icon: 'icon-danquxunhuan1',
           name: '单曲循环',
         },
         { icon: 'icon-iconsMusicyemianbofangmoshiShuffle', name: '随机播放' },
       ],
     };
   },
-  methods: {
-    handleMode(index) {
-      this.visibleMode = false;
-      this.$emit('changeMode', index);
-     
-    },
-  },
   computed: {
-    ...mapGetters(['mode']),
+    ...mapGetters(['mode', 'sequenceList', 'currrenSong']),
+  },
+  created() {},
+  methods: {
+    changeMode(mode) {
+      this.visibleMode = false;
+      if (this.mode === mode) return;
+      this.setMode(mode);
+    },
+    ...mapMutations(['setCurrrentIndex', 'setMode', 'setPlay']),
   },
 };
 </script>

@@ -11,7 +11,8 @@ export class Song {
     this.name = options.name || ''; // 歌曲名
     this.picUrl = options.picUrl || ''; // 图片
     this.album = options.album || ''; // 歌曲专辑
-    this.alia = options.alia || ''; // 歌曲别名
+    this.alia = (options.alia || []).join('/') || ''; // 歌曲别名
+    this.publishTime = options.publishTime || ''; // 发布时间
     this.artists = getArtist(options.artists || []).join('、') || ''; // 歌手
     this.privilege = options.privilege || {}; // 状态
   }

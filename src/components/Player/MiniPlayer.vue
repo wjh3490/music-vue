@@ -1,53 +1,41 @@
 <template>
-  <div
-    class="mini-container"
-    @click.stop="$store.commit('setFullScreen', true)"
-  >
-    <section class="mini-cd" :class="{ active: !playing }">
-      <div
-        class="mini-cd-wrap"
-        :style="{
-          'background-image': `conic-gradient(#20a0ff 0%, #2010ff ${percent *
-            100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
-        }"
-      ></div>
-      <div class="mini-cd-bgc" :class="animationStatus">
-        <img :src="currrenSong.picUrl" alt class="mini-cd-img" />
+  <transition name="fade2">
+    <div class="mini-container" @click.stop="handleFullScreen">
+      <section class="mini-cd" :class="{ active: !playing }">
+        <div
+          class="mini-cd-wrap"
+          :style="{
+            'background-image': `conic-gradient(#20a0ff 0%, #2010ff ${percent *
+              100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
+          }"
+        ></div>
+        <div class="mini-cd-bgc" :class="animationStatus">
+          <img :src="currrenSong.picUrl" alt class="mini-cd-img" />
+        </div>
+      </section>
+
+      <section class="mini-desc ellipsis">
+        <p class=" mini-player-name ellipsis">
+          {{ currrenSong.name }} - {{ currrenSong.artists }}
+        </p>
+      </section>
+      <div class="control">
+        <i
+          @click.stop="setPlaying(!playing)"
+          class="pause iconfont mini-control-icon mini-icon-commom"
+          :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
+        ></i>
+        <i
+          @click.stop="actionNext"
+          class="next iconfont icon-qianjin mini-icon-commom"
+        ></i>
+
+        <i
+          @click.stop="handleVisible"
+          class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
+        ></i>
       </div>
-    </section>
-
-    <section class="mini-desc ellipsis">
-      <p class=" mini-player-name ellipsis">{{ currrenSong.name }} - {{ currrenSong.artists }}</p>
-      <!-- <p class=" mini-player-singer ellipsis"></p> -->
-    </section>
-
-    <div class="control">
-      <!-- <div class="audio-icon unselectable">
-        <template v-for="item in audioIcon">
-          <div
-            :class="{ active: !playing }"
-            class="column"
-            :style="{ animationDelay: `${item.time}s` }"
-            :key="item.time"
-          ></div>
-        </template>
-      </div> -->
-      <i
-        @click.stop="$emit('pause')"
-        class="pause iconfont mini-control-icon mini-icon-commom"
-        :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
-      ></i>
-      <i
-        @click.stop="$emit('next')"
-        class="next iconfont icon-qianjin mini-icon-commom"
-      ></i>
-
-      <i
-        class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
-        @click.stop="$emit('handlePlayListVisible')"
-      ></i>
-    </div>
-    <!-- <svg viewBox="0 0 100 100"  class="svg">
+      <!-- <svg viewBox="0 0 100 100"  class="svg">
         <defs>
           <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:rgb(32,160,255);stop-opacity:1" />
@@ -82,33 +70,22 @@
         style="stroke-dashoffset: 0px">
         </path>
       </svg> -->
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
-  name: 'PlayerMini',
-  props: {
-    animationStatus: String,
-    palyStatus: String,
-    percent: {
-      type: Number,
-      default: 0,
-    },
-  },
-  data() {
-    return {
-      audioIcon: [
-        { time: -1.2 },
-        { time: 0 },
-        { time: -1.5 },
-        { time: -0.9 },
-        { time: -0.6 },
-      ],
-    };
-  },
+  name: 'MiniPlayer',
   computed: {
+    animationStatus({ playing }) {
+      return playing ? '' : 'animation_pause';
+    },
+
+    percent({ currentTime, duration }) {
+      return currentTime / duration;
+    },
     // strokeDasharray() {
     //   return {
     //     strokeDasharray: `${this.percent.toFixed(2) * this.perimeter}px, ${
@@ -119,7 +96,32 @@ export default {
     // perimeter() {
     //   return 2 * Math.PI * 50;
     // },
-    ...mapGetters(['currrenSong', 'fullScreen', 'playing']),
+    ...mapGetters([
+      'currentTime',
+      'duration',
+      'currrenSong',
+      'fullScreen',
+      'playing',
+      'lockScroll',
+    ]),
+  },
+  methods: {
+    handleVisible() {
+      this.setVisible(true);
+      this.setlockScroll(1);
+    },
+
+    handleFullScreen() {
+      this.setFullScreen('setFullScreen', true);
+      this.setlockScroll(1);
+    },
+    ...mapActions(['actionNext']),
+    ...mapMutations([
+      'setPlaying',
+      'setFullScreen',
+      'setVisible',
+      'setlockScroll',
+    ]),
   },
 };
 </script>
@@ -169,23 +171,6 @@ export default {
       .mini-player-singer {
         font-size: 12px;
         color: #888;
-      }
-    }
-    .audio-icon {
-      position: relative;
-      display: flex;
-      height: 20px;
-      align-items: center;
-      overflow: hidden;
-      .column {
-        width: 2px;
-        height: 100%;
-        margin-left: 2px;
-        background-color: #169af3;
-        animation: play 0.9s linear infinite alternate;
-        &.active {
-          animation-play-state: paused;
-        }
       }
     }
   }

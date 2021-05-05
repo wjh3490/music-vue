@@ -1,5 +1,4 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
 import Vue from 'vue';
 import App from './App';
 import router from './router';
@@ -14,17 +13,15 @@ import './style/transition.less';
 import './style/font.css';
 import './utils/flexible';
 import './assets/font/iconfont.css';
-import '@/components/Base';
-import MessageBox from './components/MessageBox';
-import BaseBall from './components/ball.js';
+
+import '@/components/base';
+import '@/components/gloabl';
 import './registerServiceWorker';
 
 Vue.use(VueAwesomeSwiper);
 Vue.use(VueLazyload, {
   loading: require('./assets/imgs/default.jpg'),
 });
-Vue.use(MessageBox);
-Vue.use(BaseBall);
 Vue.config.productionTip = false;
 Object.keys(filters).forEach((key) => {
   Vue.filter(key, filters[key]);
@@ -35,7 +32,3 @@ new Vue({
   router,
   components: { App },
 }).$mount('#app');
-//git@github.com:wjh3490/music-vue.git
-//  <!-- <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
-//   <script src="<%=js%>"></script>
-//   <% } %> -->

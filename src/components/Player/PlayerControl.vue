@@ -1,28 +1,41 @@
-<template functional>
+<template>
   <div class="control">
+    <slot />
+    <div class="control-action">
+      <i
+        @click.stop="actionPre"
+        class="pre iconfont icon-qianjin control-icon"
+      ></i>
+      <i
+        @click.stop="setPlaying(!playing)"
+        class="pause iconfont  control-icon"
+        :class="playing ? 'icon-zanting11' : 'icon-bofang'"
+      ></i>
+      <i
+        @click.stop="actionNext"
+        class="next iconfont icon-qianjin  control-icon"
+      ></i>
+    </div>
     <i
-      @click.stop="listeners.pre"
-      class="pre iconfont icon-qianjin control-icon"
-    ></i>
-    <i
-      @click.stop="listeners.pause"
-      class="pause iconfont  control-icon"
-      :class="props.palyStatus"
-    ></i>
-    <i
-      @click.stop="listeners.next"
-      class="next iconfont icon-qianjin  control-icon"
+      @click="handleVisible"
+      class="iconfont icon-iconsMusicyemianbofangmoshiPlayList collect-icon"
     ></i>
   </div>
 </template>
 <script>
+import { mapMutations, mapGetters, mapActions } from 'vuex';
 export default {
   name: 'PlayerControl',
-  props: {
-    palyStatus: {
-      type: String,
-      defaule: '',
+  computed: {
+    ...mapGetters(['playing']),
+  },
+  methods: {
+    handleVisible() {
+      this.setVisible(true);
+      this.setlockScroll(1);
     },
+    ...mapMutations(['setPlaying', 'setVisible', 'setlockScroll']),
+    ...mapActions(['actionPre', 'actionNext']),
   },
 };
 </script>
@@ -31,6 +44,8 @@ export default {
 .control {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
   .control-icon {
     &.pause {
       font-size: 50px;
@@ -39,13 +54,11 @@ export default {
     }
     &.pre {
       transform: rotate(180deg);
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 24px;
-    }
-    &.next {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 24px;
     }
   }
+}
+.iconfont {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.7);
 }
 </style>
