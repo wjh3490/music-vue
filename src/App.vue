@@ -15,16 +15,30 @@ import Audio from '@/components/Audio';
 export default {
   name: 'App',
   components: { Audio, Player, PlaySongs },
+  data() {
+    return {
+      y: 0,
+      flag: true,
+    };
+  },
   computed: { ...mapGetters(['lockScroll']) },
   mounted() {
     this.body = document.body;
   },
   watch: {
     lockScroll(val) {
+      if (this.flag) {
+        this.y = document.body.scrollTop || document.documentElement.scrollTop;
+        this.flag = false;
+      }
       if (val == 0) {
         this.body.classList.remove('lock-scroll');
+        this.body.style.top = 0;
+        document.documentElement.scrollTop = this.y;
+        this.flag = true;
       } else {
         if (!this.body.classList.contains('lock-scroll')) {
+          this.body.style.top = -this.y + 'px';
           this.body.classList.add('lock-scroll');
         }
       }
@@ -34,7 +48,9 @@ export default {
 </script>
 <style>
 .lock-scroll {
-  overflow: hidden !important;
+  position: fixed;
+  left: 0;
+  width: 100%;
 }
 </style>
 
