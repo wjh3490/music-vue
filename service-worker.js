@@ -1,4 +1,4 @@
-importScripts("/music-vue/precache-manifest.f863a686d04abf9ccc293673d7d9c5e1.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/music-vue/precache-manifest.bc05809e27f71bfb33cc8e1db2eb97b6.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /*eslint-disable*/
 workbox.core.setCacheNameDetails({
@@ -10,8 +10,7 @@ workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
 /*
- * vue-cli3.0通过workbox-webpack-plagin 来实现相关功能，我们需要加入
- * 以下语句来获取预缓存列表和预缓存他们，也就是打包项目后生产的html，js，css等* 静态文件
+ * 预缓存列表和预缓存他们，也就是html，js，css等* 静态文件
  */
 workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 
