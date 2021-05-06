@@ -1,6 +1,6 @@
 
 
-
+本项目使用 Vue全家桶 + pwa 实现
 
 npm install
 

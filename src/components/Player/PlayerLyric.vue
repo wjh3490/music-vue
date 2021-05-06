@@ -14,9 +14,8 @@
         v-for="(key, value) in currentLyric"
         :key="value"
         class="lyrics"
-        :class="{ 'active-lyric': value == activeLyricIndex }"
       >
-        <p>
+        <p :class="{ 'active-lyric': value == activeLyricIndex }">
           {{ key['lyric'] }}
         </p>
         <p v-if="key['tlyric']">{{ key['tlyric'] }}</p>
@@ -145,20 +144,20 @@ export default {
       height: 40px;
     }
     p {
-      padding: 3px 50px;
+      padding: 4px 23px;
+      transition: font-size 0.3s;
+      &.active-lyric {
+        color: rgba(238, 238, 113, 0.75);
+        font-weight: 700;
+        opacity: 1;
+        font-size: 20px;
+      }
     }
     .lyrics {
       font-size: 16px;
       text-align: left;
       color: rgba(225, 225, 225, 0.8);
       padding-bottom: 8px;
-      &.active-lyric {
-        color: rgba(238, 238, 113, 0.75);
-        font-weight: 700;
-        opacity: 1;
-        transition: all 0.2s;
-        font-size: 18px;
-      }
     }
   }
 

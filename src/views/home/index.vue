@@ -28,7 +28,7 @@
     <!-- 导航栏 -->
     <BaseNav />
     <!-- 推荐歌单 -->
-    <HomeList :list="personalized" v-if="personalized.length">
+    <HomeList :list="personalized" v-if="personalized.length" :link="true">
       <HomeMore title="推荐歌单" link="/playlist" />
     </HomeList>
     <!-- 排行榜 -->
@@ -68,11 +68,11 @@
       </HomeMore>
     </HomeNewSong>
     <!-- 独家放送  -->
-    <HomeList :list="videos">
+    <HomeList :list="videos" v-if="videos.length">
       <HomeMore title="独家放送" link="" />
     </HomeList>
     <!-- 电台  -->
-    <HomeList :list="list" round>
+    <HomeList :list="list" round v-if="list.length">
       <HomeMore>
         <div class="home-newsong-tabs">
           <div
@@ -101,7 +101,6 @@
 </template>
 
 <script>
-
 import { mapMutations, mapGetters } from 'vuex';
 import {
   vGetPersonalized,

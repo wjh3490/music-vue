@@ -5,7 +5,7 @@
       <div class="home-playlist-scroll">
         <ul class="home-playlist-wrap">
           <router-link
-            :to="`/playlist/${item.id}?type=0`"
+            :to="props.link ? `/playlist/${item.id}?type=0` : ''"
             v-for="item in props.list"
             :key="item.id"
             class="home-playlist-item"
@@ -32,6 +32,10 @@ export default {
     list: {
       type: Array,
       default: () => [],
+    },
+    link: {
+      type: Boolean,
+      default: false,
     },
     round: {
       type: Boolean,
