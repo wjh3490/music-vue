@@ -21,6 +21,7 @@ export default {
       flag: true,
     };
   },
+   created(){console.log(2222)},
   computed: { ...mapGetters(['lockScroll']) },
   mounted() {
     this.body = document.body;
