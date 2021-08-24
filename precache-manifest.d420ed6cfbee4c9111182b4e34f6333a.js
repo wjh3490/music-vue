@@ -1,50 +1,50 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0546be1e8e1d7a4581ff",
-    "url": "/music-vue/css/app.45291ea9.css"
+    "revision": "1fc3fb9d4a49c48c706d",
+    "url": "/music-vue/css/app.265b1262.css"
   },
   {
     "revision": "34511c48973e54f0a8da",
     "url": "/music-vue/css/chunk-vendors.5ba8d039.css"
   },
   {
-    "revision": "c6e21c36c6632e738c46",
+    "revision": "c78890c7118315c542fc",
     "url": "/music-vue/css/mall-category.87a1ade5.css"
   },
   {
-    "revision": "90d77b8013e4985c8884",
+    "revision": "5778f2e9f2e2bb5aa494",
     "url": "/music-vue/css/mall-shop.944930ad.css"
   },
   {
-    "revision": "d8768f0485b8c9350fbc",
+    "revision": "c3e19a7212a59430b5c9",
     "url": "/music-vue/css/mall.d916657e.css"
   },
   {
-    "revision": "5330e8046ebe8e4056aa",
+    "revision": "d96ffd4a69dfa74d8c3f",
     "url": "/music-vue/css/playlist.c541f403.css"
   },
   {
-    "revision": "8c6456c3495fcd81982a",
+    "revision": "9d615301d31003738156",
     "url": "/music-vue/css/rank.fa30b7b7.css"
   },
   {
-    "revision": "682a13e8367f6e6dd97f",
+    "revision": "75c2a611ab94b57b06a0",
     "url": "/music-vue/css/recommend.d3b5e134.css"
   },
   {
-    "revision": "dab05ae9e1fa15e2a57b",
+    "revision": "aa954655b498c675b3c9",
     "url": "/music-vue/css/search.1c2dc72f.css"
   },
   {
-    "revision": "4e592ad42253321d3781",
+    "revision": "99d171bcb641c44922fd",
     "url": "/music-vue/css/singer-detail.01f0f428.css"
   },
   {
-    "revision": "0b94bdd592075fd446f7",
+    "revision": "47fb06cdb47d5d18d974",
     "url": "/music-vue/css/songs.5a3cd0c1.css"
   },
   {
-    "revision": "abf8e3c353d228369d93",
+    "revision": "cae1ba6eedf00a564ee9",
     "url": "/music-vue/css/user.214d19fa.css"
   },
   {
@@ -68,64 +68,64 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/music-vue/img/type_cd.5e34b1b3.png"
   },
   {
-    "revision": "4bc8aee9de905d0968c3a4f4e0e07122",
+    "revision": "840354e0268cdd6e5f315aac9302bb5c",
     "url": "/music-vue/index.html"
   },
   {
-    "revision": "821489e015a7b2d81f24",
-    "url": "/music-vue/js/album.94f67f3d.js"
+    "revision": "eeebfdf8d5010c46ec5d",
+    "url": "/music-vue/js/album.c6860b47.js"
   },
   {
-    "revision": "0546be1e8e1d7a4581ff",
-    "url": "/music-vue/js/app.8d95fadd.js"
+    "revision": "1fc3fb9d4a49c48c706d",
+    "url": "/music-vue/js/app.b3cb477a.js"
   },
   {
     "revision": "34511c48973e54f0a8da",
     "url": "/music-vue/js/chunk-vendors.e2766bcb.js"
   },
   {
-    "revision": "c6e21c36c6632e738c46",
-    "url": "/music-vue/js/mall-category.e1098245.js"
+    "revision": "c78890c7118315c542fc",
+    "url": "/music-vue/js/mall-category.1efbea71.js"
   },
   {
-    "revision": "90d77b8013e4985c8884",
-    "url": "/music-vue/js/mall-shop.ac99d9e3.js"
+    "revision": "5778f2e9f2e2bb5aa494",
+    "url": "/music-vue/js/mall-shop.95acaaa0.js"
   },
   {
-    "revision": "d8768f0485b8c9350fbc",
-    "url": "/music-vue/js/mall.7ef5c0ac.js"
+    "revision": "c3e19a7212a59430b5c9",
+    "url": "/music-vue/js/mall.4da822ab.js"
   },
   {
-    "revision": "cb6c0f96e361d290e4b7",
-    "url": "/music-vue/js/playlist-detail.d530a1cc.js"
+    "revision": "f769a6f5668e9dee1f01",
+    "url": "/music-vue/js/playlist-detail.03cffc0d.js"
   },
   {
-    "revision": "5330e8046ebe8e4056aa",
-    "url": "/music-vue/js/playlist.3d9c249c.js"
+    "revision": "d96ffd4a69dfa74d8c3f",
+    "url": "/music-vue/js/playlist.215c4ea2.js"
   },
   {
-    "revision": "8c6456c3495fcd81982a",
-    "url": "/music-vue/js/rank.66b1f419.js"
+    "revision": "9d615301d31003738156",
+    "url": "/music-vue/js/rank.5eed4d78.js"
   },
   {
-    "revision": "682a13e8367f6e6dd97f",
-    "url": "/music-vue/js/recommend.5e412168.js"
+    "revision": "75c2a611ab94b57b06a0",
+    "url": "/music-vue/js/recommend.4e5ff97e.js"
   },
   {
-    "revision": "dab05ae9e1fa15e2a57b",
-    "url": "/music-vue/js/search.04e9c10f.js"
+    "revision": "aa954655b498c675b3c9",
+    "url": "/music-vue/js/search.7a3d23fb.js"
   },
   {
-    "revision": "4e592ad42253321d3781",
-    "url": "/music-vue/js/singer-detail.6821c7d8.js"
+    "revision": "99d171bcb641c44922fd",
+    "url": "/music-vue/js/singer-detail.63a503e9.js"
   },
   {
-    "revision": "0b94bdd592075fd446f7",
-    "url": "/music-vue/js/songs.5ec90aa9.js"
+    "revision": "47fb06cdb47d5d18d974",
+    "url": "/music-vue/js/songs.03c2a9f1.js"
   },
   {
-    "revision": "abf8e3c353d228369d93",
-    "url": "/music-vue/js/user.446e5c9c.js"
+    "revision": "cae1ba6eedf00a564ee9",
+    "url": "/music-vue/js/user.de49a064.js"
   },
   {
     "revision": "63623da34d2a8405018ef49730e319aa",
