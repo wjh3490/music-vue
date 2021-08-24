@@ -26,7 +26,10 @@ export default {
   mounted() {
     this.body = document.body;
   },
-  created(){console.log(88888888)},
+  created(){
+    console.log(88888888)
+    const a = 1000;
+  },
   watch: {
     lockScroll(val) {
       if (this.flag) {
