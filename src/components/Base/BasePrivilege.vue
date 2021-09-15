@@ -1,18 +1,18 @@
-<template functional>
+<template >
   <div class="song-privilege">
     <!-- sq -->
-    <span v-if="props.privilege.maxbr === 999000" class="iconsq icon sq"
+    <span v-if="privilege.maxbr === 999000" class="iconsq icon sq"
       >SQ</span
     >
     <!-- 独家 -->
-    <span v-if="/64|68|1088|1092/.test(props.privilege.flag)" class="icon only"
+    <span v-if="/64|68|1088|1092/.test(privilege.flag)" class="icon only"
       >独家</span
     >
     <!-- vip -->
-    <span v-if="props.privilege.fee === 1" class="icon vip">vip</span>
+    <span v-if="privilege.fee === 1" class="icon vip">vip</span>
     <!-- 试听 -->
     <span
-      v-if="/1152|1028|1088|1092/.test(props.privilege.flag)"
+      v-if="/1152|1028|1088|1092/.test(privilege.flag)"
       class="icon listen"
       >试听</span
     >

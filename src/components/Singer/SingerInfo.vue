@@ -3,7 +3,7 @@
     <div class="singer-info-wrap">
       <div class="singer-info-name">{{ info.name }}</div>
       <div class="singer-info-identify" v-if="info.identifyTag">
-        <img :src="info.identify.imageUrl" alt="" class="singer-info-figure" />
+        <img :src="info?.identify?.imageUrl" alt="" class="singer-info-figure" />
         <span class="singer-info-identifyTag">{{ info.identifyTag }}</span>
       </div>
       <p class="singer-info-desc" v-if="info.identify.imageDesc">

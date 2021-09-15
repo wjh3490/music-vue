@@ -1,78 +1,70 @@
 <template>
-  <div class="singer-container">
-    <BaseBack title="歌手榜" />
-    <BaseTabs
-      :navList="navList"
-      @tabs="handleScroll"
-      :active="active"
-      @change="handleChange"
-      ref="tabs"
-    />
-    <main class="singer-main">
-      <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
-        <swiper-slide
-          :data-id="item.targetId"
-          v-for="item in navList"
-          :key="item.id"
-        >
-          <SingerList ref="singer" />
-        </swiper-slide>
-      </swiper>
-    </main>
-  </div>
+  <base-back title="歌手榜" />
+  <base-tabs
+    :navList="countryOptions"
+    :active="active"
+    ref="tabRef"
+    @tabs="handleSlide"
+    @change="handleChange"
+  />
+  <base-swiper-items
+    :list="countryOptions"
+    :options="basicSwiperOptions"
+    @slideChange="onSlideChange"
+    @swiper="onSwiper"
+  >
+    <singer-list :ref="getRefs" />
+  </base-swiper-items>
 </template>
-<script>
-import SingerList from '@/components/Singer/SingerList';
-export default {
-  name: 'Singer',
+<script lang="ts">
+import { defineComponent, onMounted, ref } from "vue";
+import SingerList from "@/components/Singer/SingerList.vue";
+import useSwiper from '@/composables/useSwiper';
+import { basicSwiperOptions, countryOptions } from '@/utils';
+
+interface Detail {
+  getSingers: (type: number) => void,
+  flag: boolean
+}
+interface Tab {
+  init: (time?: number) => void
+}
+
+export default defineComponent({
+  name: "Singer",
   components: { SingerList },
-  data() {
+  setup() {
+    const tabRef = ref<Tab | null>(null)
+    const singers = ref<Detail[]>([]);
+    const {
+      active,
+      onSwiper,
+      handleSlide,
+      onSlideChange } = useSwiper();
+
+    const handleChange = (index: number): void => {
+      const id = countryOptions[index].id;
+      singers.value[index].flag && singers.value[index].getSingers(id);
+    }
+    const getRefs = (el) => {
+      singers.value.push(el)
+    }
+    onMounted(() => {
+      singers.value[0].getSingers(1);
+      (tabRef.value as Tab).init(0);
+    })
     return {
-      active: 0,
-      navList: [
-        { id: 1, name: '华语' },
-        { id: 2, name: '欧美' },
-        { id: 3, name: '韩国' },
-        { id: 4, name: '日本' },
-      ],
-      swiperOptions: {
-        on: {
-          slideChange: () => {
-            this.active = this.swiper.activeIndex;
-          },
-        },
-        loop: false,
-        watchSlidesVisibility: true,
-      },
+      tabRef,
+      active,
+      countryOptions,
+      basicSwiperOptions,
+      getRefs,
+      onSwiper,
+      onSlideChange,
+      handleChange,
+      handleSlide
     };
   },
-
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.swiper;
-    },
-  },
-  mounted() {
-    this.singers = this.$refs.singer;
-    this.singers[0].getSingers(1);
-    this.$refs.tabs.init();
-  },
-  methods: {
-    handleChange(index) {
-      const id = this.navList[index]['id'];
-      this.singers[index].getSingers(id);
-    },
-    handleScroll(index) {
-      if (this.active == index) return;
-      this.swiper.slideTo(index, 0, false);
-    },
-  },
-};
+});
 </script>
-<style scoped lang="less">
-.singer {
-  &-container {
-    padding-top: 90px;
-  }
-}
-</style>
+

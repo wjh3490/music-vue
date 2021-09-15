@@ -7,7 +7,7 @@ export function vGetPersonalized() {
   });
 }
 
-export function vGetNewsong(params) {
+export function fetchNewsong(params) {
   return service({
     url: '/personalized/newsong',
     method: 'get',

@@ -1,22 +1,29 @@
 <template>
-  <div class="player" v-show="playList.length > 0">
-    <NormalPlayer v-show="fullScreen" />
-    <MiniPlayer v-show="!fullScreen" />
-  </div>
+  <!-- <div class="player" v-show="playList.length > 0"> -->
+    <normal-player v-show="fullScreen" />
+    <!-- <mini-player v-show="!fullScreen" /> -->
+  <!-- </div> -->
 </template>
 
-<script>
-import NormalPlayer from '@/components/Player/NormalPlayer';
-import MiniPlayer from '@/components/Player/MiniPlayer';
-import { mapGetters } from 'vuex';
-export default {
+<script lang="ts">
+import { defineComponent, computed } from 'vue'
+import NormalPlayer from '@/components/Player/NormalPlayer.vue';
+import MiniPlayer from '@/components/Player/MiniPlayer.vue';
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'Player',
   components: {
     MiniPlayer,
     NormalPlayer,
   },
-  computed: {
-    ...mapGetters(['fullScreen', 'playList']),
-  },
-};
+  setup() {
+    const store = useStore();
+    const fullScreen = computed(() => store.getters.fullScreen);
+    const playList = computed(() => store.getters.playList);
+    return {
+      fullScreen,
+      playList
+    }
+  }
+});
 </script>

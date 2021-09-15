@@ -1,64 +1,55 @@
 <template>
   <div class="play-mode">
     <slot />
-    <i
-      class="iconfont mode-icon"
-      :class="modeList[mode]['icon']"
-      @click="visibleMode = !visibleMode"
-    ></i>
-    <transition name="slide">
-      <ul v-show="visibleMode" class="mode-list">
-        <li
-          @click="changeMode(index)"
-          class="mode-item"
-          v-for="(item, index) in modeList"
-          :key="item.icon"
-        >
-          <i
-            class="iconfont  mode-icon"
-            :class="[{ active: mode === index }, item.icon]"
-          ></i>
-          <span :class="{ active: mode === index }" class="mode-name">{{
+    <i class="iconfont mode-icon" :class="modeOptions[mode]['icon']" @click="visible = !visible"></i>
+    <!-- <transition name="slide"> -->
+    <ul v-show="visible" class="mode-list">
+      <li
+        v-for="(item, index) in modeOptions"
+        :key="item.icon"
+        class="mode-item"
+        @click="changeMode(index)"
+      >
+        <i class="iconfont mode-icon" :class="[{ active: mode === index }, item.icon]"></i>
+        <span :class="{ active: mode === index }" class="mode-name">
+          {{
             item.name
-          }}</span>
-        </li>
-      </ul>
-    </transition>
+          }}
+        </span>
+      </li>
+    </ul>
+    <!-- </transition> -->
   </div>
 </template>
 
-<script>
-import { mapGetters, mapMutations } from 'vuex';
+<script lang="ts">
+import { useStore } from 'vuex';
+import { defineComponent, ref, computed } from 'vue'
+import { modeOptions } from '@/utils'
 
-export default {
+type Mode = string | number | symbol;
+
+export default defineComponent({
   name: 'PlayerMode',
-  data() {
+  setup() {
+    const store = useStore();
+    const visible = ref(false);
+    const mode = computed(() => store.state.mode);
+    const setMode = (mode: Mode) => { store.commit('setMode', mode) }
+
+    const changeMode = (status: Mode) => {
+      visible.value = false;
+      if (mode.value === status) return;
+      setMode(status);
+    }
     return {
-      visibleMode: false,
-      modeIcon: '',
-      modeList: [
-        { icon: 'icon-iconsMusicyemianbofangmoshiRepeat', name: '顺序播放' },
-        {
-          icon: 'icon-danquxunhuan1',
-          name: '单曲循环',
-        },
-        { icon: 'icon-iconsMusicyemianbofangmoshiShuffle', name: '随机播放' },
-      ],
-    };
+      mode,
+      visible,
+      modeOptions,
+      changeMode,
+    }
   },
-  computed: {
-    ...mapGetters(['mode', 'sequenceList', 'currrenSong']),
-  },
-  created() {},
-  methods: {
-    changeMode(mode) {
-      this.visibleMode = false;
-      if (this.mode === mode) return;
-      this.setMode(mode);
-    },
-    ...mapMutations(['setCurrrentIndex', 'setMode', 'setPlay']),
-  },
-};
+});
 </script>
 <style scoped lang="less">
 .play-mode {

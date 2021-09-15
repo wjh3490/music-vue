@@ -1,8 +1,8 @@
-<template functional>
+<template>
   <nav class="nav-conainer">
     <router-link
       :to="item.to"
-      v-for="item in props.navList"
+      v-for="item in navList"
       :key="item.name"
       class="nav-item"
     >

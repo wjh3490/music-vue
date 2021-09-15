@@ -1,19 +1,19 @@
-<template functional>
+<template >
   <section class="home-playlist">
     <slot />
     <main class="home-playlist-main">
       <div class="home-playlist-scroll">
         <ul class="home-playlist-wrap">
           <router-link
-            :to="props.link ? `/playlist/${item.id}?type=0` : ''"
-            v-for="item in props.list"
+            :to="link ? `/playlist/${item.id}?type=0` : ''"
+            v-for="item in list"
             :key="item.id"
             class="home-playlist-item"
           >
             <figure class="home-playlist-figure">
               <img
-                :class="{ 'home-playlist-round': props.round }"
-                v-lazy="item.picUrl"
+                :class="{ 'home-playlist-round': round }"
+                :src="item.picUrl"
                 alt=""
                 class="home-playlist-img"
               />
@@ -25,9 +25,10 @@
     </main>
   </section>
 </template>
-<script>
-export default {
-  name: 'HomeList',
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "HomeList",
   props: {
     list: {
       type: Array,
@@ -42,7 +43,7 @@ export default {
       default: false,
     },
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .home-playlist {

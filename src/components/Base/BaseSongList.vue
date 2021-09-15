@@ -1,80 +1,62 @@
 <template>
-  <div class="songList">
-    <!-- <div class="allplay">
-      <div class="allplay-left">
-        <span class="iconfont icon-bofang allplay-icon"></span>
-        <span class="allplay-btn">全部播放</span>
-        <span class="allplay-length">({{ songs.length }})</span>
+  <div>
+    <section
+      v-for="(item, index) in songs"
+      :key="item.id"
+      :class="{ active: item.id == currrenSong.id }"
+      class="songlist-item"
+      @click.stop.prevent="$emit('play', index, $event.currentTarget, item)"
+    >
+      <div v-if="!visible" class="songlist-index" :class="{ active: item.id == currrenSong.id }">{{ index + 1 }}</div>
+      <div v-if="visible" class="songlist-figure">
+        <img v-lazy="item.picUrl" alt />
       </div>
-      <span class="iconfont icon-xiazai allplay-right"></span>
-    </div> -->
-
-    <main class="songlist-main">
-      <ul class="songlist-wrap">
-        <li
-          class="songlist-item"
-          @click.stop.prevent="
-            $emit('player', index, $event.currentTarget, item)
-          "
-          v-for="(item, index) in songs"
-          :key="item.id"
-          :class="{ active: item.id == currrenSong.id }"
-        >
-          <div
-            class="songlist-index"
+      <div class="songlist-name">
+        <div class="ellipsis songlist-title" :class="{ active: item.id == currrenSong.id }">
+          <span>{{ item.name }}</span>
+          <span
+            v-if="item.alia"
             :class="{ active: item.id == currrenSong.id }"
-          >
-            {{ index + 1 }}
+            class="songlist-alia"
+          >({{ item.alia }})</span>
+        </div>
+        <div class="songlist-album" :class="{ active: item.id == currrenSong.id }">
+          <base-privilege :privilege="item.privilege" />
+          <div class="ellipsis songlist-content">
+            <span>{{ item.artists }}</span> ·
+            <span>{{ item.album }}</span>
           </div>
-          <div class="songlist-name ">
-            <div
-              class="ellipsis songlist-title"
-              :class="{ active: item.id == currrenSong.id }"
-            >
-              <span>
-                {{ item.name }}
-              </span>
-
-              <span
-                class="songlist-alia"
-                :class="{ active: item.id == currrenSong.id }"
-                v-if="item.alia"
-              >
-                ({{ item.alia }})</span
-              >
-            </div>
-            <div
-              class="songlist-album"
-              :class="{ active: item.id == currrenSong.id }"
-            >
-              <BasePrivilege :privilege="item.privilege" />
-              <div class="ellipsis songlist-content">
-                <span>{{ item.artists }}</span> · <span>{{ item.album }}</span>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </main>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-export default {
+<script lang="ts">
+import { computed, defineComponent, PropType } from 'vue';
+import { useStore } from 'vuex';
+import type { Song } from '@/types'
+export default defineComponent({
   name: 'BaseSongList',
   props: {
-    songs: Array,
+    songs: {
+      type: Array as PropType<Array<Song>>,
+      default: () => []
+    },
+    visible: {
+      type:Boolean,
+      default: false,
+    }
   },
-  data() {
+  emits: ['play'],
+  setup() {
+    const store = useStore();
+    const currrenSong = computed(() => store.getters.currrenSong);
     return {
-      showText: false,
-    };
+      currrenSong,
+    }
   },
-  computed: {
-    ...mapGetters(['currrenSong', 'fullScreen', 'playList']),
-  },
-};
+});
 </script>
 <style scoped lang="less">
 .songlist {
@@ -82,14 +64,14 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    margin: 10px 0;
+    margin: 1rem 0;
     &.active {
       &::after {
         position: absolute;
         left: 0;
-        content: '';
+        content: "";
         height: 100%;
-        width: 4px;
+        width: 0.4rem;
         border-radius: 4px;
         background-color: #169af3;
       }
@@ -97,11 +79,19 @@ export default {
   }
 
   &-wrap {
-    padding-bottom: 60px;
+    padding-bottom: 6rem;
+  }
+  &-figure {
+    width: 5rem;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 1rem;
+    margin-right: 0.6rem;
+   
   }
   &-index {
     font-size: 16px;
-    width: 50px;
+    width: 5rem;
     text-align: center;
     &.active {
       color: #169af3;
@@ -109,7 +99,7 @@ export default {
   }
 
   &-title {
-    width: 260px;
+    width: 26rem;
     font-size: 18px;
     &.active {
       color: #169af3;
@@ -125,7 +115,7 @@ export default {
     width: 260px;
   }
   &-album {
-    margin-top: 6px;
+    margin-top: 0.6rem;
     color: #a59797f5;
     display: flex;
     align-items: center;
@@ -138,16 +128,16 @@ export default {
   }
 }
 .allplay {
-  height: 50px;
+  height: 5rem;
   position: sticky;
-  top: 50px;
+  top: 5rem;
   z-index: 92;
   overflow: hidden;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 1.5rem;
   &-left {
     display: flex;
     align-items: center;
@@ -157,7 +147,7 @@ export default {
     color: #169af3;
   }
   &-btn {
-    margin: 0 6px;
+    margin: 0 0.6rem;
     font-size: 15px;
     font-weight: 300;
   }
@@ -170,18 +160,18 @@ export default {
   }
 }
 .icon {
-  border: 1px solid #169af3;
+  border: 0.1rem solid #169af3;
   border-radius: 3px;
   color: #169af3;
   transform: scale(0.7);
-  width: 28px;
-  height: 17px;
+  width: 2.8rem;
+  height: 1.7rem;
   line-height: 15px;
   text-align: center;
-  margin-left: -3px;
+  margin-left: -0.3rem;
 }
 .iconsq {
-  border: 1px solid #f3cd16;
+  border: 0.1rem solid #f3cd16;
   color: #f3cd16;
 }
 </style>

@@ -24,7 +24,7 @@ export default {
   props: {
     isFixed: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     title: String,
     background: {
@@ -49,6 +49,7 @@ export default {
 .return {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 50px;
   line-height: 50px;
   width: 100%;

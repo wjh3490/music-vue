@@ -2,7 +2,7 @@
   <ul class="singer-main-wrap">
     <li
       v-for="(item, index) in singerList"
-      :key="index"
+      :key="item.id"
       @click.stop="getSingerDetail(item)"
       class="singer-main-item"
     >
@@ -10,18 +10,14 @@
         <span
           class="singer-main-nownum"
           :class="{ 'singer-main-top3': index <= 2 }"
-          >{{ (index + 1) | formatIndex }}</span
-        >
+        >{{ formatIndex(index + 1) }}</span>
         <span class="singer-main-rank">
-          <span
-            class="iconfont"
-            :class="(item.lastRank - index) | formatRank"
-          ></span>
-          <span class="singer-main-num"
-            >&nbsp;{{
-              item.lastRank - index == 0 ? '' : Math.abs(item.lastRank - index)
-            }}</span
-          >
+          <span class="iconfont" :class="formatRank(item.lastRank - index)"></span>
+          <span class="singer-main-num">
+            &nbsp;{{
+              item.lastRank - index === 0 ? '' : Math.abs(item.lastRank - index)
+            }}
+          </span>
         </span>
       </div>
       <div class="singer-main-avatar">
@@ -37,56 +33,59 @@
     </li>
   </ul>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router';
 import { vGetSinger } from '@/api/singer';
-import { mapMutations, mapGetters } from 'vuex';
-export default {
+import { formatIndex, formatRank } from '@/utils';
+
+interface Singer {
+  id: number,
+  lastRank: number,
+  score: number,
+  name: string,
+  img1v1Url: string,
+}
+export default defineComponent({
   name: 'SingerList',
-  data() {
-    return {
-      singerList: [],
-    };
-  },
-  filters: {
-    formatIndex(index) {
-      return (index + '').padStart(2, '0');
-    },
-    formatRank(rank) {
-      if (rank > 0) return ['icon-jiantou', 'rankRose'];
-      if (rank < 0) return ['icon-jiantou', 'rankLose'];
-      if (rank == 0) return ['icon-line', 'rankEqual'];
-    },
-  },
-  computed: {
-    ...mapGetters(['singer']),
-  },
-  methods: {
-    async getSingers(type) {
+  setup(_, { expose }) {
+    const store = useStore();
+    const router = useRouter();
+    const singerList = ref<Singer[]>([]);
+    const flag = ref(true);
+
+    const getSingers = async (type: number) => {
       const {
-        code,
         list: { artists },
       } = await vGetSinger(type);
-      if (code === 200) this.singerList = Object.freeze(artists);
-    },
-    getSingerDetail(singer) {
+      singerList.value = Object.freeze(artists);
+      flag.value = false;
+    }
+    const getSingerDetail = (singer: any) => {
       const _singer = {
         id: singer.id,
         singerPic: singer.picUrl,
         name: singer.name,
       };
-
-      this.setSinger(_singer);
-      this.$router.push(`/singer/${singer.id}`);
-    },
-    ...mapMutations(['setSinger']),
+      store.commit('setSinger', _singer);
+      router.push({ name: 'SingerDetail', params: { id: singer.id } });
+    }
+    expose({ getSingers, flag });
+    return {
+      singerList,
+      formatRank,
+      formatIndex,
+      getSingerDetail,
+    }
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .singer {
   &-main {
     &-wrap {
-      height: calc(100vh - 90px);
+      height: calc(100vh - 9.4rem);
       padding-top: 15px;
       padding-bottom: 80px;
       overflow-y: scroll;

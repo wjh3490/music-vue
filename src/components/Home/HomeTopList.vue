@@ -1,68 +1,60 @@
-<template functional>
+<template>
   <section class="home-toplist">
-    <slot />
-    <swiper :options="props.options" v-if="props.list.length">
-      <swiper-slide v-for="(item, index) in props.list" :key="item.id" style="width: 9.2rem">
-        <router-link
-          :to="`/playlist/${item.id}?type=1`"
-          tag="div"
-          class="home-toplist-main"
-          :style="{ backgroundColor: props.colors[index] }"
-        >
-          <img v-lazy="item.coverImgUrl" alt="" class="home-toplist-figure" />
-          <div class="home-toplist-songs">
-            <div class="home-toplist-title">
-              <b class="home-toplist-name">{{ item.name }}</b> _
-              {{ item.updateFrequency }}
-            </div>
-            <div class=" home-toplist-song-wrap">
-              <div
-                class="ellipsis home-toplist-song"
-                v-for="(track, index) in item.tracks"
-                :key="track.first"
-              >
-                <span class="home-toplist-song-rank"
-                  ><b>0{{ index + 1 }}&nbsp;&nbsp; </b></span
-                >
-                <span class="home-toplist-song-name">{{ track.first }}</span>
-                -
-                <span class="home-toplist-song=artist">{{ track.second }}</span>
-              </div>
-            </div>
+    <router-link
+      :to="`/playlist/${data.id}?type=1`"
+      class="home-toplist-main"
+      :style="{ backgroundColor: colors[index] }"
+    >
+      <img :src="data.coverImgUrl" alt="" class="home-toplist-figure" />
+      <div class="home-toplist-songs">
+        <div class="home-toplist-title">
+          <b class="home-toplist-name">{{ data.name }}</b> _
+          {{ data.updateFrequency }}
+        </div>
+        <div class="home-toplist-song-wrap">
+          <div
+            class="ellipsis home-toplist-song"
+            v-for="(track, index) in data.tracks"
+            :key="track.first"
+          >
+            <span class="home-toplist-song-rank"
+              ><b>0{{ index + 1 }}&nbsp;&nbsp; </b></span
+            >
+            <span class="home-toplist-song-name">{{ track.first }}</span>
+            -
+            <span class="home-toplist-song=artist">{{ track.second }}</span>
           </div>
-        </router-link>
-      </swiper-slide>
-    </swiper>
+        </div>
+      </div>
+    </router-link>
   </section>
 </template>
 
-<script>
-export default {
-  name: 'HomeTopList',
+<script lang="ts">
+import { PropType, defineComponent } from 'vue';
+import { songType } from '@/composables/home/useMultiple.ts'
+export default defineComponent({
+  name: "HomeTopList",
   props: {
-    list: {
-      type: Array,
-      default: () => [],
+    data: {
+      type: Object as PropType<songType>,
+      default: () => {},
     },
-    options: {
-      type: Object,
-      default: () => ({
-        watchSlidesVisibility: true,
-        slidesPerView: 'auto',
-        centeredSlides: true,
-      }),
+    index: {
+      type: [String, Number],
+      default: 0,
     },
     colors: {
       type: Object,
       default: () => ({
-        0: '#e6eaf1',
-        1: '#eff1f1',
-        2: '#ebe6e7',
-        3: '#faefee',
+        0: "#e6eaf1",
+        1: "#eff1f1",
+        2: "#ebe6e7",
+        3: "#faefee",
       }),
     },
   },
-};
+});
 </script>
 <style scoped lang="less">
 .home-toplist {

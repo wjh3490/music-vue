@@ -1,66 +1,65 @@
 <template>
-  <div class="mall-category">
-    <BaseBack title="语种风格馆" />
-    <BaseTabs
-      :navList="navList"
+  <div class="paddingtop60 padding60 mall-category">
+    <base-back :isFixed="true" title="语种风格馆" />
+    <base-tabs
+      :navList="categoryOptions"
       :active="active"
-      lineHeight="0.053rem"
+      :style="{ top: '5rem' }"
+      ref="tabRef"
       @change="handleChange"
       @tabs="(index) => (active = index)"
-      position="relative"
-      top="0"
-      ref="tabs"
     />
-    <MallArea :list="albums" className="mall-category-style"></MallArea>
+    <mall-area
+      :list="albums"
+      :style="{
+        width: '14rem',
+        height: '14rem',
+        paddingRight: '2rem',
+      }"
+    />
   </div>
 </template>
-<script>
-import MallArea from '@/components/Mall/MallArea';
-
-import { getAlbumListStyle } from '@/api/album';
-export default {
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue';
+import MallArea from '@/components/Mall/MallArea.vue';
+import { categoryOptions, categoryNavMaps } from '@/utils'
+import { fetchAlbumListStyle } from '@/api/album';
+import { Tab } from '@/types'
+export default defineComponent({
   name: 'MallCategory',
   components: { MallArea },
-  data() {
-    return {
-      albums: [],
-      active: 0,
-      navList: [
-        { id: 'Z_H', name: '华语' },
-        { id: 'E_A', name: '欧美' },
-        { id: 'KR', name: '韩国' },
-        { id: 'JP', name: '日本' },
-      ],
-    };
-  },
-  mounted() {
-    this.$refs.tabs.init();
-    this.handleChange(0);
-  },
-  methods: {
-    async handleChange(index) {
-      const area = this.navList[index]['id'];
-      const { albumProducts, code } = await getAlbumListStyle({
-        area,
+  setup() {
+    const albums = ref([]);
+    const active = ref(0);
+    const tabRef = ref<Tab | null>(null)
+
+    const handleChange = async (index) => {
+      const { albumProducts } = await fetchAlbumListStyle({
+        area: categoryNavMaps[index],
         limit: 10,
       });
-      if (code == 200) this.albums = albumProducts;
-    },
+      albums.value = albumProducts;
+    }
+    onMounted(() => {
+      (tabRef.value as Tab).init(0);
+      handleChange(0);
+    })
+    return {
+      tabRef,
+      albums,
+      active,
+      categoryOptions,
+      handleChange
+    }
   },
-};
+
+});
 </script>
-<style lang="less">
+<style  lang="less" scoped>
 .mall-category {
-  &-style {
-    width: 140px;
-    height: 140px;
-    padding-right: 20px;
-    background-size: 160px 160px !important;
+  &:deep(.mall-area-item) {
+    margin-top: 1.2rem;
   }
 }
 </style>
-<style lang="less" scoped>
-.mall-category {
-  padding: 60px 0;
-}
-</style>
+

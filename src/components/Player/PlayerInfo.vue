@@ -4,38 +4,36 @@
       <p class="player-info-name ellipsis">{{ currrenSong.name }}</p>
       <div class="player-info-time ellipsis">
         发行时间：
-        <span v-if="currrenSong.publishTime">{{
-          currrenSong.publishTime | parseTime('{y}-{m}-{d}')
-        }}</span>
+        <span v-if="currrenSong.publishTime">
+          {{
+            parseTime(currrenSong.publishTime, '{y}-{m}-{d}')
+          }}
+        </span>
         <span v-else>暂无</span>
       </div>
       <div class="player-info-line"></div>
-      <p class="player-info-artists ellipsis">
-        歌手： {{ currrenSong.artists }}
-      </p>
+      <p class="player-info-artists ellipsis">歌手： {{ currrenSong.artists }}</p>
       <div class="player-info-wrap">
-        <img class="player-info-figure" :src="currrenSong.picUrl" alt="" />
+        <img class="player-info-figure" v-lazy="currrenSong.picUrl" alt />
         <p class="player-info-album">专辑：{{ currrenSong.album }}</p>
       </div>
     </section>
-    <section class="player-info-simisong" v-if="songs.length">
+    <section class="player-info-simisong" v-if="simiSongs.length">
       <span class="player-info-title">相关歌曲</span>
-      <p v-for="item in songs" :key="item.id" class="player-info-simisong-item">
-        {{ item.name }} - {{ formatArtists(item.artists) }}
-      </p>
+      <p
+        v-for="item in simiSongs"
+        :key="item.id"
+        class="player-info-simisong-item"
+      >{{ item.name }} - {{ arrayToString(item.artists) }}</p>
     </section>
-    <section class="player-info-simiplaylist" v-if="playlists.length">
+    <section class="player-info-simiplaylist" v-if="simiPlayList.length">
       <span class="player-info-title">相关歌单</span>
       <div
         class="player-info-simiplaylist-item"
-        v-for="playlist in playlists"
+        v-for="playlist in simiPlayList"
         :key="playlist.id"
       >
-        <img
-          v-lazy="playlist.coverImgUrl"
-          alt=""
-          class="player-info-simiplaylist-figure"
-        />
+        <img v-lazy="playlist.coverImgUrl" alt class="player-info-simiplaylist-figure" />
         <span class="player-info-simiplaylist-name ellipsis">{{ playlist.name }}</span>
         <span class="iconfont icon-youjiantou"></span>
       </div>
@@ -43,83 +41,94 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent, computed, ref, onMounted, watch } from 'vue'
+import { useStore } from 'vuex';
 import { querySongSimi, queryPlaylistSimi } from '@/api/singer';
-export default {
-  name: 'PlayerInfo',
-  props: {
-    index: Number,
-    flag: Boolean,
-  },
-  data() {
-    return {
-      playlists: [],
-      songs: [],
-    };
-  },
-  computed: {
-    ...mapGetters(['currrenSong']),
-    formatArtists() {
-      return function(artist) {
-        return artist.map((item) => item.name).join('/');
-      };
-    },
-  },
+import { arrayToString, parseTime } from '@/utils';
 
-  watch: {
-    index(val) {
-      if (val == 0 && this.flag) {
-        this.getSimiPlaylist();
-        this.getSimiSong();
-        this.$emit('change', false);
-      }
-    },
-  },
-  methods: {
-    async getSimiPlaylist() {
-      const { playlists, code } = await queryPlaylistSimi(
-        this.currrenSong.id,
+interface Songs {
+  name: string,
+  id: number,
+  artists: [],
+}
+interface PlayList {
+  name: string,
+  id: number,
+  coverImgUrl: string,
+}
+
+export default defineComponent({
+  name: 'PlayerInfo',
+  setup() {
+    const store = useStore();
+    const simiPlayList = ref<PlayList[]>([]);
+    const simiSongs = ref<Songs[]>([]);
+    let flag = true;
+    const currrenSong = computed(() => store.getters.currrenSong);
+
+    const getSimiPlaylist = async () => {
+      const { playlists } = await queryPlaylistSimi(
+        currrenSong.value.id,
         3
       );
-      if (code == 200) this.playlists = playlists.slice(0, 3);
-    },
-    async getSimiSong() {
-      const { code, songs } = await querySongSimi(this.currrenSong.id, 3);
-      if (code == 200) this.songs = songs.slice(0, 3);
-    },
+      simiPlayList.value = playlists.slice(0, 3);
+    };
+    const getSimiSong = async () => {
+      const { songs } = await querySongSimi(currrenSong.value.id, 3);
+      simiSongs.value = songs.slice(0, 3);
+    };
+    const getData = () => {
+      if (flag) {
+        getSimiPlaylist();
+        getSimiSong();
+        flag = false;
+      }
+    }
+    watch(store.state.currrentIndex, () => {
+      flag = true;
+    })
+    onMounted(getData)
+
+    return {
+      simiSongs,
+      currrenSong,
+      simiPlayList,
+      parseTime,
+      arrayToString,
+    }
   },
-};
+});
 </script>
 <style lang="less" scoped>
 @color: rgba(225, 225, 225, 0.8);
-@fontSize: 14px;
+@fontSize: 1.4rem;
 .player-info {
   &-container {
-    padding: 0 15px;
+    padding: 0 1.5rem;
     overflow-y: auto;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 4rem);
   }
   &-name {
     font-size: 24px;
     color: #fff;
   }
   &-des {
-    padding: 10px 8px;
+    padding: 1rem 0.8rem;
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    border-radius: 0.8rem;
   }
   &-line {
     background-color: @color;
-    height: 0.5px;
-    margin: 10px 0;
+    height: 0.1rem;
+    margin: 1rem 0;
   }
   &-artists {
     color: @color;
     font-size: @fontSize;
   }
   &-time {
-    margin-top: 10px;
+    margin-top: 1rem;
     color: @color;
     font-size: @fontSize;
   }
@@ -130,50 +139,50 @@ export default {
   &-wrap {
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 1rem;
   }
   &-figure {
-    width: 30px;
-    height: 30px;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 1rem;
   }
 
   &-title {
     display: inline-block;
     font-size: 16px;
     color: #fff;
-    padding-bottom: 10px;
+    padding-bottom: 1rem;
   }
   &-simisong {
-    margin-top: 15px;
-    padding: 10px 8px;
+    margin-top: 1.5rem;
+    padding: 1rem 0.8rem;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     &-item {
       color: @color;
       font-size: @fontSize;
-      margin-bottom: 6px;
+      margin-bottom: 0.6rem;
     }
   }
   &-simiplaylist {
-    margin-top: 15px;
+    margin-top: 1.5rem;
     &-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
     }
     &-figure {
-      width: 60px;
-      height: 60px;
-      border-radius: 6px;
-      margin-right: 8px;
+      width: 6rem;
+      height: 6rem;
+      border-radius: 0.6rem;
+      margin-right: 0.8rem;
     }
     &-name {
       font-size: @fontSize;
       color: #fff;
-      width: 245px;
+      width: 24.5rem;
     }
   }
 }

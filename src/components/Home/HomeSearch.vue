@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <div class="header-search">
     <router-link tag="div" to="/search" class="header-link" key="搜索">
       <span class="iconfont icon-sousuo header-icon"></span>
@@ -7,10 +7,11 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
   name: 'HomeSearch',
-};
+});
 </script>
 <style scoped lang="less">
 @color: #169af3;

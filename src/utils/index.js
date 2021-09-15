@@ -1,3 +1,7 @@
+export * from './swiperOption.js'
+export * from './util.js'
+export * from './contants.js'
+
 /**
  * @param {Array} list
  * @param {Object} currrenSong
@@ -94,12 +98,7 @@ export function scrollToSmooth(el, to, flag = false) {
   });
 }
 
-export function randomColor() {
-  let r = parseInt(Math.random() * 100) + 100;
-  let g = parseInt(Math.random() * 100) + 100;
-  let b = parseInt(Math.random() * 100) + 100;
-  return `rgb(${r}, ${g}, ${b})`;
-}
+
 
 var requestAnimFrame = (function() {
   return (
@@ -125,11 +124,14 @@ export function splitList(list, length) {
   return newArray;
 }
 
-export function getArtist(artists) {
-  return artists.reduce((acc, cur) => {
-    acc.push(cur.name);
-    return acc;
-  }, []);
+export function randomColor() {
+  let r = parseInt(Math.random() * 100) + 100;
+  let g = parseInt(Math.random() * 100) + 100;
+  let b = parseInt(Math.random() * 100) + 100;
+  return `rgb(${r}, ${g}, ${b})`;
 }
+
+
+
 
 

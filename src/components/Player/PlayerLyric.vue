@@ -2,98 +2,90 @@
   <div class="lyric">
     <div class="lyric-wrap">
       <p class="lyric-singer">
-        <marquee behavior="" direction="">{{ currrenSong.name }}</marquee>
+        <!-- <marquee behavior="" direction="">{{ currrenSong.name }}</marquee> -->
       </p>
       <p class="lyric-name">{{ currrenSong.artists }}</p>
     </div>
-    <div class="lyric-item" ref="lyricList">
-      <div class="empty1" ref="empty"></div>
+    <div class="lyric-item" ref="lyricRef">
+      <div class="empty1"></div>
       <div class="no-lyric" v-if="!lyricKeys.length">暂无歌词</div>
       <div
-        ref="lyricLine"
-        v-for="(key, value) in currentLyric"
-        :key="value"
+        v-for="(item, index) in currentLyric"
+        :key="item.time"
+        :ref="el => { if (el) activeLyricRef[index] = el }"
         class="lyrics"
       >
-        <p :class="{ 'active-lyric': value == activeLyricIndex }">
-          {{ key['lyric'] }}
-        </p>
-        <p v-if="key['tlyric']">{{ key['tlyric'] }}</p>
+        <p :class="{ 'active-lyric': item.time == activeLyricIndex }">{{ item.lyric }}</p>
+        <p v-if="item.tlyric">{{ item.tlyric }}</p>
       </div>
 
       <div class="empty"></div>
     </div>
-    <div class="pause-wrap" @click.stop="setPlaying(!playing)">
-      <i
-        class="pause iconfont  control-icon"
-        :class="playing ? 'icon-zanting11' : 'icon-bofang'"
-      ></i>
+    <div class="pause-wrap" @click.stop="setPlaying">
+      <i class="pause iconfont control-icon" :class="playing ? 'icon-zanting11' : 'icon-bofang'"></i>
     </div>
   </div>
 </template>
 
-<script>
-import { scrollToEase, scrollToSmooth } from '@/utils/index.js';
-import { mapGetters, mapMutations } from 'vuex';
-export default {
+<script lang="ts">
+import { defineComponent, ref, watch, computed, nextTick } from 'vue'
+import { useStore } from 'vuex'
+import { scrollToEase } from '@/utils/index.js';
+export default defineComponent({
   name: 'PlayerLyric',
-  computed: {
-    ...mapGetters([
-      'currentTime',
-      'currrenSong',
-      'playing',
-      'fullScreen',
-      'currentLyric',
-      'lyricKeys',
-      'LyricScrollY',
-      'debounce',
-      'activeLyricIndex',
-    ]),
-  },
-  watch: {
-    currentTime(val) {
-      if (!this.lyricKeys.length) return;
-      if (!this.fullScreen) return;
-      if (this.lyricKeys[this.LyricScrollY] > Math.floor(val)) {
-        if (this.debounce) {
-          this.setActiveLyricIndex(this.lyricKeys[this.LyricScrollY - 1]);
-          this.scrollAnimate(this.LyricScrollY);
-          this.setDebounce(false);
-        }
+  setup() {
+    const store = useStore()
+    const lyricRef = ref<HTMLDivElement>(null);
+    const activeLyricRef = ref([]);
+    const currentLyric = computed(() => store.state.currentLyric);
+    const currrenSong = computed(() => store.getters.currrenSong);
+    const activeLyricIndex = computed(() => store.state.activeLyricIndex);
+    const playing = computed(() => store.state.playing);
+    const lyricKeys = computed(() => store.getters.lyricKeys);
+    const LyricScrollY = computed(() => store.state.LyricScrollY);
+
+    const scrollAnimate = () => {
+      const activeElement = activeLyricRef.value[LyricScrollY.value];
+      if (!activeElement) return;
+      const start = lyricRef.value.scrollTop;
+      const { offsetTop, offsetHeight } = activeElement;
+      scrollToEase(lyricRef.value, start, offsetTop - 100 - offsetHeight);
+    };
+    const setPlaying = () => {
+      store.commit('setPlaying', !playing)
+    };
+
+    watch(() => store.state.currentTime, (val) => {
+      if (!lyricKeys.value.length) return;
+      if (!store.state.fullScreen) return;
+      if (lyricKeys.value[LyricScrollY.value] > ~~val) {
+        if (store.state.debounce) {
+          store.commit('setActiveLyricIndex', lyricKeys.value[Math.min(LyricScrollY.value - 1, lyricKeys.value.length - 1)])
+          nextTick(scrollAnimate);
+          store.commit('setDebounce', false);
+        };
         return;
-      }
-      let filterLyric = [];
-      filterLyric = this.lyricKeys.filter((item) => item <= Math.floor(val));
-      this.setLyricScrollY(filterLyric.length);
-      this.setActiveLyricIndex(filterLyric.pop());
-      this.scrollAnimate(this.LyricScrollY);
-    },
+      };
+      store.commit('setLyricScrollY', Math.min(LyricScrollY.value + 1, lyricKeys.value.length))
+      store.commit('setActiveLyricIndex', lyricKeys.value[Math.min(LyricScrollY.value - 1, lyricKeys.value.length - 1)])
+      nextTick(scrollAnimate)
+    });
+    watch(() => store.state.currrentIndex, () => {
+      store.commit('setLyricScrollY', 0)
+    });
+
+    return {
+      playing,
+      lyricRef,
+      lyricKeys,
+      currrenSong,
+      currentLyric,
+      activeLyricRef,
+      activeLyricIndex,
+      setPlaying,
+    }
   },
-  mounted() {
-    this.el = this.$refs.lyricList;
-  },
-  methods: {
-    scrollAnimate() {
-      this.$nextTick(() => {
-        const activeLyric = document.querySelector('.active-lyric');
-        if (!activeLyric) return;
-        const start = this.el.scrollTop;
-        const { offsetTop, offsetHeight } = activeLyric;
-        scrollToEase(this.el, start, offsetTop - 100 - offsetHeight);
-      });
-    },
-    scrollToSmooth() {
-      scrollToSmooth(this.el, 0);
-    },
-    ...mapMutations([
-      'setActiveLyricIndex',
-      'setDebounce',
-      'setLyricScrollY',
-      'setPlaying',
-      'setDebounce',
-    ]),
-  },
-};
+});
 </script>
 <style scoped lang="less">
 .lyric-wrap {

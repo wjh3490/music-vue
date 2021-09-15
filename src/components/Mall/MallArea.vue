@@ -1,59 +1,52 @@
-<template functional>
-  <section class="mall-area">
-    <slot />
-    <div class="mall-area-wrap">
-      <div
-        class="mall-area-item"
-        v-for="item in props.list"
-        :key="item.albumId"
-      >
-        <figure class="mall-area-figure" :class="props.className">
-          <img class="mall-area-pic" v-lazy="item.coverUrl" alt="" />
-        </figure>
-        <p class="mall-area-name ellipsis">{{ item.albumName }}</p>
-        <p class="mall-area-artist ellipsis">{{ item.artistName }}</p>
-        <p class="mall-area-price ellipsis">¥ {{ item.price }}</p>
-      </div>
+<template >
+  <div class="mall-area-wrap">
+    <div class="mall-area-item" v-for="item in list" :key="item.albumId">
+      <figure class="mall-area-figure mall-area-dystyle" :style="style">
+        <img v-lazy="item.coverUrl" class="mall-area-pic"  alt />
+      </figure>
+      <p class="mall-area-name ellipsis">{{ item.albumName }}</p>
+      <p class="mall-area-artist ellipsis">{{ item.artistName }}</p>
+      <p class="mall-area-price ellipsis">¥ {{ item.price }}</p>
     </div>
-  </section>
+  </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { StrKeys } from '@/types'
+export default defineComponent({
   name: 'MallArea',
   props: {
     list: {
-      type: Array,
+      type: Array as PropType<any[]>,
       default: () => [],
     },
-    className: {
-      type: String,
-      default: 'mall-area-dystyle',
+    style: {
+      type: Object as PropType<StrKeys<string>>,
+      default: () => ({
+        width: '9.5rem',
+        height: '9.5rem',
+        paddingRight: '1.5rem',
+      })
     },
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .mall-area {
   &-wrap {
     display: flex;
-    padding: 0 14px;
+    padding: 0 1.4rem;
     justify-content: space-between;
     flex-wrap: wrap;
   }
-  &-item {
-    margin-top: 12px;
-  }
   &-figure {
-    background: url('../../assets/imgs/type_cd.png') no-repeat;
+    background: url("../../assets/imgs/type_cd.png") no-repeat;
     background-position: right center;
     box-sizing: content-box;
     overflow: hidden;
   }
   &-dystyle {
-    width: 95px;
-    padding-right: 15px;
-    height: 95px;
-    background-size: 90px 90px;
+    background-size: 100% 100%;
   }
   &-pic {
     width: 100%;
@@ -61,16 +54,16 @@ export default {
     border-radius: 4px;
   }
   &-name {
-    margin-top: 6px;
-    width: 100px;
+    margin-top: 0.6rem;
+    width: 10rem;
   }
   &-artist {
     color: #999;
-    width: 100px;
+    width: 10rem;
   }
   &-price {
     color: #c20c0c;
-    width: 100px;
+    width: 10rem;
   }
 }
 </style>

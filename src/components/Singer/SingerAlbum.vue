@@ -1,23 +1,20 @@
 <template>
-  <div
-    class="singer-album"
-    :class="active == 1 ? 'auto-height' : 'fixed-height'"
-  >
+  <div class="singer-album" :class="active == 1 ? 'auto-height' : 'fixed-height'">
     <ul class="singer-album-wrap">
       <router-link
-        tag="li"
-        :to="`/album/${item.id}`"
         v-for="item in albums"
+        :to="{ name: 'Album', params: { id: item.id } }"
         :key="item.id"
+        tag="li"
         class="singer-album-item"
       >
         <div class="singer-album-left">
-          <img v-lazy="item.picUrl" alt="" class="singer-album-figure" />
+          <img v-lazy="item.picUrl" alt class="singer-album-figure" />
         </div>
         <div class="singer-album-right">
           <p class="singer-album-name ellipsis">{{ item.name }}</p>
           <p class="singer-album-publishTime">
-            <span>{{ item.publishTime | parseTime('{y}-{m}-{d}') }}</span>
+            <span>{{ parseTime(item.publishTime, '{y}-{m}-{d}') }}</span>
             <span class="singer-album-size">{{ item.size }}首</span>
           </p>
         </div>
@@ -26,10 +23,19 @@
     </ul>
   </div>
 </template>
-<script>
-import { queryArtistAlbum } from '@/api/singer';
-
-export default {
+<script lang="ts">
+import { defineComponent, reactive, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { fetchArtistAlbum } from '@/api/singer';
+import { parseTime } from '@/utils'
+interface Album {
+  id: number,
+  picUrl: string,
+  name: string,
+  size: number,
+  publishTime: number,
+}
+export default defineComponent({
   name: 'SingerAblum',
   props: {
     active: {
@@ -37,36 +43,39 @@ export default {
       default: '0',
     },
   },
-  data() {
-    return {
-      albums: [],
+  setup(_, { expose }) {
+    const flag = ref(true);
+    const route = useRoute();
+    let albums = ref<Array<Album>>([]);
+    const getDetail = async () => {
+      const { hotAlbums } = await fetchArtistAlbum(route.params.id);
+      albums.value = hotAlbums;
+      flag.value = false;
     };
+
+    expose({ getDetail, flag });
+
+    return { albums, parseTime };
   },
-  methods: {
-    async getDetail() {
-      const { hotAlbums } = await queryArtistAlbum(this.$route.params.id);
-      this.albums = hotAlbums;
-    },
-  },
-};
+});
 </script>
 
 <style lang="less" scoped>
 .singer-album {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 1rem;
+  padding-right: 1rem;
   overflow-x: hidden;
-  padding-bottom: 70px;
+  padding-bottom: 7rem;
   &-item {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
     align-items: center;
     justify-content: space-between;
   }
   &-left {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
+    width: 6rem;
+    height: 6rem;
+    margin-right: 1.5rem;
     border-radius: 6px;
     overflow: hidden;
   }
@@ -74,27 +83,27 @@ export default {
     flex: 1;
   }
   &-figure {
-    width: 60px;
-    height: 60px;
+    width:6rem;
+    height:6rem;
   }
   &-name {
     font-size: 16px;
   }
   &-publishTime {
-    margin-top: 4px;
+    margin-top: 0.4rem;
     color: #888;
     font-size: 13px;
     display: flex;
     align-items: center;
   }
   &-size {
-    margin-left: 10px;
+    margin-left:1rem;
   }
 }
 .auto-height {
   height: auto;
 }
 .fixed-height {
-  height: calc(100vh - 50px);
+  height: calc(100vh - 5rem);
 }
 </style>

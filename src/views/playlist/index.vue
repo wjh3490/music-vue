@@ -1,85 +1,76 @@
 <template>
   <div class="singer-container">
-    <BaseBack title="歌单广场" />
-    <BaseTabs
+    <base-back title="歌单广场" />
+    <base-tabs
       :navList="navList"
-      @tabs="handleScroll"
       :active="active"
+      ref="tab"
+      @tabs="handleSwiper"
       @change="handleChange"
     />
-
-    <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
-      <swiper-slide v-for="(item, index) in navList" :key="item.id">
-        <component :is="currentTabComponent(index)" ref="playlist"></component>
-      </swiper-slide>
-    </swiper>
+    <base-swiper-items
+      v-slot="{ index }"
+      :list="navList"
+      :options="swiperOptions"
+      @slideChange="onSlideChange"
+      @swiper="onSwiper"
+    >
+      <play-list-recommend v-if="index === 0" :ref="el => { if (el) playlist[index] = el }" />
+      <play-list-main v-else :ref="el => { if (el) playlist[index] = el }" />
+    </base-swiper-items>
   </div>
 </template>
-<script>
-import PlayListMain from '@/components/PlayList/PlayListMain';
-import PlayListRecommend from '@/components/PlayList/PlayListRecommend';
-import { getPlaylist } from '@/api/playlist';
-export default {
+<script lang="ts">
+import {defineComponent, ref, onMounted, nextTick } from 'vue'
+import PlayListMain from '@/components/PlayList/PlayListMain.vue';
+import PlayListRecommend from '@/components/PlayList/PlayListRecommend.vue';
+import { getPlaylist } from '@/api/playlist.js';
+import { swiperOptions } from "./swiperItemsOptions";
+export default defineComponent({
   name: 'PlayList',
   components: { PlayListMain, PlayListRecommend },
-  data() {
+  setup() {
+    const swiper = ref<any>(null);
+    const onSwiper = (sw: Element) => {
+      swiper.value = sw
+    }
+    const playlist = ref<any>([])
+    const tab = ref<any>(null)
+
+    const active = ref<number>(0);
+    const onSlideChange = () => {
+      active.value = swiper.value.activeIndex;
+    };
+    const handleChange = (index: number) => {
+      const id = navList.value[index]['id'];
+      playlist.value[index].getSingers(id)
+    }
+    const navList = ref([])
+    const getList = async () => {
+      const { tags } = await getPlaylist();
+      navList.value = [{ name: '推荐', id: 100 }, ...tags];
+      nextTick(() => {
+        tab.value.init(0)
+        playlist.value[0].getSingers()
+      })
+    }
+    const handleSwiper = (index: number) => {
+      if (active.value == index) return;
+      swiper.value.slideTo(index, 200, false);
+    }
+    onMounted(getList)
     return {
-      active: 0,
-      navList: [],
-      swiperOptions: {
-        on: {
-          slideChange: () => {
-            this.active = this.swiper.activeIndex;
-          },
-        },
-        loop: false,
-        watchSlidesVisibility: true,
-      },
+      playlist,
+      tab,
+      active,
+      swiperOptions,
+      navList,
+      onSwiper,
+      onSlideChange,
+      handleChange,
+      handleSwiper,
+      getList,
     };
   },
-  computed: {
-    currentTabComponent() {
-      return function(index) {
-        if (index == 0) return 'PlayListRecommend';
-        return 'PlayListMain';
-      };
-    },
-    swiper() {
-      return this.$refs.mySwiper.swiper;
-    },
-  },
-  watch: {
-    navList: {
-      deep: true,
-      handler() {
-        this.$nextTick(() => {
-          this.child = this.$refs.playlist;
-          this.child[0].getSingers();
-        });
-      },
-    },
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    handleChange(index) {
-      const id = this.navList[index]['id'];
-      this.child[this.active].getSingers(id);
-    },
-    async getList() {
-      const { code, tags } = await getPlaylist();
-      if (code == 200) this.navList = [{ name: '推荐', id: 100 }, ...tags];
-    },
-    handleScroll(index) {
-      if (this.active == index) return;
-      this.swiper.slideTo(index, 0, false);
-    },
-  },
-};
+});
 </script>
-<style scoped>
-.singer-container {
-  padding-top: 110px;
-}
-</style>

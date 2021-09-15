@@ -1,186 +1,162 @@
 <template>
-  <div class="mall">
-    <BaseBack title="数字专辑" />
+  <div class="mall padding60 paddingtop60">
+    <base-back :isFixed="true" title="数字专辑" />
     <nav class="mall-nav">
-      <router-link to="/mall-shop" class="mall-nav-item">
+      <router-link :to="{ name: 'MallShop' }" class="mall-nav-item">
         <span class="iconfont icon-icon mall-nav-icon"></span>
         <p class="mall-nav-title">畅销榜</p>
       </router-link>
-      <router-link to="/mall-category" class="mall-nav-item">
+      <router-link :to="{ name: 'MallCategory' }" class="mall-nav-item">
         <span class="iconfont icon-category1 mall-nav-icon"></span>
         <p class="mall-nav-title">语种风格馆</p>
       </router-link>
-      <div v class="mall-nav-item">
+      <div class="mall-nav-item">
         <span class="iconfont icon-yigoumai mall-nav-icon"></span>
         <p class="mall-nav-title">已购</p>
       </div>
     </nav>
-    <MallArea :list="news" v-if="news.length" key="news">
-      <MallTitle title="最新上架" />
-    </MallArea>
+    <base-card title="最新上架">
+      <mall-area :list="news" />
+    </base-card>
 
-    <MallAlbum :list="albums" v-if="albums.length">
-      <MallTitle title="数字专辑榜">
+    <base-card v-for="num in 2" :title="num === 1 ? '数字专辑榜' : '数字单曲榜'" :key="'t' + num">
+      <base-swiper-items
+        v-slot="{ data, index }"
+        :list="num === 1 ? albums : songs"
+        :options="{
+          watchSlidesVisibility: true,
+          centeredSlides: true,
+          slidesPerView: 'auto',
+        }"
+      >
+        <mall-album :list="data" :num="index" />
+      </base-swiper-items>
+      <template #right>
         <div class="mall-rank">
-          <span
-            :class="{ 'mall-rank-active': albumActive == 'daily' }"
-            @click="handleChange('daily', 0)"
-            >日榜</span
-          >
-          <span class="mall-rank-line"></span>
-          <span
-            :class="{ 'mall-rank-active': albumActive == 'week' }"
-            @click="handleChange('week', 0)"
-            >周榜</span
-          >
-          <span class="mall-rank-line"></span>
-          <span
-            :class="{ 'mall-rank-active': albumActive == 'total' }"
-            @click="handleChange('total', 0)"
-            >总榜</span
-          >
+          <template v-for="(item, index) in mallOptions" :key="'s'+item.time">
+            <span
+              :class="{ 'mall-rank-active': (num === 1 ? albumActive : songActive) === item.time }"
+              @click="handleChange(item.time, num)"
+            >{{ item.rank }}</span>
+            <span v-if="index !== 2" class="mall-rank-line"></span>
+          </template>
         </div>
-      </MallTitle>
-    </MallAlbum>
+      </template>
+    </base-card>
 
-    <MallAlbum :list="songs" v-if="songs.length">
-      <MallTitle title="数字单曲榜">
-        <div class="mall-rank">
-          <span
-            :class="{ 'mall-rank-active': songActive == 'daily' }"
-            @click="handleChange('daily', 1)"
-            >日榜</span
-          >
-          <span class="mall-rank-line"></span>
-          <span
-            :class="{ 'mall-rank-active': songActive == 'week' }"
-            @click="handleChange('week', 1)"
-            >周榜</span
-          >
-          <span class="mall-rank-line"></span>
-          <span
-            :class="{ 'mall-rank-active': songActive == 'total' }"
-            @click="handleChange('total', 1)"
-            >总榜</span
-          >
-        </div>
-      </MallTitle>
-    </MallAlbum>
-
-    <MallArea :list="ZHList" v-if="ZHList.length" key="ZHList">
-      <MallTitle :visible="false" title="华语新生力量" />
-    </MallArea>
-    <MallArea :list="EAList" v-if="EAList.length" key="EAList">
-      <MallTitle :visible="false" title="欧美品质大碟" />
-    </MallArea>
-    <MallArea :list="KRList" v-if="KRList.length" key="KRList">
-      <MallTitle :visible="false" title="韩国风向牌" />
-    </MallArea>
-    <MallArea :list="JPList" v-if="JPList.length" key="KRList">
-      <MallTitle :visible="false" title="日本专辑推荐" />
-    </MallArea>
+    <base-card v-for="item in list" :title="item.title" :key="item.title">
+      <mall-area :list="item.albums" />
+    </base-card>
   </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue';
 import {
-  getAlbumSongsaleboard,
-  getAlbumListStyle,
-  getAlbumList,
+  fetchAlbumList,
+  fetchAlbumListStyle,
+  fetchAlbumSongsaleboard,
 } from '@/api/album';
-import MallAlbum from '@/components/Mall/MallAlbum';
-import MallTitle from '@/components/Mall/MallTitle';
-import MallArea from '@/components/Mall/MallArea';
-export default {
+import MallAlbum from '@/components/Mall/MallAlbum.vue';
+import MallArea from '@/components/Mall/MallArea.vue';
+import { mallOptions, nameMaps, splitList } from '@/utils'
+
+interface Mall {
+  title: string,
+  albums: any[],
+}
+
+export default defineComponent({
   name: 'Mall',
-  components: { MallAlbum, MallTitle, MallArea },
-  data() {
-    return {
+  components: { MallAlbum, MallArea },
+  setup() {
+    const albumActive = ref('daily');
+    const songActive = ref('daily');
+    const list = ref<Mall[]>([]);
+    const state = reactive({
       albums: [],
       songs: [],
-      albumActive: 'daily',
-      songActive: 'daily',
-      ZHList: [],
-      EAList: [],
-      KRList: [],
-      JPList: [],
       news: [],
-    };
-  },
-  created() {
-    this.getAlbumsList();
-    this.getSongsList();
-    this.getAlbumStyle();
-  },
-  methods: {
-    async getAlbumsList(type = 'daily', albumType = 0) {
-      const { code, products } = await getAlbumSongsaleboard({
+    });
+    const getAlbumsList = async (type = 'daily', albumType = 0) => {
+      const { products } = await fetchAlbumSongsaleboard({
         type,
         albumType,
         limit: 3,
       });
-      if (code == 200) {
-        this.albums = this.splitList(products.slice(0, 12), 4);
-      }
-    },
-    async getSongsList(type = 'daily', albumType = 1) {
-      const { code, products } = await getAlbumSongsaleboard({
+      state.albums = splitList(products.slice(0, 12), 4);
+    }
+    const getSongsList = async (type = 'daily', albumType = 1) => {
+      const { products } = await fetchAlbumSongsaleboard({
         type,
         albumType,
         limit: 12,
       });
-      if (code == 200) {
-        this.songs = this.splitList(products.slice(0, 12), 4);
-      }
-    },
-    async getAlbumStyle() {
+      state.songs = splitList(products.slice(0, 12), 4);
+    }
+    const getAlbumStyle = async () => {
       const apis = [
-        getAlbumListStyle({ area: 'Z_H', limit: 3 }),
-        getAlbumListStyle({ area: 'E_A', limit: 3 }),
-        getAlbumListStyle({ area: 'KR', limit: 3 }),
-        getAlbumListStyle({ area: 'JP', limit: 3 }),
-        getAlbumList({ limit: 6 }),
+        fetchAlbumListStyle({ area: 'Z_H', limit: 3 }),
+        fetchAlbumListStyle({ area: 'E_A', limit: 3 }),
+        fetchAlbumListStyle({ area: 'KR', limit: 3 }),
+        fetchAlbumListStyle({ area: 'JP', limit: 3 }),
       ];
-      const res = await Promise.all(apis);
-      this.ZHList = res[0]['albumProducts'];
-      this.EAList = res[1]['albumProducts'];
-      this.KRList = res[2]['albumProducts'];
-      this.JPList = res[3]['albumProducts'];
-      this.news = res[4]['products'];
-    },
-    handleChange(type, albumType) {
-      if (albumType == 0) {
-        this.getAlbumsList(type, albumType);
-        this.albumActive = type;
+      const data = await Promise.all(apis);
+      data.forEach(({ albumProducts }, index: number) => {
+        list.value.push({ title: nameMaps[index], albums: albumProducts } as Mall)
+      })
+    }
+    const getNewAblums = async () => {
+      const { products } = await fetchAlbumList({ limit: 6 });
+      state.news = products
+    }
+    const handleChange = (type: string, albumType: number) => {
+      if (albumType === 1) {
+        if (albumActive.value === type) return;
+        getAlbumsList(type, albumType - 1);
+        albumActive.value = type;
       } else {
-        this.songActive = type;
-        this.getSongsList(type, albumType);
+        if (songActive.value === type) return;
+        getSongsList(type, albumType - 1);
+        songActive.value = type;
       }
-    },
-    splitList(list, length) {
-      let index = 0;
-      let newArray = [];
-      while (index < list.length) {
-        newArray.push(list.slice(index, (index += length)));
-      }
-      return newArray;
-    },
+    }
+    onMounted(() => {
+      getAlbumsList();
+      getSongsList();
+      getAlbumStyle();
+      getNewAblums()
+    })
+    return {
+      list,
+      songActive,
+      albumActive,
+      mallOptions,
+      ...toRefs(state),
+      handleChange
+    }
   },
-};
+});
 </script>
 
 <style lang="less" scoped>
 .mall {
-  padding-bottom: 60px;
-  padding-top: 100px;
+  &:deep(.swiper-slide) {
+    width: 35rem !important;
+  }
+  &:deep(.mall-area-item) {
+    &:nth-child(n + 4) {
+      margin-top: 1.2rem;
+    }
+  }
   &-rank {
     display: flex;
     align-items: center;
     font-size: 15px;
     &-line {
-      height: 10px;
-      width: 1px;
+      height: 1rem;
+      width: 0.1rem;
       background-color: #999;
-      margin: 0 6px;
+      margin: 0 0.6rem;
     }
     &-active {
       color: #169af3;
@@ -199,19 +175,19 @@ export default {
       align-items: center;
     }
     &-title {
-      margin-top: 6px;
+      margin-top: 0.6rem;
     }
     &-icon {
       display: block;
       text-align: center;
-      line-height: 50px;
-      width: 50px;
-      height: 50px;
+      line-height: 5rem;
+      width: 5rem;
+      height: 5rem;
       border-radius: 50%;
       background-color: #169af3;
       color: #fff;
       font-size: 24px;
-      box-shadow: 0 6px 6px 0 rgba(22, 154, 243, 0.3);
+      box-shadow: 0 0.6rem 0.6rem 0 rgba(22, 154, 243, 0.3);
     }
   }
 }

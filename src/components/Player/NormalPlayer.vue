@@ -1,90 +1,71 @@
 <template>
-  <transition name="scale">
-    <div
-      class="normal-player"
-      :style="{ backgroundImage: `url(${currrenSong.picUrl})` }"
-    >
-      <div class="normal-player-main">
-        <PlayerTabs @slide="slide" :index="index" />
-        <swiper
-          :options="swiperOptions"
-          style="height:calc(100% - 40px)"
-          ref="mySwiper"
-        >
-          <swiper-slide>
-            <PlayerInfo
-              :index="index"
-              :flag="flag"
-              @change="(e) => (flag = e)"
-            />
-          </swiper-slide>
-          <swiper-slide>
-            <div class="player-center">
-              <PlayerCircle />
-            </div>
-            <div class="normal-player-bottom" @touchmove.stop.prevent>
-              <PlayerProgressBar />
-              <PlayerControl>
-                <PlayerMode />
-              </PlayerControl>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <PlayerLyric />
-          </swiper-slide>
-        </swiper>
-      </div>
-      <!-- <div class="blurBgMask">
-        <div class="blurBg"></div>
-      </div> -->
+  <div :style="{ backgroundImage: `url(${backgroundImage})` }" class="normal-player">
+    <div class="normal-player-main">
+      <player-tabs :index="active" @slide="handleSlide" />
+      <base-swiper-items
+        v-slot="{ data }"
+        :list="playerOptions"
+        :options="playerSwiperOptions"
+        style="height:calc(100% - 4rem)"
+        @slideChange="onSlideChange"
+        @swiper="onSwiper"
+      >
+        <component :is="data.component" />
+      </base-swiper-items>
     </div>
-  </transition>
+  </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-import components from '@/components/Player';
-export default {
+<script lang="ts">
+import { defineComponent, watch, ref } from 'vue'
+import { useStore } from 'vuex';
+import PlayerTabs from '@/components/Player/PlayerTabs.vue'
+import PlayerInfo from '@/components/Player/PlayerInfo.vue'
+import PlayerLyric from '@/components/Player/PlayerLyric.vue'
+import PlayerMain from '@/components/Player/PlayerMain.vue'
+import { playerSwiperOptions, playerOptions } from "@/utils";
+import userSwiper from '@/composables/useSwiper'
+export default defineComponent({
   name: 'NormalPlayer',
-  components,
-  data() {
-    return {
-      visibleAllLyric: true,
-      swiperOptions: {
-        on: {
-          slideChange: () => {
-            this.index = this.swiper.activeIndex;
-          },
-        },
-        loop: false,
-        watchSlidesVisibility: true,
-      },
-      index: 0,
-      flag: true,
-    };
+  components: {
+    PlayerTabs,
+    PlayerInfo,
+    PlayerLyric,
+    PlayerMain,
   },
+  setup() {
+    const store = useStore();
+    const backgroundImage = ref('');
+    const {
+      active,
+      onSwiper,
+      handleSlide,
+      onSlideChange,
+    } = userSwiper();
 
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.swiper;
-    },
-    ...mapGetters(['currrenSong', 'fullScreen', 'songInfo']),
+
+    let img = new Image();
+    watch(() => store.getters.currrenSong, (val) => {
+      img.src = val.picUrl;
+      img.onload = () => {
+        backgroundImage.value = val.picUrl;
+      }
+    });
+    watch(() => store.state.fullScreen, (val) => {
+      if (val) handleSlide(1);
+    })
+
+    return {
+      active,
+      playerOptions,
+      backgroundImage,
+      playerSwiperOptions,
+      onSwiper,
+      handleSlide,
+      onSlideChange,
+    }
   },
-  watch: {
-    fullScreen(val) {
-      if (val) this.slide(1);
-    },
-    currrenSong() {
-      this.flag = true;
-    },
-  },
-  methods: {
-    slide(index) {
-      if (this.swiper.activeIndex == index) return;
-      this.swiper.slideTo(index, 0, false);
-    },
-  },
-};
+});
 </script>
 <style lang="less">
 .normal-player {

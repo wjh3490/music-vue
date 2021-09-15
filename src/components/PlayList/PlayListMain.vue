@@ -1,54 +1,47 @@
 <template>
-  <div class="play-scrollbar">
-    <BaseList :list="list" @list="getSingerDetail" />
-  </div>
+  <base-list :list="list" @list="getSingerDetail" />
 </template>
-<script>
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { getPlaylistDetail } from '@/api/playlist';
-import { mapMutations, mapGetters } from 'vuex';
-export default {
+export default defineComponent({
   name: 'PlayListMain',
   props: ['id'],
-  data() {
-    return {
-      list: [],
-    };
-  },
-
-  computed: {
-    ...mapGetters(['singer']),
-  },
-  methods: {
-    async getSingers(type) {
+  setup(_, { expose }) {
+    const { setSinger } = useStore()
+    const router = useRouter()
+    const list = ref([]);
+    const getSingers = async (type) => {
       const {
-        code,
         playlist: { tracks },
       } = await getPlaylistDetail(type);
-      if (code == 200) {
-        this.list = tracks.reduce((acc, cur) => {
-          const obj = {
-            id: cur.id,
-            picUrl: cur.al.picUrl,
-            playCount: cur.dt,
-            name: cur.name,
-          };
-          acc.push(obj);
-          return acc;
-        }, []);
-      }
-    },
-    getSingerDetail(singer) {
+      list.value = tracks.reduce((acc, cur) => {
+        const obj = {
+          id: cur.id,
+          picUrl: cur.al.picUrl,
+          playCount: cur.dt,
+          name: cur.name,
+        };
+        acc.push(obj);
+        return acc;
+      }, []);
+    }
+    const getSingerDetail = (singer) => {
       const _singer = {
         id: singer.id,
         singerPic: singer.picUrl,
         name: singer.name,
       };
-
-      this.setSinger(_singer);
-      this.$router.push(`/playlist/${singer.id}`);
-    },
-    ...mapMutations(['setSinger']),
-  },
-};
+      setSinger(_singer);
+      router.push(`/playlist/${singer.id}`);
+    }
+    expose({ getSingers });
+    return {
+      list,
+      getSingerDetail
+    }
+  }
+});
 </script>
-<style lang="less" scoped></style>

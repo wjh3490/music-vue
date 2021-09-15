@@ -1,309 +1,134 @@
 <template>
   <div class="recommend">
-    <HomeSearch />
+    <home-search />
     <!-- 轮播图 -->
-    <div class="recommend-swiper">
-      <BaseSwiper
-        :list="swiperList"
-        :options="swiperOptions"
-        :visible="true"
-        v-slot="{ data }"
-      >
-        <div class="recommend-swiper-wrap" @click="handleAction(data)">
-          <img
-            :data-index="data.targetId"
-            :data-src="data.imageUrl"
-            class="swiper-lazy swiper-img"
-          />
-          <span
-            class="recommend-swiper-title"
-            :style="{ backgroundColor: colors[data.titleColor] }"
-            >{{ data.typeTitle }}</span
-          >
-        </div>
-
-        <div class="my-lazy-preloader"></div>
-      </BaseSwiper>
-    </div>
+    <base-swiper-items v-slot="{ data }" :list="swiperList" :options="homeSwiperOptions">
+      <div class="recommend-swiper-wrap">
+        <img v-lazy="data.imageUrl" class="swiper-lazy swiper-img" @click="gotoPath(data)" />
+        <span
+          class="recommend-swiper-title"
+          :style="{ backgroundColor: colorsMaps[data.titleColor] }"
+        >{{ data.typeTitle }}</span>
+      </div>
+      <div class="my-lazy-preloader"></div>
+    </base-swiper-items>
     <!-- 导航栏 -->
-    <BaseNav />
+    <base-nav />
     <!-- 推荐歌单 -->
-    <HomeList :list="personalized" v-if="personalized.length" :link="true">
-      <HomeMore title="推荐歌单" link="/playlist" />
-    </HomeList>
+    <base-card title="推荐歌单" to="/playlist">
+      <home-list :list="personalized" />
+    </base-card>
     <!-- 排行榜 -->
-    <HomeTopList :list="toplists" v-if="toplists.length">
-      <HomeMore title="排行榜" link="/rank" />
-    </HomeTopList>
+    <base-card title="排行榜" to="/rank">
+      <base-swiper-items
+        v-slot="{ data, index }"
+        :list="toplists"
+        :options="topListSwiperOptions"
+        model="id"
+      >
+        <home-top-list :data="data" :index="index" />
+      </base-swiper-items>
+    </base-card>
     <!--  新歌  新碟  数字专辑  -->
-    <HomeNewSong
-      v-if="newsong.length"
-      :products="products"
-      :songs="newsong"
-      :albums="albums"
-      :tabs="tabs"
-      :activeTab="activeTab"
-      @player="player"
-      :palyStatus="palyStatus"
-    >
-      <HomeMore :link="link" :more="more">
-        <div class="home-newsong-tabs">
-          <div
-            class="home-newsong-tab"
-            v-for="tab in tabs"
-            :key="tab.tabIndex"
-            @click="handleChange(tab)"
-          >
-            <strong
-              class="home-newsong-tabs-name"
-              :class="{ 'home-newsong-active': activeTab == tab.tabIndex }"
-              >{{ tab.name }}</strong
-            >
-            <span
-              class="home-newsong-tabs-line"
-              v-if="tab.tabIndex != 3"
-            ></span>
-          </div>
+    <base-card :to="tabLinkMaps[activeTab]">
+      <template #title>
+        <div class="home-newsong-tabs" @click="handleTabChange">
+          <h3 :class="{ 'home-newsong-active': activeTab === 'song' }" data-type="song">新歌</h3>
+          <span class="home-newsong-tabs-line" @click.stop></span>
+          <h3 :class="{ 'home-newsong-active': activeTab === 'album' }" data-type="album">新碟</h3>
+          <span class="home-newsong-tabs-line" @click.stop></span>
+          <h3
+            :class="{ 'home-newsong-active': activeTab === 'digitalbum' }"
+            data-type="digitalbum"
+          >数字专辑</h3>
         </div>
-      </HomeMore>
-    </HomeNewSong>
+      </template>
+      <base-swiper-items
+        v-for="item in multipleList"
+        v-show="item.type === activeTab"
+        v-slot="{ data }"
+        :key="item.type"
+        :list="item.list"
+        :options="topListSwiperOptions"
+        model="id"
+      >
+        <home-new-song :data="data" @play="(id) => handlePlay(id, item.type)"/>
+      </base-swiper-items>
+    </base-card>
     <!-- 独家放送  -->
-    <HomeList :list="videos" v-if="videos.length">
-      <HomeMore title="独家放送" link="" />
-    </HomeList>
+    <base-card title="独家放送">
+      <home-list :list="videos" />
+    </base-card>
     <!-- 电台  -->
-    <HomeList :list="list" round v-if="list.length">
-      <HomeMore>
+    <base-card :show-more="false">
+      <template #title>
         <div class="home-newsong-tabs">
-          <div
-            class="home-newsong-tab"
-            v-for="tab in radio"
-            :key="tab.tabIndex"
-          >
-            <strong
-              class="home-newsong-tabs-name"
-              :class="{ 'home-newsong-active': activeRadio == tab.tabIndex }"
-              >{{ tab.name }}</strong
-            >
-            <span
-              class="home-newsong-tabs-line"
-              v-if="tab.tabIndex != 2"
-            ></span>
-          </div>
+          <h3 class="home-newsong-active">广播电台</h3>
+          <span class="home-newsong-tabs-line"></span>
+          <h3>24小时播客</h3>
         </div>
-      </HomeMore>
-    </HomeList>
+      </template>
+      <home-list :list="list" round v-if="list.length" />
+    </base-card>
     <!-- 热门MV  -->
-    <HomeList :list="mvs" v-if="mvs.length">
-      <HomeMore title="热门MV" link="" />
-    </HomeList>
+    <base-card title="热门MV">
+      <home-list :list="mvs" />
+    </base-card>
   </div>
 </template>
 
-<script>
-import { mapMutations, mapGetters } from 'vuex';
-import {
-  vGetPersonalized,
-  vGetNewsong,
-  vGetBanner,
-  vGetDetail,
-} from '@/api/recomment.js';
-import { rankTopList } from '@/api/rank';
-import { getAlbumNewset, getAlbumList } from '@/api/album';
-import { getVideos, getMVs, getDjs, getDjToplist } from '@/api/video';
-import HomeSearch from '@/components/Home/HomeSearch';
-import HomeTopList from '@/components/Home/HomeTopList';
-import HomeMore from '@/components/Home/HomeMore';
-import HomeNewSong from '@/components/Home/HomeNewSong';
-import HomeList from '@/components/Home/HomeList';
-import { splitList } from '@/utils';
-import { Song } from '@/utils/config';
-export default {
-  name: 'Home',
-  components: {
-    HomeSearch,
-    HomeTopList,
-    HomeMore,
-    HomeNewSong,
-    HomeList,
-  },
-  data() {
-    return {
-      swiperOptions: {
-        pagination: {
-          el: '.swiper-pagination',
-        },
-        loop: true,
-        autoplay: {
-          delay: 2000,
-          stopOnLastSlide: false,
-          disableOnInteraction: false,
-        },
-        watchSlidesVisibility: true, // 解决了swiper前面的一个不能提前加载的bug
-        lazy: {
-          preloaderClass: 'my-lazy-preloader',
-        }, // 懒加载开启
-        // observer: true,
-        // observeParents: true,
-        slidesPerView: 'auto',
-        centeredSlides: true,
-      },
-      tabs: [
-        { link: '/songs/0', more: '更多新歌', tabIndex: 1, name: '新歌' },
-        { link: '/songs/1', more: '更多新碟', tabIndex: 2, name: '新碟' },
-        { link: '/mall', more: '更多数专', tabIndex: 3, name: '数字专辑' },
-      ],
-      radio: [
-        { tabIndex: 1, name: '广播电台' },
-        { tabIndex: 2, name: '24小时播客' },
-      ],
-      activeTab: 1,
-      activeRadio: 1,
-      more: '更多新歌',
-      link: '/songs/0',
-      swiperList: [],
-      personalized: [],
-      newsong: [],
-      toplists: [],
-      albums: [],
-      products: [],
-      videos: [],
-      mvs: [],
-      djs: [],
-      djToplist: [],
-      list: [],
+<script lang="ts">
+import { defineComponent, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { vGetBanner, vGetDetail } from "@/api/recomment.js";
+import { fetchRankList } from "@/api/rank.js";
+import HomeSearch from "@/components/Home/HomeSearch.vue";
+import HomeTopList from "@/components/Home/HomeTopList.vue";
+import HomeNewSong from "@/components/Home/HomeNewSong.vue";
+import HomeList from "@/components/Home/HomeList.vue";
+import useMultiple from "@/composables/home/useMultiple";
+import useBatch from "@/composables/home/useBatch";
+import { homeSwiperOptions, topListSwiperOptions, colorsMaps, tabLinkMaps } from '@/utils'
+
+export default defineComponent({
+  name: "Home",
+  components: { HomeSearch, HomeTopList, HomeNewSong, HomeList },
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const swiperList = ref([]);
+    const toplists = ref([]);
+    const audio = document.getElementById('audio') as HTMLAudioElement;
+
+    const { multipleList, activeTab, handleTabChange } = useMultiple();
+    const state = useBatch();
+    const getBanners = async () => {
+      const { banners } = await vGetBanner();
+      swiperList.value = banners;
     };
-  },
-
-  computed: {
-    palyStatus({ playing, currrenSong }) {
-      return function(id) {
-        if (currrenSong.id == id) {
-          return playing ? 'icon-pause-full' : 'icon-bofang31';
-        } else {
-          return 'icon-bofang31';
-        }
-      };
-    },
-    ...mapGetters(['playList', 'playing', 'currrenSong']),
-  },
-
-  async created() {
-    this.getSwiperList();
-    this.getTopList();
-
-    this.getNewsong();
-    this.getNewAlbum();
-    this.getAlbumList();
-
-    this.Batchs();
-    this.colors = {
-      blue: '#169af3',
-      red: '#ff3a3a',
+    const getTopList = async () => {
+      const { list } = await fetchRankList();
+      const toplist = list.filter((item) => item.tracks?.length);
+      toplists.value = toplist;
     };
-    this.$nextTick(() => (this.audio = document.getElementById('audio')));
-  },
-  methods: {
-    async getTopList() {
-      const { list } = await rankTopList();
-      const toplists = list.filter((item) => item.tracks && item.tracks.length);
-      this.toplists = toplists;
-    },
-    async getSwiperList() {
-      const { code, banners } = await vGetBanner();
-      if (code === 200) {
-        this.swiperList = banners;
+    const gotoPath = (path): void => {
+      if (path.targetType == 1) {
+          handlePlay(path.targetId);
       }
-    },
-    async getNewAlbum() {
-      const { code, albums } = await getAlbumNewset({ limit: 6 });
-      if (code == 200) {
-        const list = albums.slice(0, 6).reduce((acc, cur) => {
-          const { id, name, picUrl, artists } = cur;
-          acc.push(
-            new Song({
-              id,
-              name,
-              picUrl,
-              artists,
-            })
-          );
-          return acc;
-        }, []);
-        this.albums = splitList(list, 3);
+      if (path.targetType == 10) {
+        router.push({ name: 'Album', params: { id: path.targetId } });
       }
-    },
-    async getAlbumList() {
-      const { code, products } = await getAlbumList({ limit: 9 });
-
-      if (code == 200) {
-        const list = products.reduce((acc, cur) => {
-          const { albumId, albumName, coverUrl, artistName } = cur;
-          acc.push(
-            new Song({
-              id: albumId,
-              name: albumName,
-              picUrl: coverUrl,
-              artists: [{ name: artistName }],
-            })
-          );
-          return acc;
-        }, []);
-        this.products = splitList(list, 3);
-      }
-    },
-    async getNewsong() {
-      const { code, result } = await vGetNewsong({ limit: 30, offset: 1 });
-      if (code == 200) {
-        const list = result.reduce((acc, cur) => {
-          const { id, name, picUrl, song } = cur;
-          acc.push(
-            new Song({
-              id,
-              name,
-              picUrl,
-              artists: song['artists'],
-              album: song.album.name,
-              privilege: {
-                pl: song.privilege['pl'],
-                fee: song.privilege['fee'],
-                flag: song.privilege['flag'],
-                maxbr: song.privilege['maxbr'],
-              },
-            })
-          );
-          return acc;
-        }, []);
-        this.newsong = splitList(list, 3);
-      }
-    },
-    async Batchs() {
-      const apis = [
-        getDjs(),
-        getDjToplist(),
-        vGetPersonalized(),
-        getVideos(),
-        getMVs(),
-      ];
-      const res = await Promise.all(apis);
-      this.djs = res[0]['djRadios'];
-      this.djToplist = res[1]['toplist'];
-      this.personalized = res[2]['result'];
-      this.videos = res[3]['result'];
-      this.mvs = res[4]['data'].map((item) => ({
-        picUrl: item.cover,
-        name: item.name,
-      }));
-      this.list = res[0]['djRadios'];
-    },
-    async player(id) {
-      const index = this.playList.findIndex((item) => item.id == id);
+    };
+    const handlePlay = async (id: number, type: string) => {
+      if(type !== 'song') return;
+      const index = store.state.playList.findIndex((item) => item.id == id);
       if (index >= 0) {
-        if (id == this.currrenSong.id) {
-          this.setPlaying(!this.playing);
-          this.playing ? this.audio.play() : this.audio.pause();
+        if (id == store.getters.currrenSong.id) {
+          store.commit('setPlaying', !store.state.playing)
+          store.state.playing ? audio.play() : audio.pause();
         } else {
-          this.setCurrrentIndex(index);
+           store.commit('setCurrrentIndex', index)
         }
       } else {
         const { songs, privileges } = await vGetDetail(id);
@@ -321,34 +146,33 @@ export default {
             maxbr: privileges[0]['maxbr'],
           },
         };
-        this.setPlay([new Song(song), ...this.playList]);
-        this.setSequenceList(this.playList);
-        this.setCurrrentIndex(0);
+        store.commit('setPlay', [song, store.state.playList]);
+        store.commit('setSequenceList', store.state.playList);
+        store.commit('setCurrrentIndex', 0);
       }
-    },
-    handleAction(obj) {
-      if (obj.targetType == 1) {
-        this.player(obj.targetId);
-      }
-      if (obj.targetType == 10) {
-        this.$router.push(`/album/${obj.targetId}`);
-      }
-    },
-    handleChange(tab) {
-      if (tab.tabIndex == this.activeTab) return;
-      this.activeTab = tab.tabIndex;
-      this.more = tab.more;
-      this.link = tab.link;
-    },
-    ...mapMutations([
-      'setCurrrentIndex',
-      'setPlay',
-      'setFullScreen',
-      'setSequenceList',
-      'setSinger',
-    ]),
+    }
+    
+    onMounted(() => {
+      getBanners();
+      getTopList()
+    });
+
+    return {
+      homeSwiperOptions,
+      topListSwiperOptions,
+      swiperList,
+      colorsMaps,
+      tabLinkMaps,
+      activeTab,
+      multipleList,
+      handleTabChange,
+      gotoPath,
+      toplists,
+      ...state,
+      handlePlay,
+    };
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .recommend-type {
@@ -360,9 +184,9 @@ export default {
 .recommend-swiper {
   margin-top: 20px;
 }
-.recommend-swiper /deep/ .swiper-slide {
+.recommend &:deep(.swiper-slide) {
   position: relative;
-  width: 90%;
+  width: 90% !important;
   padding: 0 1.5%;
   margin-top: 6px;
 }
@@ -393,9 +217,6 @@ export default {
     display: flex;
     align-items: center;
     color: #999;
-    &-name {
-      font-size: 18px;
-    }
     &-line {
       margin: 0 8px;
       height: 13px;

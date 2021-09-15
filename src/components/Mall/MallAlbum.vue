@@ -1,99 +1,83 @@
-<template functional>
-  <section class="mall-album">
-    <slot />
-    <swiper :options="props.options" v-if="props.list.length">
-      <swiper-slide v-for="(item, index) in props.list" :key="'s' + index">
-        <ul>
-          <li
-            class="mall-album-item"
-            v-for="(song, index1) in item"
-            :key="song.id"
-          >
-            <div class="mall-album-wrap">
-              <figure class="mall-album-figure">
-                <img v-lazy="song.coverUrl" alt="" class="mall-album-img" />
-              </figure>
-              <span class="mall-album-index">{{ index1 + 1 + index * 4 }}</span>
-              <div class="mall-album-right ellipsis">
-                <div class="ellipsis">
-                  <span class="mall-album-name ">{{ song.albumName }}</span>
-                </div>
-                <div class="ellipsis mall-album-album">
-                  {{ song.artistName }}
-                </div>
-              </div>
-              <span class="mall-album-action">支持</span>
-            </div>
-          </li>
-        </ul>
-      </swiper-slide>
-    </swiper>
-  </section>
+<template>
+  <ul class="mall-album-container">
+    <li class="mall-album-item" v-for="(song, index) in list" :key="song.albumId">
+      <figure class="mall-album-figure">
+        <img v-lazy="song.coverUrl" alt class="mall-album-img" />
+      </figure>
+      <span class="mall-album-index">{{ index + 1 + num * 4 }}</span>
+      <div class="mall-album-right ellipsis">
+        <div>
+          <div class="ellipsis mall-album-name">{{ song.albumName }}</div>
+          <div class="ellipsis mall-album-album">{{ song.artistName }}</div>
+        </div>
+        <span class="mall-album-action">支持</span>
+      </div>
+    </li>
+  </ul>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+import { StrKeys } from '@/types'
+export default defineComponent({
   name: 'MallAlbum',
   props: {
     list: {
-      type: Array,
+      type: Array as PropType<StrKeys<string>[]>,
       default: () => [],
     },
-    options: {
-      type: Object,
-      default: () => ({
-        watchSlidesVisibility: true,
-        centeredSlides: true,
-        slidesPerView: 'auto',
-      }),
+    num: {
+      type: Number,
+      default: 0
     },
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .mall-album {
   &-img {
-    width: 50px;
-    height: 50px;
+    width: 5rem;
+    height: 5rem;
     border-radius: 4px;
   }
   &-item {
-    border-bottom: 1px solid #f0f0f0;
-  }
-  &-wrap {
     display: flex;
     align-items: center;
-    margin-top: 6px;
-    padding-bottom: 6px;
+    justify-content: space-between;
+    margin-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-right: 1.2rem;
+    border-bottom: 0.1rem solid #f0f0f0;
   }
   &-right {
-    margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 1rem;
     color: #999;
     font-size: 13px;
+    width: 25rem;
   }
   &-index {
     font-size: 16px;
     color: #525252;
-    margin-left: 18px;
+    margin-left: 1.4rem;
   }
   &-name {
     color: #333;
     font-size: 15px;
-    width: 190px;
+    width: 18rem;
   }
   &-album {
     margin-top: 2px;
-    width: 190px;
+    width: 18rem;
   }
   &-action {
     border-radius: 6px;
-    border: 1px solid #169af3;
-    padding: 2px 14px;
+    border: 0.1rem solid #169af3;
+    padding: 0.2rem 1.4rem;
     border-radius: 20px;
     color: #169af3;
     font-size: 14px;
   }
-}
-.mall-album /deep/ .swiper-slide {
-  width: 345px !important;
 }
 </style>

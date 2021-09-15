@@ -1,4 +1,4 @@
-import { getArtist } from './index';
+
 export const playMode = {
   sequence: 0,
   loop: 1,
@@ -13,7 +13,7 @@ export class Song {
     this.album = options.album || ''; // 歌曲专辑
     this.alia = (options.alia || []).join('/') || ''; // 歌曲别名
     this.publishTime = options.publishTime || ''; // 发布时间
-    this.artists = getArtist(options.artists || []).join('、') || ''; // 歌手
+    this.artists =  ''; // 歌手
     this.privilege = options.privilege || {}; // 状态
   }
 }

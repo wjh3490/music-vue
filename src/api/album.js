@@ -6,35 +6,43 @@ export function getAlbum(id) {
     method: 'get',
   });
 }
-export function getAlbumNewset() {
+export function fetchNewAlbumset() {
   return service({
     url: '/album/newest',
     method: 'get',
   });
 }
-export function getAlbumList(params) {
+export function fetchAlbumList(params) {
   return service({
     url: '/album/list',
     method: 'get',
     params,
   });
 }
-export function getAlbumNew(area) {
+export function fetchNewAlbum(area) {
   return service({
     url: `/album/new?area=${area}&limit=10`,
     method: 'get',
   });
 }
-export function getAlbumSongsaleboard(params) {
+export function fetchAlbumSongsaleboard(params) {
   return service({
     url: 'album/songsaleboard',
     params,
     method: 'get',
   });
 }
-export function getAlbumListStyle(params) {
+export function fetchAlbumListStyle(params) {
   return service({
     url: `/album/list/style`,
+    method: 'get',
+    params,
+  });
+}
+
+export function fetchTopAlbum(params) {
+  return service({
+    url: '/top/album',
     method: 'get',
     params,
   });

@@ -1,77 +1,97 @@
 <template>
-  <div class="singer-container">
-    <BaseTabs
-      :navList="navList"
-      @tabs="handleScroll"
-      :active="active"
-      @change="handleChange"
-      ref="tabs"
-    />
-    <main class="singer-main">
-      <swiper :options="swiperOptions" ref="mySwiper" v-if="navList.length > 0">
-        <swiper-slide
-          :data-id="item.targetId"
-          v-for="item in navList"
-          :key="item.id"
-        >
-          <SongsNewAlbumList ref="singer" />
-        </swiper-slide>
-      </swiper>
-    </main>
+  <div class="paddingtop45 new-album">
+    <base-card :show-more="false" title="本周新碟">
+      <album-list
+        :list="weekAlbum"
+        :style="{
+          height: '14rem',
+          paddingRight: '2rem',
+          width: '14rem',
+        }"
+      />
+    </base-card>
+    <base-card :show-more="false" title="本周新碟" :style="{ position: 'sticky', top: ' 5rem' }">
+      <album-list
+        :list="monthAlbum"
+        :style="{
+          height: '14rem',
+          paddingRight: '2rem',
+          width: '14rem',
+        }"
+      />
+    </base-card>
   </div>
 </template>
-<script>
-import SongsNewAlbumList from './SongsNewAlbumList';
-export default {
-  name: 'SongNewAblum',
-  components: { SongsNewAlbumList },
-  data() {
-    return {
-      active: 0,
-      navList: [
-        { id: 'ZH', name: '华语' },
-        { id: 'EA', name: '欧美' },
-        { id: 'KR', name: '韩国' },
-        { id: 'JP', name: '日本' },
-      ],
-      swiperOptions: {
-        on: {
-          slideChange: () => {
-            this.active = this.swiper.activeIndex;
-          },
-        },
-        loop: false,
-        watchSlidesVisibility: true,
-      },
-    };
-  },
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { fetchTopAlbum } from '@/api/album';
+import { arrayToString } from '@/utils';
+import AlbumList from '@/components/common/AlbumList.vue'
 
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.swiper;
-    },
+export default defineComponent({
+  name: 'SongsNewAlbum',
+  components: { AlbumList },
+  setup() {
+    const monthAlbum = ref([]);
+    const weekAlbum = ref([]);
+    const date = new Date();
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const getAlnums = async () => {
+      const params = { area: 'ALL', month: 9 }
+      const { monthData, weekData } = await fetchTopAlbum(params);
+      monthAlbum.value = monthData.map(item => ({
+        albumId: item.id,
+        coverUrl: item.picUrl,
+        albumName: item.name,
+        artistName: arrayToString(item.artists)
+      }
+      ));
+      weekAlbum.value = weekData.map(item => ({
+        albumId: item.id,
+        coverUrl: item.picUrl,
+        albumName: item.name,
+        artistName: arrayToString(item.artists)
+      }
+      ));
+    }
+    onMounted(getAlnums)
+    return {
+      monthAlbum,
+      weekAlbum,
+      year,
+      month
+    }
   },
-  mounted() {
-    this.singers = this.$refs.singer;
-    this.singers[0].getSingers('ZH');
-    this.$refs.tabs.init();
-  },
-  methods: {
-    handleChange(index) {
-      const id = this.navList[index]['id'];
-      this.singers[index].getSingers(id);
-    },
-    handleScroll(index) {
-      if (this.active == index) return;
-      this.swiper.slideTo(index, 0, false);
-    },
-  },
-};
+});
 </script>
-<style scoped lang="less">
-.singer {
-  &-container {
-    padding-top: 90px;
+<style lang="less" scoped>
+.songs-album {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 1.5rem;
+  margin-top: 1.5rem;
+  &-item {
+    margin-bottom: 1.5rem;
+  }
+  &-img {
+    width: 16.2rem;
+    height: 16.2rem;
+    border-radius: 8px;
+  }
+  &-info {
+    margin-top: 0.5rem;
+  }
+  &-name {
+    width: 15rem;
+    font-size: 14px;
+  }
+  &-artist {
+    width: 15rem;
+    font-size: 13px;
+    color: #999;
+    margin-top: 0.3rem;
   }
 }
 </style>

@@ -1,100 +1,43 @@
 <template>
-  <div class="songs-main">
-    <BaseBack>
+  <div class="songs-main paddingtop50">
+    <base-back :isFixed="true">
       <nav class="songs-nav-wrap">
         <span
-          :class="{ 'songs-nav-active': activeIndex == 0 }"
-          @click="handleChange(0)"
-          >新歌</span
-        >
-        <span class="songs-nav-line"> | </span>
+          class="songs-nav-item"
+          :class="{ 'songs-nav-active': +activeIndex === 1 }"
+          @click="activeIndex = 1"
+        >新歌</span>
         <span
-          :class="{ 'songs-nav-active': activeIndex == 1 }"
-          @click="handleChange(1)"
-          >新碟</span
-        >
+          class="songs-nav-item"
+          :class="{ 'songs-nav-active': +activeIndex === 2 }"
+          @click="activeIndex = 2"
+        >新碟</span>
       </nav>
-    </BaseBack>
-    <BaseSongList
-      :songs="songs"
-      @player="player"
-      v-show="activeIndex == 0"
-      style="padding-top:1.6rem"
-    />
-    <SongsNewAlbum v-show="activeIndex == 1"></SongsNewAlbum>
+    </base-back>
+    <songs-new-song v-show="+activeIndex === 1" />
+    <songs-new-album v-show="+activeIndex === 2" />
   </div>
 </template>
 
-<script>
-import { mapMutations } from 'vuex';
-import { vGetNewsong } from '@/api/recomment.js';
-import SongsNewAlbum from '@/components/Songs/SongsNewAlbum';
-import { Song } from '@/utils/config';
-export default {
-  name: 'Songs',
-  components: { SongsNewAlbum },
-  data() {
-    return {
-      songs: [],
-      activeIndex: this.$route.params.id || 1,
-    };
-  },
-  created() {
-    this.getNewSong();
-  },
-  methods: {
-    async getNewSong() {
-      const { code, result } = await vGetNewsong({ limit: 30 });
-      if (code == 200) {
-        let list = [];
-        for (let i = 0, length = result.length; i < length; i++) {
-          const song = {
-            id: result[i]['id'],
-            name: result[i]['name'],
-            album: result[i]['song']['name'],
-            singer: result[i]['song']['artists'],
-            picUrl: '',
-            privilege: {
-              pl: result[i]['song']['privilege']['pl'] || '',
-              fee: result[i]['song']['privilege']['fee'] || '',
-              flag: result[i]['song']['privilege']['flag'] || '',
-              maxbr: result[i]['song']['privilege']['maxbr'] || '',
-            },
-          };
-          list.push(new Song(song));
-        }
-        this.songs = list;
-      }
-    },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
-    },
-    player(index, ele) {
-      this.$drop(ele);
-      if (!Object.is(this.songs, this.playList)) {
-        this.setPlay(this.songs);
-        this.setSequenceList(this.songs);
-      }
-      this.setCurrrentIndex(index);
-    },
-    handleChange(index) {
-      if (this.activeIndex == index) return;
-      this.activeIndex = index;
-    },
-    ...mapMutations([
-      'setCurrrentIndex',
-      'setPlay',
-      'setFullScreen',
-      'setSequenceList',
-      'setSinger',
-    ]),
-  },
-};
-</script>
+<script lang="ts">
+import { defineComponent, ref, } from 'vue';
+import { useRoute } from 'vue-router';
 
+import SongsNewAlbum from '@/components/Songs/SongsNewAlbum.vue';
+import SongsNewSong from '@/components/Songs/SongsNewSong.vue';
+export default defineComponent({
+  name: 'Songs',
+  components: { SongsNewAlbum, SongsNewSong },
+  setup() {
+    const route = useRoute();
+    const activeIndex = ref(route.params.id || 1);
+    return {
+      activeIndex,
+    }
+  },
+})
+
+</script>
 <style lang="less" scoped>
 .songs {
   &-main {
@@ -103,16 +46,26 @@ export default {
   &-nav {
     &-wrap {
       display: flex;
-      color: #999;
-      justify-content: center;
+      border: 0.1rem solid #169af3;
+      width: 20rem;
+      height: 3rem;
+      justify-content: space-between;
       align-items: center;
+      margin: 0 auto;
+      border-radius: 30px;
+      overflow: hidden;
     }
-    &-line {
-      margin: 0 20px;
+    &-item {
+      font-size: 16px;
+      padding: 0.4rem 0;
+      border-radius: 14px;
+      width: 50%;
+      text-align: center;
+      color: #169af3;
     }
     &-active {
-      color: #333;
-      font-weight: 600;
+      background-color: #169af3;
+      color: #fff;
     }
   }
 }

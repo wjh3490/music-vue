@@ -4,41 +4,37 @@
       <span class="iconfont icon-iconfont2 normal-player-header-icon"></span>
     </div>
     <div class="normal-player-header-control">
-      <span @click="$emit('slide', 0)" :class="{ activeIndex: index == 0 }"
-        >推荐</span
-      >
+      <span @click="$emit('slide', 0)" :class="{ activeIndex: index === 0 }">推荐</span>
       <span class="normal-player-header-line"></span>
-      <span @click="$emit('slide', 1)" :class="{ activeIndex: index == 1 }"
-        >歌曲</span
-      >
+      <span @click="$emit('slide', 1)" :class="{ activeIndex: index === 1 }">歌曲</span>
       <span class="normal-player-header-line"></span>
-      <span @click="$emit('slide', 2)" :class="{ activeIndex: index == 2 }"
-        >歌词</span
-      >
+      <span @click="$emit('slide', 2)" :class="{ activeIndex: index === 2 }">歌词</span>
     </div>
   </header>
 </template>
 
-<script>
-import { mapGetters, mapMutations } from 'vuex';
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'PlayerTabs',
   props: {
     index: {
+      type: Number,
       default: 1,
     },
   },
-  computed: {
-    ...mapGetters(['currrenSong']),
+  emits: ['slide'],
+  setup() {
+    const store = useStore();
+    const handleFullScreen = () => {
+      store.commit('setFullScreen', false)
+    };
+    return {
+      handleFullScreen
+    }
   },
-
-  methods: {
-    handleFullScreen() {
-      this.setFullScreen(false);
-    },
-    ...mapMutations(['setFullScreen','setlockScroll']),
-  },
-};
+});
 </script>
 
 <style scoped lang="less">

@@ -2,19 +2,13 @@
   <div class="control">
     <slot />
     <div class="control-action">
+      <i @click.stop="actionPre" class="pre iconfont icon-qianjin control-icon"></i>
       <i
-        @click.stop="actionPre"
-        class="pre iconfont icon-qianjin control-icon"
-      ></i>
-      <i
-        @click.stop="setPlaying(!playing)"
-        class="pause iconfont  control-icon"
+        @click.stop="handlePlaying"
+        class="pause iconfont control-icon"
         :class="playing ? 'icon-zanting11' : 'icon-bofang'"
       ></i>
-      <i
-        @click.stop="actionNext"
-        class="next iconfont icon-qianjin  control-icon"
-      ></i>
+      <i @click.stop="actionNext" class="next iconfont icon-qianjin control-icon"></i>
     </div>
     <i
       @click="handleVisible"
@@ -22,22 +16,28 @@
     ></i>
   </div>
 </template>
-<script>
-import { mapMutations, mapGetters, mapActions } from 'vuex';
-export default {
+<script lang="ts">
+import { computed, defineComponent } from 'vue';
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'PlayerControl',
-  computed: {
-    ...mapGetters(['playing']),
+  setup() {
+    const store = useStore();
+    const playing = computed(() => store.state.playing);
+    const handlePlaying  = () => { store.commit('setPlaying', !playing.value) }
+    const handleVisible = () => { store.commit('setVisible', false) }
+    const actionPre = () => { store.dispatch('actionPre') }
+    const actionNext = () => { store.dispatch('actionNext') }
+
+    return {
+      playing,
+      actionPre,
+      actionNext,
+      handleVisible,
+      handlePlaying,
+    }
   },
-  methods: {
-    handleVisible() {
-      this.setVisible(true);
-      this.setlockScroll(1);
-    },
-    ...mapMutations(['setPlaying', 'setVisible', 'setlockScroll']),
-    ...mapActions(['actionPre', 'actionNext']),
-  },
-};
+});
 </script>
 
 <style scoped lang="less">

@@ -1,48 +1,35 @@
 <template>
   <div class="mall-shop">
-    <BaseBack title="畅销榜" />
+    <base-back :isFixed="true" title="畅销榜" />
     <nav class="mall-shop-nav">
       <span
         class="mall-shop-nav-item"
-        @click="handleChange('albumType', 0)"
-        :class="{ 'mall-shop-nav-active': albumType == 0 }"
-        >数字专辑榜</span
-      >
+        :class="{ 'mall-shop-nav-active': albumType === 0 }"
+        @click="albumType = 0"
+      >数字专辑榜</span>
       <span
         class="mall-shop-nav-item"
-        @click="handleChange('albumType', 1)"
-        :class="{ 'mall-shop-nav-active': albumType == 1 }"
-        >数字单曲榜</span
-      >
+        :class="{ 'mall-shop-nav-active': albumType === 1 }"
+        @click="albumType = 1"
+      >数字单曲榜</span>
     </nav>
-    <BaseTabs
-      :navList="navList"
+    <base-tabs
+      :navList="mallNavOptions"
       :active="active"
-      lineHeight="0.053rem"
-      @change="(e) => handleChange('type', e)"
+      ref="tabRef"
       @tabs="(index) => (active = index)"
-      position="relative"
-      top="0"
-      ref="tabs"
+      @change="(e) => (type = mallNavMaps[e])"
     />
     <ul class="singer-main-wrap">
-      <li
-        v-for="(item, index) in albums"
-        :key="index"
-        @click.stop="getSingerDetail(item)"
-        class="singer-main-item"
-      >
+      <li v-for="(item, index) in albums" :key="item.albumId" class="singer-main-item">
         <div class="singer-main-index">
           <span
             class="singer-main-nownum"
             :class="{ 'singer-main-top3': index <= 2 }"
-            >{{ index + 1 }}</span
-          >
+          >{{ index + 1 }}</span>
           <span class="singer-main-rank">
             <span class="iconfont" :class="formatRank(item.rankIncr)"></span>
-            <span class="singer-main-num"
-              >&nbsp;{{ item.rankIncr == 0 ? '' : item.rankIncr }}</span
-            >
+            <span class="singer-main-num">&nbsp;{{ item.rankIncr === 0 ? '' : item.rankIncr }}</span>
           </span>
         </div>
         <div class="singer-main-avatar">
@@ -50,77 +37,75 @@
         </div>
         <div class="singer-main-name">
           <span class="singer-main-singer">{{ item.albumName }}</span>
-          <span class="singer-main-score">
-            {{ item.artistName }}
-          </span>
+          <span class="singer-main-score">{{ item.artistName }}</span>
           <span class="singer-main-saleNum">已售{{ item.saleNum }}张</span>
         </div>
       </li>
     </ul>
   </div>
 </template>
-<script>
-import { getAlbumSongsaleboard } from '@/api/album';
-export default {
+<script lang="ts">
+import { defineComponent, onMounted, ref, watchEffect } from 'vue';
+import { fetchAlbumSongsaleboard } from '@/api/album';
+import { mallNavOptions, mallNavMaps, formatRank } from '@/utils';
+import { Tab } from '@/types';
+
+interface Album {
+  saleNum: number,
+  artistName: string,
+  albumName: string,
+  coverUrl: string,
+  rankIncr: number,
+  albumId: number,
+}
+
+export default defineComponent({
   name: 'MallShop',
-  data() {
-    return {
-      albums: [],
-      active: 0,
-      type: 'daily',
-      albumType: 0,
-      navList: [
-        { id: 'daily', name: '日榜' },
-        { id: 'week', name: '周榜' },
-        { id: 'year', name: '2021年榜' },
-        { id: 'total', name: '总榜' },
-      ],
-    };
-  },
-  mounted() {
-    this.$refs.tabs.init();
-    this.handleChange('daily', 0);
-  },
-  filters: {
-    formatIndex(index) {
-      return (index + '').padStart(2, '0');
-    },
-  },
-  methods: {
-    async handleChange(type, index) {
-      if (type == 'type') {
-        this.type = this.navList[index]['id'];
-      } else {
-        this.albumType = index;
-      }
-      const { products, code } = await getAlbumSongsaleboard({
-        type: this.type,
-        albumType: this.albumType,
+  setup() {
+    const albums = ref<Album[]>([]);
+    const active = ref(0)
+    const type = ref('daily')
+    const albumType = ref(0);
+    const tabRef = ref<Tab | null>(null)
+
+    const getData = async () => {
+      const { products } = await fetchAlbumSongsaleboard({
+        type: type.value,
+        albumType: albumType.value,
         limit: 10,
       });
-      if (code == 200) this.albums = products;
-    },
-    formatRank(rank) {
-      if (rank > 0) return ['icon-jiantou', 'rankRose'];
-      if (rank < 0) return ['icon-jiantou', 'rankLose'];
-      if (rank == 0) return ['icon-line', 'rankEqual'];
-    },
+      albums.value = products;
+    };
+    watchEffect(getData);
+    onMounted(() => {
+      (tabRef.value as Tab).init(0);
+    })
+    return {
+      type,
+      tabRef,
+      albums,
+      active,
+      albumType,
+      mallNavMaps,
+      mallNavOptions,
+      formatRank,
+    }
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .mall-shop {
-  padding: 60px 0;
+  padding: 6rem 0;
   &-nav {
     display: flex;
-    border: 1px solid #169af3;
-    width: 240px;
+    border: 0.1rem solid #169af3;
+    width: 24rem;
     border-radius: 30px;
     justify-content: space-between;
     margin: 0 auto;
     &-item {
       font-size: 16px;
-      padding: 4px 0;
+      padding: 0.4rem 0;
       border-radius: 14px;
       width: 50%;
       text-align: center;
@@ -139,15 +124,15 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 1rem;
     }
     &-img {
-      width: 80px;
-      height: 80px;
+      width: 8rem;
+      height: 8rem;
       border-radius: 8px;
     }
     &-index {
-      width: 55px;
+      width: 5.5rem;
       display: flex;
       flex-direction: column;
       font-size: 18px;
@@ -157,11 +142,11 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      margin-left: 15px;
+      margin-left: 1.5rem;
     }
     &-score,
     &-saleNum {
-      margin-top: 6px;
+      margin-top: 0.6rem;
       color: #999;
     }
     &-singer {
@@ -175,7 +160,7 @@ export default {
     &-rank {
       display: flex;
       align-items: center;
-      margin-top: 4px;
+      margin-top: 0.4rem;
       justify-content: center;
     }
     &-top3 {

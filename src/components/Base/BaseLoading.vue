@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <ul class="base-loading">
     <li v-for="v in 5" :key="v" :style="`--line-index: ${v}`"></li>
   </ul>

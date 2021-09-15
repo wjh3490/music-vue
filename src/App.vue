@@ -1,67 +1,34 @@
 <template>
-  <div id="app">
-    <router-view :key="$route.fullPath" />
-    <Player />
-    <PlaySongs />
-    <Audio />
-  </div>
+  <router-view :key="$route.fullPath" />
+  <!-- <normal-player v-show="fullScreen"/>
+  <mini-player v-show="!fullScreen" /> -->
+  <!-- <PlaySongs /> -->
+  <vue-audio />
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-import Player from './player';
-import PlaySongs from '@/components/PlaySongs';
-import Audio from '@/components/Audio';
-export default {
-  name: 'App',
-  components: { Audio, Player, PlaySongs },
-  data() {
-    return {
-      y: 0,
-      flag: true,
-    };
-  },
-   created(){console.log(2222)},
-  computed: { ...mapGetters(['lockScroll']) },
-  mounted() {
-    this.body = document.body;
-  },
-  created(){
-    console.log(88888888)
-    const a = 1000;
-  },
-  watch: {
-    lockScroll(val) {
-      if (this.flag) {
-        this.y = document.body.scrollTop || document.documentElement.scrollTop;
-        this.flag = false;
-      }
-      if (val == 0) {
-        this.body.classList.remove('lock-scroll');
-        this.body.style.top = 0;
-        document.documentElement.scrollTop = this.y;
-        this.flag = true;
-      } else {
-        if (!this.body.classList.contains('lock-scroll')) {
-          this.body.style.top = -this.y + 'px';
-          this.body.classList.add('lock-scroll');
-          
-        }
-      }
-    },
-  },
-};
-</script>
-<style>
-.lock-scroll {
-  position: fixed;
-  left: 0;
-  width: 100%;
-}
-</style>
+<script lang="ts">
+import { defineComponent, computed, ref, watch } from 'vue'
+import { useStore } from 'vuex';
+import Player from './player/index.vue';
+import NormalPlayer from '@/components/Player/NormalPlayer.vue';
+import MiniPlayer from '@/components/Player/MiniPlayer.vue';
+// import PlaySongs from '@/components/PlaySongs.vue';
+import VueAudio from '@/components/Audio/index.vue';
 
-<style scoped>
-#app {
-  font-size: 12px;
-}
-</style>
+export default defineComponent({
+  name: 'App',
+  components: { VueAudio, Player, NormalPlayer, MiniPlayer },
+  setup() {
+    const store = useStore();
+    const fullScreen = computed(() => store.getters.fullScreen);
+    const playList = computed(() => store.state.playList);
+
+    return {
+      fullScreen,
+      playList,
+    }
+  }
+})
+</script>
+
+

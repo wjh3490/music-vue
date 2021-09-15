@@ -8,29 +8,32 @@
       <p class="song-name">{{ currrenSong.artists }}</p>
       <div class="currrent_lyric">
         {{
-          currentLyric[activeLyricIndex]
-            ? currentLyric[activeLyricIndex]['lyric']
+          currentLyric
+            ? currentLyric?.lyric
             : '暂无歌词'
         }}
       </div>
-      <div
-        class="currrent_lyric"
-        v-if="currentLyric[activeLyricIndex] && currentLyric[activeLyricIndex]['tlyric']"
-      >
-        {{ currentLyric[activeLyricIndex]['tlyric'] }}
-      </div>
+      <div class="currrent_lyric" v-if="currentLyric?.tlyric">{{ currentLyric['tlyric'] }}</div>
     </div>
   </div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex';
-export default {
+<script lang="ts">
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'PlayerCircle',
-  computed: {
-    ...mapGetters(['currrenSong', 'currentLyric', 'activeLyricIndex']),
+  setup() {
+    const store = useStore()
+    const currrenSong = computed(() => store.getters.currrenSong);
+    const currentLyric = computed(() => store.state.currentLyric[store.state.LyricScrollY - 1]);
+
+    return {
+      currrenSong,
+      currentLyric,
+    }
   },
-};
+});
 </script>
 <style scoped lang="less">
 .song-detail {
@@ -58,6 +61,10 @@ export default {
     border-radius: 10px;
     margin: 0 auto;
     overflow: hidden;
+    background-size: 100% 100%;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    transition: background-image 0.2s;
     .bgc-img {
       height: 100%;
     }

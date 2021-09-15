@@ -1,89 +1,53 @@
 <template>
-  <div>
-    <BaseSwiper
-      :list="recommendSongs"
-      :options="swiperOptions"
-      v-slot="{ data, index }"
-      ref="mySwiper"
-      class="playlist-recommend"
-    >
-      <div class="playlist-recommend-wrap">
-        <img class="playlist-recommend-pic" :src="data.picUrl" alt="" />
-        <span
-          :class="palyStatus(data)"
-          class="playlist-recommend-icon iconfont"
-          @click="handlePlay(data, index)"
-        ></span>
-        <div class="playlist-recommend-mask" v-show="id != index"></div>
-      </div>
-    </BaseSwiper>
-    <p class="playlist-recommend-name">
-      <strong>{{ recommendSongs[id] && recommendSongs[id]['name'] }}</strong>
-    </p>
-  </div>
+  <base-swiper-items
+    v-slot="{ data, index }"
+    :list="recommendSongs"
+    :options="playListSwiperOption"
+    class="playlist-recommend"
+    @swiper="onSwiper"
+  >
+    <div class="playlist-recommend-wrap">
+      <img class="playlist-recommend-pic" :src="data.picUrl" alt />
+      <span class="playlist-recommend-icon iconfont icon-bofang" @click="handlePlay(data, index)"></span>
+      <div class="playlist-recommend-mask" v-show="swiper?.realIndex ?? 0 != index"></div>
+    </div>
+  </base-swiper-items>
+  <p class="playlist-recommend-name">
+    <strong>{{ recommendSongs[swiper?.realIndex ?? 0] && recommendSongs[swiper?.realIndex ?? 0]['name'] }}</strong>
+  </p>
 </template>
-<script>
-import { vGetNewsong } from '@/api/recomment';
-import { mapMutations, mapGetters } from 'vuex';
+<script lang="ts">
+import { defineComponent, ref, onMounted, computed } from 'vue'
+import { useStore } from 'vuex';
+import { fetchNewsong } from '@/api/recomment';
 import { Song } from '@/utils/config';
-export default {
+import { playListSwiperOption } from '@/utils'
+export default defineComponent({
   name: 'PlayListBanner',
-  data() {
-    return {
-      swiperOptions: {
-        effect: 'coverflow',
-        slidesPerView: '3',
-        spaceBetween: '-20%',
-        centeredSlides: true,
-        loop: true,
-        loopSlides: 2,
-        coverflowEffect: {
-          rotate: 0, // 旋转的角度
-          stretch: 0, // 拉伸   图片间左右的间距和密集度
-          depth: 130, // 深度   切换图片间上下的间距和密集度
-          modifier: 4, // 修正值 该值越大前面的效果越明显
-          slideShadows: false,
-        },
-        on: {
-          slideChange: () => {
-            this.id = this.swiper.realIndex;
-          },
-        },
-      },
-      recommendSongs: [],
-      id: 0,
-    };
-  },
-
-  computed: {
-    palyStatus({ playing, currrenSong }) {
-      return function(data) {
-        if (currrenSong.id == data.id) {
-          return playing ? 'icon-pause-full' : 'icon-bofang';
-        } else {
-          return 'icon-bofang';
-        }
-      };
-    },
-    swiper() {
-      return this.$refs.mySwiper.swiper;
-    },
-    ...mapGetters(['playList', 'playing', 'currrenSong']),
-  },
-  created() {
-    this.getRecommendSongs();
-
-    this.$nextTick(() => (this.audio = document.getElementById('audio')));
-  },
-  methods: {
-    handlePlay(item) {
-      let index = this.playList.findIndex((item1) => item1.id === item.id);
+  setup() {
+    const {
+      setPlaying,
+      setCurrrentIndex,
+      setPlay,
+      setSequenceList,
+      playList,
+      playing,
+      currrenSong,
+    } = useStore();
+    const swiper = ref<any>(null);
+    const onSwiper = (sw: Element) => {
+      swiper.value = sw
+      console.log(swiper.value.realIndex)
+    }
+    const recommendSongs = ref([]);
+    const handlePlay = (item) => {
+      let index = playList.findIndex((item1) => item1.id === item.id);
       if (index >= 0) {
-        if (item.id == this.currrenSong.id) {
-          this.setPlaying(!this.playing);
-          this.playing ? this.audio.play() : this.audio.pause();
+        if (item.id == currrenSong.id) {
+          setPlaying(!playing);
+          playing ? audio.play() : audio.pause();
         } else {
-          this.setCurrrentIndex(index);
+          setCurrrentIndex(index);
         }
       } else {
         const song = {
@@ -100,25 +64,37 @@ export default {
             maxbr: item.song.privilege['maxbr'],
           },
         };
-        this.setPlay([new Song(song), ...this.playList]);
-        this.setSequenceList(this.playList);
-        this.setCurrrentIndex(0);
+        setPlay([new Song(song), ...playList]);
+        setSequenceList(playList);
+        setCurrrentIndex(0);
       }
-    },
-    async getRecommendSongs() {
-      const { code, result } = await vGetNewsong({ limit: 30 });
-      if (code == 200) {
-        this.recommendSongs = result.slice(0, 5);
-      }
-    },
-    ...mapMutations([
-      'setPlaying',
-      'setCurrrentIndex',
-      'setPlay',
-      'setSequenceList',
-    ]),
+    }
+
+    const getRecommendSongs = async () => {
+      const { result } = await fetchNewsong({ limit: 30 });
+      recommendSongs.value = result.slice(0, 5);
+    }
+    const palyStatus = computed(() => {
+      // return function (data) {
+      //   if (currrenSong.id == data.id) {
+      //     return playing ? 'icon-pause-full' : 'icon-bofang';
+      //   } else {
+      return 'icon-bofang';
+      // }
+      // };
+    })
+
+    onMounted(getRecommendSongs)
+    return {
+      playListSwiperOption,
+      palyStatus,
+      handlePlay,
+      onSwiper,
+      recommendSongs,
+      swiper
+    }
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .playlist-recommend {

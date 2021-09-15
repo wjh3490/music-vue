@@ -1,129 +1,64 @@
 <template>
-  <transition name="fade2">
-    <div class="mini-container" @click.stop="handleFullScreen">
-      <section class="mini-cd" :class="{ active: !playing }">
-        <div
-          class="mini-cd-wrap"
-          :style="{
-            'background-image': `conic-gradient(#20a0ff 0%, #2010ff ${percent *
-              100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
-          }"
-        ></div>
-        <div class="mini-cd-bgc" :class="animationStatus">
-          <img :src="currrenSong.picUrl" alt class="mini-cd-img" />
-        </div>
-      </section>
-
-      <section class="mini-desc ellipsis">
-        <p class=" mini-player-name ellipsis">
-          {{ currrenSong.name }} - {{ currrenSong.artists }}
-        </p>
-      </section>
-      <div class="control">
-        <i
-          @click.stop="setPlaying(!playing)"
-          class="pause iconfont mini-control-icon mini-icon-commom"
-          :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
-        ></i>
-        <i
-          @click.stop="actionNext"
-          class="next iconfont icon-qianjin mini-icon-commom"
-        ></i>
-
-        <i
-          @click.stop="handleVisible"
-          class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
-        ></i>
+  <div class="mini-container" @click.stop="handleFullScreen">
+    <section class="mini-cd" :class="{ active: !playing }">
+      <div
+        class="mini-cd-wrap"
+        :style="{
+          backgroundImage: `conic-gradient(#20a0ff 0%, #2010ff ${percent *
+            100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
+        }"
+      ></div>
+      <div class="mini-cd-bgc" :class="{ 'animation_pause': !playing }">
+        <img :src="currrenSong.picUrl" alt class="mini-cd-img" />
       </div>
-      <!-- <svg viewBox="0 0 100 100"  class="svg">
-        <defs>
-          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgb(32,160,255);stop-opacity:1" />
-            <stop offset="100%" style="stop-color:rgb(32,16,255);stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <path d="
-        M 50 50
-        m 0 -47
-        a 47 47 0 1 1 0 94
-        a 47 47 0 1 1 0 -94
-        "
-        stroke="#888" 
-        stroke-width="6" 
-        fill="none"
-        style="stroke-dashoffset: 0px;"
-          :style="{strokeDasharray:`${perimeter}px, ${perimeter}px`}"
-        >
-        
-        </path>
-        <path d="
-        M 50 50
-        m 0 -47
-        a 47 47 0 1 1 0 94
-        a 47 47 0 1 1 0 -94
-        " 
-        stroke="url(#grad1)" 
-        stroke-linecap="round" 
-        fill="none"
-        stroke-width="6" 
-        :style="strokeDasharray"
-        style="stroke-dashoffset: 0px">
-        </path>
-      </svg> -->
+    </section>
+
+    <section class="mini-desc ellipsis">
+      <p class="mini-player-name ellipsis">{{ currrenSong.name }} - {{ currrenSong.artists }}</p>
+    </section>
+    <div class="control">
+      <i
+        @click.stop="handlePlaying"
+        class="pause iconfont mini-control-icon mini-icon-commom"
+        :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
+      ></i>
+      <i @click.stop="actionNext" class="next iconfont icon-qianjin mini-icon-commom"></i>
+
+      <i
+        @click.stop="handleVisible"
+        class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
+      ></i>
     </div>
-  </transition>
+  </div>
 </template>
 
-<script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
-export default {
+<script lang="ts">
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex';
+export default defineComponent({
   name: 'MiniPlayer',
-  computed: {
-    animationStatus({ playing }) {
-      return playing ? '' : 'animation_pause';
-    },
+  setup() {
+    const store = useStore();
+    const playing = computed(() => store.state.playing);
+    const percent = computed(() => store.state.currentTime / store.state.duration);
+    const currrenSong = computed(() => store.getters.currrenSong);
+    const handleVisible = () => { store.commit('setVisible', true) };
+    const handlePlaying = () => { store.commit('setPlaying', !playing.value) };
+    const handleFullScreen = () => { store.commit('setFullScreen', true) };
+    const actionNext = () => { store.dispatch('actionNext') };
 
-    percent({ currentTime, duration }) {
-      return currentTime / duration;
-    },
-    // strokeDasharray() {
-    //   return {
-    //     strokeDasharray: `${this.percent.toFixed(2) * this.perimeter}px, ${
-    //       this.perimeter
-    //     }px`
-    //   };
-    // },
-    // perimeter() {
-    //   return 2 * Math.PI * 50;
-    // },
-    ...mapGetters([
-      'currentTime',
-      'duration',
-      'currrenSong',
-      'fullScreen',
-      'playing',
-      'lockScroll',
-    ]),
-  },
-  methods: {
-    handleVisible() {
-      this.setVisible(true);
-      this.setlockScroll(1);
-    },
+    return {
+      playing,
+      percent,
+      currrenSong,
+      handleVisible,
+      handlePlaying,
+      handleFullScreen,
+      actionNext,
+    }
 
-    handleFullScreen() {
-      this.setFullScreen('setFullScreen', true);
-      this.setlockScroll(1);
-    },
-    ...mapActions(['actionNext']),
-    ...mapMutations([
-      'setPlaying',
-      'setFullScreen',
-      'setVisible',
-      'setlockScroll',
-    ]),
   },
-};
+});
 </script>
 <style scoped lang="less">
 .mini {

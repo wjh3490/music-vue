@@ -1,10 +1,8 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-Vue.use(Vuex);
+import { createStore } from 'vuex'
 
 import { playMode } from '../utils/config';
 
-const store = new Vuex.Store({
+const store = createStore({
   state: {
     axiosList: {},
     singer: {},
@@ -21,12 +19,12 @@ const store = new Vuex.Store({
     playHistory: JSON.parse(localStorage.getItem('playHistory')) || [],
     visible: false,
     currentTime: 0,
-    currentLyric: {},
+    currentLyric: [],
     lyricKeys: [],
     duration: 0,
     LyricScrollY: 0,
     debounce: false,
-    activeLyricIndex: '0',
+    activeLyricIndex: 0,
 
     lockScroll: 0,
   },
@@ -50,7 +48,8 @@ const store = new Vuex.Store({
       return state.activeLyricIndex;
     },
     lyricKeys(state) {
-      return state.lyricKeys;
+      const times = (state.currentLyric || []).map(item => +item.time)
+      return times;
     },
     currentLyric(state) {
       return state.currentLyric;

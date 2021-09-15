@@ -1,16 +1,17 @@
 <template>
   <div class="rank">
-    <BaseBack title="排行榜" />
+    <base-back title="排行榜" :isFixed="true" />
     <div class="rank-wrap">
-      <div class="rank-title"><strong>官方榜</strong></div>
+      <div class="rank-title">
+        <strong>官方榜</strong>
+      </div>
       <ul class="rank-items">
         <router-link
+          v-for="(item, index) in ranks"
           :to="`/playlist/${item.id}?type=1`"
           tag="li"
           class="rank-item"
-          v-for="(item, index) in rank"
           :key="index"
-          @click="getRankSongs(item)"
         >
           <div class="rank-item-right">
             <p
@@ -18,12 +19,13 @@
               v-for="(track, index) in item.tracks"
               :key="track.first"
             >
-              <b>{{ index + 1 }}. </b> {{ track.first }}
-              <span class="rank-item-name"> - {{ track.second }}</span>
+              <b>{{ index + 1 }}.</b>
+              {{ track.first }}
+              <span class="rank-item-name">- {{ track.second }}</span>
             </p>
           </div>
           <div class="rank-item-left">
-            <img v-lazy="item.coverImgUrl" :alt="item.name" class="rank-img" />
+            <img :src="item.coverImgUrl" :alt="item.name" class="rank-img" />
           </div>
         </router-link>
       </ul>
@@ -36,17 +38,18 @@
         </div>
         <div class="others-items">
           <router-link
-            :to="`/playlist/${item1.id}?type=1`"
             v-for="item1 in item.list"
             :key="item1.id"
+            :to="`/playlist/${item1.id}?type=1`"
             class="others-item ellipsis"
-            @click="getRankSongs(item1)"
           >
-            <img v-lazy="item1.coverImgUrl" alt="" class="others-img" />
+            <img :src="item1.coverImgUrl" alt class="others-img" />
             <p class="others-name ellipsis">{{ item1.name }}</p>
-            <span class="others-updateFrequency ellipsis">{{
-              item1.updateFrequency
-            }}</span>
+            <span class="others-updateFrequency ellipsis">
+              {{
+                item1.updateFrequency
+              }}
+            </span>
           </router-link>
         </div>
       </div>
@@ -54,50 +57,59 @@
   </div>
 </template>
 
-<script>
-import { mapMutations } from 'vuex';
-import { rankTopList } from '@/api/rank';
-export default {
-  name: 'Rank',
-  data() {
+<script lang="ts">
+
+interface Track {
+  first: string,
+  second: string,
+  updateFrequency: string,
+  coverImgUrl: string
+  name: string,
+  id: number
+}
+
+interface Rank {
+  id: number,
+  coverImgUrl: string,
+  name: string,
+  tracks: Array<Pick<Track, 'first' | 'second'>>,
+};
+
+interface Other {
+  name: string,
+  id: number,
+  list: Array<Omit<Track, 'first' | 'second'>>,
+}
+
+import { defineComponent, onMounted, ref } from "vue";
+import { fetchRankList } from "@/api/rank";
+export default defineComponent({
+  name: "Rank",
+  setup() {
+    const others = ref<Other[]>([]);
+    const ranks = ref<Rank[]>([]);
+    const getList = async () => {
+      const { list } = await fetchRankList();
+      const rank = list.filter(
+        <T extends "length">({ tracks }: { tracks: T }) => tracks?.length
+      );
+      ranks.value = rank || [];
+      const index = list.findIndex(
+        <T extends "length">({ tracks }: { tracks: T }) =>
+          tracks && !tracks.length
+      );
+      others.value.push({ id: 1, name: "曲风榜", list: list.splice(index, 7) });
+      others.value.push({ id: 2, name: "全球榜", list: list.splice(index, 9) });
+      others.value.push({ id: 3, name: "精选榜", list: list.splice(index, 6) });
+      others.value.push({ id: 4, name: "特色榜", list: list.splice(index) });
+    };
+    onMounted(getList);
     return {
-      rank: [],
-      others: [],
+      others,
+      ranks,
     };
   },
-  created() {
-    this.rankTopList();
-  },
-  methods: {
-    async rankTopList() {
-      const { list } = await rankTopList();
-      const rank = list.filter((item) => item.tracks && item.tracks.length);
-      this.rank = rank || [];
-
-      const index = list.findIndex(
-        (item) => item.tracks && !item.tracks.length
-      );
-      const other = [];
-      other.push({ name: '曲风榜', list: list.splice(index, 7) });
-      other.push({ name: '全球榜', list: list.splice(index, 9) });
-      other.push({ name: '精选榜', list: list.splice(index, 6) });
-      other.push({ name: '特色榜', list: list.splice(index) });
-      this.others = other;
-    },
-    getRankSongs(item) {
-      console.log();
-      this.setSinger({
-        name: item.name,
-        id: item.id,
-        singerPic: item.coverImgUrl,
-      });
-      this.$router.push(
-        `/details/${item.id}?singerPic=${item.coverImgUrl}&name=${item.name}&componentName=RankDetail`
-      );
-    },
-    ...mapMutations(['setSinger']),
-  },
-};
+});
 </script>
 <style scoped lang="less">
 .rank {
@@ -174,7 +186,7 @@ export default {
     padding: 0px 6px;
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.3);
-    font-size: 12px
+    font-size: 12px;
   }
   &-name {
     text-align: center;

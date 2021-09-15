@@ -7,7 +7,7 @@ export function rankSongs(id) {
   });
 }
 
-export function rankTopList() {
+export function fetchRankList() {
   return service({
     url: `/toplist/detail`,
     method: 'get',
