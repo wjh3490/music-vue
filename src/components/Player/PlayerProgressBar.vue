@@ -12,7 +12,7 @@
             class="ball"
             ref="progressBall"
             @touchstart.stop="handleTouchStart"
-            @touchmove.stop="handleTouchMove"
+            @touchmove.stop.passive="handleTouchMove"
             @touchend.stop="handleTouchEnd"
           >
             <div class="tip" v-show="visible">{{ tips }}</div>
@@ -32,10 +32,8 @@ export default defineComponent({
   name: 'PlayerProgressBar',
   setup() {
     const store = useStore();
-    const progressRef = ref<HTMLElement>(null);
-    const progressBarRef = ref<HTMLElement>(null);
-
-
+    const progressRef = ref<any>(null);
+    const progressBarRef = ref<any>(null);
     const isMove = ref(false);
     const visible = ref(false);
     const tips = ref(0);

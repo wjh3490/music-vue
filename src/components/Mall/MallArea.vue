@@ -1,13 +1,13 @@
 <template >
   <div class="mall-area-wrap">
-    <div class="mall-area-item" v-for="item in list" :key="item.albumId">
+    <router-link to class="mall-area-item" v-for="item in list" :key="item.albumId">
       <figure class="mall-area-figure mall-area-dystyle" :style="style">
-        <img v-lazy="item.coverUrl" class="mall-area-pic"  alt />
+        <img v-lazy="item.coverUrl" class="mall-area-pic" alt />
       </figure>
       <p class="mall-area-name ellipsis">{{ item.albumName }}</p>
-      <p class="mall-area-artist ellipsis">{{ item.artistName }}</p>
-      <p class="mall-area-price ellipsis">¥ {{ item.price }}</p>
-    </div>
+      <p v-if="item.artistName" class="mall-area-artist ellipsis">{{ item.artistName }}</p>
+      <p v-if="item.price" class="mall-area-price ellipsis">¥ {{ item.price }}</p>
+    </router-link>
   </div>
 </template>
 <script lang="ts">
@@ -23,11 +23,15 @@ export default defineComponent({
     style: {
       type: Object as PropType<StrKeys<string>>,
       default: () => ({
-        width: '9.5rem',
-        height: '9.5rem',
-        paddingRight: '1.5rem',
+        width: '11rem',
+        height: '11rem',
+        // paddingRight: '1.5rem',
       })
     },
+    to: {
+      type: [String, Object],
+      default: '',
+    }
   },
 });
 </script>
@@ -39,6 +43,7 @@ export default defineComponent({
     justify-content: space-between;
     flex-wrap: wrap;
   }
+
   &-figure {
     background: url("../../assets/imgs/type_cd.png") no-repeat;
     background-position: right center;

@@ -37,7 +37,7 @@
 import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';
-import { vGetSinger } from '@/api/singer';
+import { fetchSinger } from '@/api/singer';
 import { formatIndex, formatRank } from '@/utils';
 
 interface Singer {
@@ -47,6 +47,7 @@ interface Singer {
   name: string,
   img1v1Url: string,
 }
+
 export default defineComponent({
   name: 'SingerList',
   setup(_, { expose }) {
@@ -58,8 +59,8 @@ export default defineComponent({
     const getSingers = async (type: number) => {
       const {
         list: { artists },
-      } = await vGetSinger(type);
-      singerList.value = Object.freeze(artists);
+      } = await fetchSinger(type);
+      singerList.value = artists;
       flag.value = false;
     }
     const getSingerDetail = (singer: any) => {

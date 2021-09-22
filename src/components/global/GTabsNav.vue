@@ -1,27 +1,27 @@
 <template>
-  <nav class="base-tabs-nav" v-if="navList.length > 0" :class="{ fixed: isFixed }" :style="style">
-    <div class="base-tabs-hidden" ref="scrollbarRef">
+  <nav class="tabs-nav" v-if="navList.length > 0" :class="{ fixed: isFixed }" :style="style">
+    <div class="tabs-hidden" ref="scrollbarRef">
       <ul
-        class="base-tabs-nav-wrap"
+        class="tabs-nav-wrap"
         ref="scrollItemRef"
-        :class="{ 'base-tabs-nav-normal': navList.length <= 4 }"
+        :class="{ 'tabs-nav-normal': navList.length <= 4 }"
       >
         <li
           v-for="(item, index) in navList"
           :key="item[valueKey]"
           :class="{ active: active == index }"
           :ref="getRef"
-          class="base-tabs-nav-item"
+          class="tabs-nav-item"
           @click="$emit('tabs', index, item[valueKey])"
         >
           <span>{{ item.name }}</span>
           <slot>
-            <span class="base-tabs-nav-icon" v-if="count">{{ count[item.icon] }}</span>
+            <span class="tabs-nav-icon" v-if="count">{{ count[item.icon] }}</span>
           </slot>
         </li>
       </ul>
       <div
-        class="base-tabs-nav-line"
+        class="tabs-nav-line"
         :style="{
           ...transformStyle,
           ...lineStyle
@@ -37,7 +37,7 @@ import { scrollToEase } from '@/utils';
 import { StrKeys } from '@/types'
 
 export default defineComponent({
-  name: 'BaseTabs',
+  name: 'GTabsNav',
   props: {
     valueKey: {
       type: String,
@@ -81,10 +81,12 @@ export default defineComponent({
     }
     const init = (time = 0.3) => {
       const { offsetLeft, offsetWidth } = lisRef.value[props.active];
-      const left = offsetLeft + offsetWidth / 2
+      const left = offsetLeft + offsetWidth / 2;
       transformStyle.value = {
-        transform: `translate3d(calc(${left}px - 1.5rem),0,0)`,
-        transitionDuration: `${time}s`,
+        // transform: `translate3d(calc(${left}px - 1.5rem),0,0)`,
+        // transitionDuration: `${time}s`,
+        transform: `translate3d(${left}px,0px,0px) translate3d(-50%,0px,0px)`,
+        transitionDuration: `${time}s`
       };
     }
     let timeId: number = -1;
@@ -139,7 +141,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.base-tabs {
+.tabs {
   &-hidden {
     position: relative;
     overflow-x: auto;
@@ -148,7 +150,7 @@ export default defineComponent({
   }
   &-nav {
     width: 100%;
-    font-size: 16px;
+    font-size: 1.6rem;
     background-color: #fff;
     z-index: 10;
     overflow: hidden;
@@ -160,7 +162,7 @@ export default defineComponent({
       display: inline-block;
       white-space: nowrap;
       word-break: break-all;
-      .base-tabs-nav-item {
+      .tabs-nav-item {
         display: inline-block;
         padding: 0 1.5rem;
         &.active {
@@ -172,7 +174,7 @@ export default defineComponent({
     &-normal {
       display: flex;
       align-items: center;
-      .base-tabs-nav-item {
+      .tabs-nav-item {
         flex: 1;
         text-align: center;
         &.active {

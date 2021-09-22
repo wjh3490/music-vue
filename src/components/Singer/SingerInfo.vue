@@ -3,31 +3,39 @@
     <div class="singer-info-wrap">
       <div class="singer-info-name">{{ info.name }}</div>
       <div class="singer-info-identify" v-if="info.identifyTag">
-        <img :src="info?.identify?.imageUrl" alt="" class="singer-info-figure" />
+        <img :src="info?.identify?.imageUrl" alt class="singer-info-figure" />
         <span class="singer-info-identifyTag">{{ info.identifyTag }}</span>
       </div>
-      <p class="singer-info-desc" v-if="info.identify.imageDesc">
-        {{ info.identify.imageDesc }}
-      </p>
+      <p class="singer-info-desc" v-if="info.identify.imageDesc">{{ info.identify.imageDesc }}</p>
       <div class="singer-info-action">
-        <span class="singer-info-btn singer-info-follow"> + 关注</span>
-        <span class="singer-info-btn singer-info-twitter iconfont icon-duanxin">
-          私信</span
-        >
+        <span class="singer-info-btn singer-info-follow">+ 关注</span>
+        <span class="singer-info-btn singer-info-twitter iconfont icon-duanxin">私信</span>
       </div>
     </div>
-    <slot />
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent, PropType } from 'vue';
+
+interface Info {
+  cover: string,
+  albumSize: string | number,
+  identifyTag: string,
+  musicSize: string | number,
+  mvSize: string | number,
+  name: string
+  identify: { imageDesc: string, imageUrl: string },
+}
+
+export default defineComponent({
   name: 'SingerInfo',
   props: {
     info: {
-      type: Object,
+      type: Object as PropType<Info>,
+      default: () => { },
     },
   },
-};
+});
 </script>
 <style lang="less" scoped>
 .singer-info {
@@ -40,7 +48,7 @@ export default {
   background-size: 100% 100%;
   border-radius: 0 0 30px 30px;
   &::after {
-    content: ' ';
+    content: " ";
     position: absolute;
     left: 0;
     right: 0;

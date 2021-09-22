@@ -2,15 +2,15 @@
     <div class="new-songs">
         <div class="new-songs-bg" :style="{ backgroundPositionY: index * 25 + '%' }">
             <div class="new-songs-desc">
-                <p class="new-songs-cn">{{ data?.name || '' }}</p>
-                <p class="new-songs-en">{{ data?.en || '' }} Music</p>
+                <p class="new-songs-cn">{{ data.name || '' }}</p>
+                <p class="new-songs-en">{{ data.en || '' }} Music</p>
             </div>
             <div class="new-songs-all">
                 <b>播放全部</b>
-                <span v-if="!!songs.length">({{songs.length}}首)</span>
+                <span v-if="!!songs.length">({{ songs.length }}首)</span>
             </div>
         </div>
-        <base-song-list :songs="songs" :visible="true" />
+        <song-list :songs="songs" :visible="true" />
     </div>
 </template>
 
@@ -19,8 +19,11 @@ import { defineComponent, ref } from 'vue';
 import { fetchTopSong } from '@/api/songs';
 import { arrayToString } from '@/utils';
 import type { Song } from '@/types';
+import SongList from '@/components/common/SongList.vue'
+
 export default defineComponent({
     name: 'SongsNewSongList',
+    components: { SongList },
     props: {
         index: { type: Number, default: 1, },
         data: { type: Object, default: () => { } }

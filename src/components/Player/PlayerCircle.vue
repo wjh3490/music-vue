@@ -1,11 +1,11 @@
 <template>
   <div class="circle">
     <div class="bgc">
-      <img v-lazy="currrenSong.picUrl" class="bgc-img" alt />
+      <img :src="currentSong.picUrl" class="bgc-img" alt />
     </div>
     <div class="song-detail">
-      <p class="song-singer">{{ currrenSong.name }}</p>
-      <p class="song-name">{{ currrenSong.artists }}</p>
+      <p class="song-singer">{{ currentSong.name }}</p>
+      <p class="song-name">{{ currentSong.artists }}</p>
       <div class="currrent_lyric">
         {{
           currentLyric
@@ -25,11 +25,11 @@ export default defineComponent({
   name: 'PlayerCircle',
   setup() {
     const store = useStore()
-    const currrenSong = computed(() => store.getters.currrenSong);
+    const currentSong = computed(() => store.getters.currentSong);
     const currentLyric = computed(() => store.state.currentLyric[store.state.LyricScrollY - 1]);
 
     return {
-      currrenSong,
+      currentSong,
       currentLyric,
     }
   },

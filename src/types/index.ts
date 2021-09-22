@@ -9,7 +9,7 @@ export interface Song {
     id: number,
     name: string,
     album: string,
-    alia?: [],
+    alia?: '',
     artists: string,
     publishTime?: number,
     picUrl: string,

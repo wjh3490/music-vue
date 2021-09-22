@@ -1,5 +1,5 @@
 <template>
-  <div class="singer-album" :class="active == 1 ? 'auto-height' : 'fixed-height'">
+  <div class="singer-album">
     <ul class="singer-album-wrap">
       <router-link
         v-for="item in albums"
@@ -62,10 +62,6 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .singer-album {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  overflow-x: hidden;
-  padding-bottom: 7rem;
   &-item {
     display: flex;
     margin-bottom: 1rem;
@@ -99,11 +95,5 @@ export default defineComponent({
   &-size {
     margin-left:1rem;
   }
-}
-.auto-height {
-  height: auto;
-}
-.fixed-height {
-  height: calc(100vh - 5rem);
 }
 </style>

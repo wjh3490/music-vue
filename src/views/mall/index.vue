@@ -1,26 +1,14 @@
 <template>
   <div class="mall padding60 paddingtop60">
-    <base-back :isFixed="true" title="数字专辑" />
-    <nav class="mall-nav">
-      <router-link :to="{ name: 'MallShop' }" class="mall-nav-item">
-        <span class="iconfont icon-icon mall-nav-icon"></span>
-        <p class="mall-nav-title">畅销榜</p>
-      </router-link>
-      <router-link :to="{ name: 'MallCategory' }" class="mall-nav-item">
-        <span class="iconfont icon-category1 mall-nav-icon"></span>
-        <p class="mall-nav-title">语种风格馆</p>
-      </router-link>
-      <div class="mall-nav-item">
-        <span class="iconfont icon-yigoumai mall-nav-icon"></span>
-        <p class="mall-nav-title">已购</p>
-      </div>
-    </nav>
-    <base-card title="最新上架">
-      <mall-area :list="news" />
-    </base-card>
+    <g-head-nav :isFixed="true" title="数字专辑" />
+    <navigation :navList="mallNavOptions" type="primary" />
 
-    <base-card v-for="num in 2" :title="num === 1 ? '数字专辑榜' : '数字单曲榜'" :key="'t' + num">
-      <base-swiper-items
+    <g-card title="最新上架">
+      <mall-area :list="news" />
+    </g-card>
+
+    <g-card v-for="num in 2" :title="num === 1 ? '数字专辑榜' : '数字单曲榜'" :key="'t' + num">
+      <g-swiper-items
         v-slot="{ data, index }"
         :list="num === 1 ? albums : songs"
         :options="{
@@ -30,7 +18,7 @@
         }"
       >
         <mall-album :list="data" :num="index" />
-      </base-swiper-items>
+      </g-swiper-items>
       <template #right>
         <div class="mall-rank">
           <template v-for="(item, index) in mallOptions" :key="'s'+item.time">
@@ -42,11 +30,11 @@
           </template>
         </div>
       </template>
-    </base-card>
+    </g-card>
 
-    <base-card v-for="item in list" :title="item.title" :key="item.title">
+    <g-card v-for="item in list" :title="item.title" :key="item.title">
       <mall-area :list="item.albums" />
-    </base-card>
+    </g-card>
   </div>
 </template>
 <script lang="ts">
@@ -58,7 +46,8 @@ import {
 } from '@/api/album';
 import MallAlbum from '@/components/Mall/MallAlbum.vue';
 import MallArea from '@/components/Mall/MallArea.vue';
-import { mallOptions, nameMaps, splitList } from '@/utils'
+import Navigation from '@/components/common/Navigation.vue';
+import { mallNavOptions, mallOptions, nameMaps, splitList } from '@/utils'
 
 interface Mall {
   title: string,
@@ -67,7 +56,7 @@ interface Mall {
 
 export default defineComponent({
   name: 'Mall',
-  components: { MallAlbum, MallArea },
+  components: { Navigation, MallAlbum, MallArea },
   setup() {
     const albumActive = ref('daily');
     const songActive = ref('daily');
@@ -77,7 +66,7 @@ export default defineComponent({
       songs: [],
       news: [],
     });
-    const getAlbumsList = async (type = 'daily', albumType = 0) => {
+    const fetchAlbumsList = async (type = 'daily', albumType = 0) => {
       const { products } = await fetchAlbumSongsaleboard({
         type,
         albumType,
@@ -93,7 +82,7 @@ export default defineComponent({
       });
       state.songs = splitList(products.slice(0, 12), 4);
     }
-    const getAlbumStyle = async () => {
+    const fetchAlbumStyle = async () => {
       const apis = [
         fetchAlbumListStyle({ area: 'Z_H', limit: 3 }),
         fetchAlbumListStyle({ area: 'E_A', limit: 3 }),
@@ -112,7 +101,7 @@ export default defineComponent({
     const handleChange = (type: string, albumType: number) => {
       if (albumType === 1) {
         if (albumActive.value === type) return;
-        getAlbumsList(type, albumType - 1);
+        fetchAlbumsList(type, albumType - 1);
         albumActive.value = type;
       } else {
         if (songActive.value === type) return;
@@ -121,9 +110,9 @@ export default defineComponent({
       }
     }
     onMounted(() => {
-      getAlbumsList();
+      fetchAlbumsList();
       getSongsList();
-      getAlbumStyle();
+      fetchAlbumStyle();
       getNewAblums()
     })
     return {
@@ -131,6 +120,7 @@ export default defineComponent({
       songActive,
       albumActive,
       mallOptions,
+      mallNavOptions,
       ...toRefs(state),
       handleChange
     }

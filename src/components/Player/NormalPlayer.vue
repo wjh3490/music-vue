@@ -2,7 +2,7 @@
   <div :style="{ backgroundImage: `url(${backgroundImage})` }" class="normal-player">
     <div class="normal-player-main">
       <player-tabs :index="active" @slide="handleSlide" />
-      <base-swiper-items
+      <g-swiper-items
         v-slot="{ data }"
         :list="playerOptions"
         :options="playerSwiperOptions"
@@ -10,8 +10,8 @@
         @slideChange="onSlideChange"
         @swiper="onSwiper"
       >
-        <component :is="data.component" />
-      </base-swiper-items>
+        <component :is="data.component" :index="active"/>
+      </g-swiper-items>
     </div>
   </div>
 </template>
@@ -43,9 +43,8 @@ export default defineComponent({
       onSlideChange,
     } = userSwiper();
 
-
     let img = new Image();
-    watch(() => store.getters.currrenSong, (val) => {
+    watch(() => store.getters.currentSong, (val) => {
       img.src = val.picUrl;
       img.onload = () => {
         backgroundImage.value = val.picUrl;

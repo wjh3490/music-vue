@@ -27,11 +27,11 @@
             >
               <div
                 class="playsong-desc-wrap  ellipsis fl"
-                :class="{ 'playsong-active': item.id == currrenSong.id }"
+                :class="{ 'playsong-active': item.id == currentSong.id }"
               >
                 <span
                   class="playsong-desc-name"
-                  :class="{ 'playsong-active': item.id == currrenSong.id }"
+                  :class="{ 'playsong-active': item.id == currentSong.id }"
                   >{{ item.name }}</span
                 >
 
@@ -44,7 +44,7 @@
               <div class="fl playsong-byte">
                 <div
                   class="audio-icon unselectable "
-                  v-if="item.id == currrenSong.id"
+                  v-if="item.id == currentSong.id"
                 >
                   <template v-for="item in audioIcon">
                     <div
@@ -102,7 +102,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['playing', 'playList', 'currrenSong', 'visible', 'mode']),
+    ...mapGetters(['playing', 'playList', 'currentSong', 'visible', 'mode']),
   },
   mounted() {
     this.scrollBar = this.$refs.scrollBar;
@@ -112,7 +112,7 @@ export default {
     getActiveItemDistancce() {
       this.$nextTick(() => {
         let index = this.playList.findIndex(
-          (item) => item.id === this.currrenSong.id
+          (item) => item.id === this.currentSong.id
         );
 
         let to =

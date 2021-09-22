@@ -1,6 +1,6 @@
 <template>
   <div class="songs-main paddingtop50">
-    <base-back :isFixed="true">
+    <g-head-nav :isFixed="true">
       <nav class="songs-nav-wrap">
         <span
           class="songs-nav-item"
@@ -13,7 +13,7 @@
           @click="activeIndex = 2"
         >新碟</span>
       </nav>
-    </base-back>
+    </g-head-nav>
     <songs-new-song v-show="+activeIndex === 1" />
     <songs-new-album v-show="+activeIndex === 2" />
   </div>

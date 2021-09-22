@@ -1,50 +1,48 @@
 <template>
-  <div class="singer-about" :class="active == 3 ? 'auto-height' : 'fixed-height'">
-    <section class="singer-about-info" v-if="info.briefDesc">
-      <h2>歌手资料</h2>
-      <div class="singer-about-briefDesc">{{ info.briefDesc }}</div>
-    </section>
-    <section class="singer-about-represent" v-if="info.topicData.length">
-      <h2>代表作品</h2>
-      <div class="singer-about-represent-item" v-for="item in info.topicData" :key="item.id">
-        <img v-lazy="item.coverUrl" alt class="singer-about-represent-left" />
-        <div class="singer-about-represent-right">
-          <p class="singer-about-represent-mainTitle">{{ item.mainTitle }}</p>
-          <p class="singer-about-represent-tag ellipsis">标签: {{ item.tags.join(',') }}</p>
-          <span class="singer-about-represent-read">
-            {{ item.categoryName || '' }}, 阅读
-            {{ filterNum(item.readCount) }}
-          </span>
-        </div>
+  <section class="singer-about-info" v-if="info.briefDesc">
+    <h2>歌手资料</h2>
+    <div class="singer-about-briefDesc">{{ info.briefDesc }}</div>
+  </section>
+  <section class="singer-about-represent" v-if="info.topicData.length">
+    <h2>代表作品</h2>
+    <div v-for="item in info.topicData" :key="item.id" class="singer-about-represent-item">
+      <img v-lazy="item.coverUrl" alt class="singer-about-represent-left" />
+      <div class="singer-about-represent-right">
+        <p class="singer-about-represent-mainTitle">{{ item.mainTitle }}</p>
+        <p class="singer-about-represent-tag ellipsis">标签: {{ item.tags.join(',') }}</p>
+        <span class="singer-about-represent-read">
+          {{ item.categoryName || '' }}, 阅读
+          {{ filterNum(item.readCount) }}
+        </span>
       </div>
-    </section>
-    <section
-      class="singer-about-samilar"
-      @touchmove.stop
-      @touchstart.stop
-      @scroll.stop
-      v-if="simiArtists.length"
-    >
-      <h2>相似歌手</h2>
-      <div class="singer-about-samilar-main">
-        <div class="singer-about-samilar-scroller">
-          <ul class="singer-about-samilar-wrap">
-            <li v-for="artist in simiArtists" :key="artist.id" class="singer-about-samilar-item">
-              <router-link :to="`/singer/${artist.id}`">
-                <img v-lazy="artist.img1v1Url" alt class="singer-about-samilar-figure" />
-                <span class="singer-about-samilar-name">{{ artist.name }}</span>
-              </router-link>
-            </li>
-          </ul>
-        </div>
+    </div>
+  </section>
+  <section
+    v-if="simiArtists.length"
+    class="singer-about-samilar"
+    @touchmove.stop
+    @touchstart.stop
+    @scroll.stop
+  >
+    <h2>相似歌手</h2>
+    <div class="singer-about-samilar-main">
+      <div class="singer-about-samilar-scroller">
+        <ul class="singer-about-samilar-wrap">
+          <li v-for="artist in simiArtists" :key="artist.id" class="singer-about-samilar-item">
+            <router-link :to="{ name: 'SingerDetail', params: { id: artist.id } }">
+              <img v-lazy="artist.img1v1Url" alt class="singer-about-samilar-figure" />
+              <span class="singer-about-samilar-name">{{ artist.name }}</span>
+            </router-link>
+          </li>
+        </ul>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 <script lang="ts">
 import { defineComponent, shallowReactive, toRefs, ref } from 'vue';
 import { fetchArtistDesc, fetchArtistSimi } from '@/api/singer';
-import { useRoute , RouteParams} from 'vue-router';
+import { useRoute, RouteParams } from 'vue-router';
 import { filterNum } from '@/utils';
 interface Artists {
   coverUrl: string,
@@ -85,7 +83,7 @@ export default defineComponent({
         briefDesc,
       }
     }
-    const getSimiSinger = async (id:string) => {
+    const getSimiSinger = async (id: string) => {
       const { artists, } = await fetchArtistSimi(id);
       state.simiArtists = artists;
     }
@@ -108,9 +106,6 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .singer-about {
-  padding: 0 1rem;
-  margin-top: 2rem;
-  padding-bottom: 70px;
   &-briefDesc {
     color: #a59797f5;
     margin-top: 1rem;
@@ -180,11 +175,5 @@ export default defineComponent({
       font-size: 13px;
     }
   }
-}
-.auto-height {
-  height: auto;
-}
-.fixed-height {
-  height: calc(100vh - 5rem);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="paddingtop60 padding60 mall-category">
-    <base-back :isFixed="true" title="语种风格馆" />
-    <base-tabs
+    <g-head-nav :isFixed="true" title="语种风格馆" />
+    <g-tabs-nav
       :navList="categoryOptions"
       :active="active"
       :style="{ top: '5rem' }"

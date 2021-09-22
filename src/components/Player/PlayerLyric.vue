@@ -2,9 +2,9 @@
   <div class="lyric">
     <div class="lyric-wrap">
       <p class="lyric-singer">
-        <!-- <marquee behavior="" direction="">{{ currrenSong.name }}</marquee> -->
+        <!-- <marquee behavior="" direction="">{{ currentSong.name }}</marquee> -->
       </p>
-      <p class="lyric-name">{{ currrenSong.artists }}</p>
+      <p class="lyric-name">{{ currentSong.artists }}</p>
     </div>
     <div class="lyric-item" ref="lyricRef">
       <div class="empty1"></div>
@@ -35,10 +35,10 @@ export default defineComponent({
   name: 'PlayerLyric',
   setup() {
     const store = useStore()
-    const lyricRef = ref<HTMLDivElement>(null);
+    const lyricRef = ref<any>(null);
     const activeLyricRef = ref([]);
     const currentLyric = computed(() => store.state.currentLyric);
-    const currrenSong = computed(() => store.getters.currrenSong);
+    const currentSong = computed(() => store.getters.currentSong);
     const activeLyricIndex = computed(() => store.state.activeLyricIndex);
     const playing = computed(() => store.state.playing);
     const lyricKeys = computed(() => store.getters.lyricKeys);
@@ -78,7 +78,7 @@ export default defineComponent({
       playing,
       lyricRef,
       lyricKeys,
-      currrenSong,
+      currentSong,
       currentLyric,
       activeLyricRef,
       activeLyricIndex,
@@ -89,7 +89,7 @@ export default defineComponent({
 </script>
 <style scoped lang="less">
 .lyric-wrap {
-  padding: 0 50px;
+  padding: 0 5rem;
   color: #fff;
   .lyric-singer {
     font-size: 24px;
@@ -99,13 +99,13 @@ export default defineComponent({
   .lyric-name {
     color: rgba(225, 225, 225, 0.8);
     font-size: 16px;
-    margin: 4px 0;
+    margin: 0.4rem 0;
   }
 }
 .lyric {
   width: 100%;
-  height: calc(100% - 26px);
-  margin-top: 26px;
+  height: calc(100% - 2.6rem);
+  margin-top: 2.6rem;
   width: 100%;
   position: relative;
 
@@ -115,7 +115,7 @@ export default defineComponent({
     margin-top: 16px;
     overflow-x: hidden;
     overflow-y: scroll;
-    padding-right: 7px;
+    padding-right: 0.7rem;
     box-sizing: content-box;
     transition: opacity 1s;
     -webkit-overflow-scrolling: touch;
@@ -128,15 +128,15 @@ export default defineComponent({
       rgba(255, 255, 255, 0.6) 85%,
       rgba(255, 255, 255, 0) 100%
     );
-    min-height: 250px;
+    min-height: 25rem;
     .empty {
-      height: 80px;
+      height: 8rem;
     }
     .empty1 {
-      height: 40px;
+      height: 4rem;
     }
     p {
-      padding: 4px 23px;
+      padding: 0.4rem 2.3rem;
       transition: font-size 0.3s;
       &.active-lyric {
         color: rgba(238, 238, 113, 0.75);
@@ -149,23 +149,18 @@ export default defineComponent({
       font-size: 16px;
       text-align: left;
       color: rgba(225, 225, 225, 0.8);
-      padding-bottom: 8px;
+      padding-bottom: 0.8rem;
     }
   }
 
   .no-lyric {
-    line-height: 40px;
+    line-height: 4rem;
     font-size: 16px;
     color: #fff;
     text-align: center;
   }
 }
-.rotateY {
-  transform: rotateY(180deg);
-}
-.visible {
-  opacity: 0;
-}
+
 .pause {
   font-size: 40px;
   border-radius: 50%;
@@ -175,7 +170,7 @@ export default defineComponent({
 }
 .pause-wrap {
   position: absolute;
-  bottom: 20px;
+  bottom: 2rem;
   right: 0;
   text-align: right;
 }

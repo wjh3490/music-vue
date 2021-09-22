@@ -1,6 +1,6 @@
 import service from '../request/service';
 
-export function vGetSinger(type) {
+export function fetchSinger(type) {
   return service({
     url: `/toplist/artist?type=${type}`,
     method: 'get',
@@ -51,13 +51,13 @@ export function fetchArtistSimi(id, limit) {
     method: 'get',
   });
 }
-export function querySongSimi(id, limit) {
+export function fetchSongSimi(id, limit) {
   return service({
     url: `/simi/song?id=${id}&limit=${limit}`,
     method: 'get',
   });
 } 
-export function queryPlaylistSimi(id, limit) {
+export function fetchPlaylistSimi(id, limit) {
   return service({
     url: `/simi/playlist?id=${id}&limit=${limit}`,
     method: 'get',

@@ -1,25 +1,24 @@
 <template>
-  <div class="singer-songs" :class="active == 0 ? 'auto-height' : 'fixed-height'">
-    <base-song-list :songs="songList" @play="handlePlay" />
-  </div>
+  <song-list :songs="songList" />
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import isEqual from 'lodash.isequal'
 import { fetchArtistTop } from '@/api/singer';
 import { splitString, arrayToString } from '@/utils';
-import type { Song } from '@/types'
+import type { Song } from '@/types';
+import SongList from '@/components/common/SongList.vue'
 export default defineComponent({
   name: 'SingerHotSong',
+  components: { SongList },
   props: {
     active: {
       type: [String, Number],
       default: '0',
     },
   },
-  
+
   setup(_, { expose }) {
     const store = useStore();
     const route = useRoute();
@@ -49,17 +48,10 @@ export default defineComponent({
       }
       flag.value = false;
     }
-    const handlePlay = (index) => {
-      if (!isEqual(songList.value, store.state.playList)) {
-        store.commit('setPlay', songList.value)
-        store.commit('setSequenceList', songList.value)
-      }
-      store.commit('setCurrrentIndex', index)
-    }
+
     expose({ getDetail, flag });
     return {
       songList,
-      handlePlay,
     }
   },
 
@@ -67,13 +59,4 @@ export default defineComponent({
 </script>
 
 <style lang="less" scoped>
-.singer-songs {
-  overflow-x: hidden;
-}
-.auto-height {
-  height: auto;
-}
-.fixed-height {
-  height: calc(100vh - 50px);
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <base-swiper-items
+  <g-swiper-items
     v-slot="{ data, index }"
     :list="recommendSongs"
     :options="playListSwiperOption"
@@ -11,7 +11,7 @@
       <span class="playlist-recommend-icon iconfont icon-bofang" @click="handlePlay(data, index)"></span>
       <div class="playlist-recommend-mask" v-show="swiper?.realIndex ?? 0 != index"></div>
     </div>
-  </base-swiper-items>
+  </g-swiper-items>
   <p class="playlist-recommend-name">
     <strong>{{ recommendSongs[swiper?.realIndex ?? 0] && recommendSongs[swiper?.realIndex ?? 0]['name'] }}</strong>
   </p>
@@ -32,7 +32,7 @@ export default defineComponent({
       setSequenceList,
       playList,
       playing,
-      currrenSong,
+      currentSong,
     } = useStore();
     const swiper = ref<any>(null);
     const onSwiper = (sw: Element) => {
@@ -43,7 +43,7 @@ export default defineComponent({
     const handlePlay = (item) => {
       let index = playList.findIndex((item1) => item1.id === item.id);
       if (index >= 0) {
-        if (item.id == currrenSong.id) {
+        if (item.id == currentSong.id) {
           setPlaying(!playing);
           playing ? audio.play() : audio.pause();
         } else {
@@ -76,7 +76,7 @@ export default defineComponent({
     }
     const palyStatus = computed(() => {
       // return function (data) {
-      //   if (currrenSong.id == data.id) {
+      //   if (currentSong.id == data.id) {
       //     return playing ? 'icon-pause-full' : 'icon-bofang';
       //   } else {
       return 'icon-bofang';

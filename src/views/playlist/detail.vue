@@ -37,13 +37,13 @@ export default defineComponent({
     ...mapGetters(['playList']),
   },
   created() {
-    this.getPlaylist();
+    this.fetchPlaylist();
   },
   mounted() {
     document.addEventListener('scroll', this.handldeScroll);
   },
   methods: {
-    async getPlaylist() {
+    async fetchPlaylist() {
       const { id } = this.$route.params;
       const {
         playlist: {

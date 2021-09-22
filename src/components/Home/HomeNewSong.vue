@@ -39,7 +39,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const status = computed(() => (id: number) => {
-      if (store.getters.currrenSong.id == id) {
+      if (store.getters.currentSong.id == id) {
         return store.state.playing ? 'icon-pause-full' : 'icon-bofang31';
       } else {
         return 'icon-bofang31';

@@ -1,6 +1,6 @@
 <template>
   <div class="paddingtop90">
-    <base-tabs
+    <g-tabs-nav
       :navList="topSongOptions"
       :active="active"
       :isFixed="true"
@@ -10,7 +10,7 @@
       ref="tabRef"
       @tabs="handleSlide"
     />
-    <base-swiper-items
+    <g-swiper-items
       v-slot="{ index, data }"
       :index="index"
       :list="topSongOptions"
@@ -19,15 +19,15 @@
       @swiper="onSwiper"
     >
       <songs-new-song-list :ref="getRefs" :data="data" :index="index + 1" />
-    </base-swiper-items>
+    </g-swiper-items>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
-import SongsNewSongList from './SongsNewSongList.vue';
-import { topSongOptions, topSongMaps, basicSwiperOptions } from '@/utils';
 import useSwiper from '@/composables/useSwiper';
+import { topSongOptions, topSongMaps, basicSwiperOptions } from '@/utils';
 import type { Tab } from '@/types';
+import SongsNewSongList from './SongsNewSongList.vue';
 
 interface Song {
   getSongs: (type: number | string) => void,

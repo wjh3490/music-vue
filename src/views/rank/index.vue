@@ -1,6 +1,6 @@
 <template>
   <div class="rank">
-    <base-back title="排行榜" :isFixed="true" />
+    <g-head-nav title="排行榜" :isFixed="true" />
     <div class="rank-wrap">
       <div class="rank-title">
         <strong>官方榜</strong>

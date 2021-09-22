@@ -1,5 +1,5 @@
 <template>
-  <div class="singer-mv" :class="active == 2 ? 'auto-height' : 'fixed-height'">
+  <div class="singer-mv">
     <section class="singer-mv-section" v-for="item in mvList" :key="item.id">
       <div class="singer-mv-wrap">
         <div class="singer-mv-main" :style="{ backgroundImage: `url(${item.imgurl})` }"></div>
@@ -66,8 +66,6 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 0 1.5rem;
-  padding-bottom: 7rem;
   &-section {
     width: 16.5rem;
     overflow: hidden;
@@ -157,11 +155,5 @@ export default defineComponent({
     margin-top: 1.5rem;
     color: #a7a3a3;
   }
-}
-.auto-height {
-  height: auto;
-}
-.fixed-height {
-  height: calc(100vh - 5rem);
 }
 </style>

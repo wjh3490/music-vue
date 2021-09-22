@@ -1,108 +1,99 @@
 <template>
-  <div class="album-container">
-    <BaseBack background="transparent" :title="title" color="#fff" />
-    <BaseBackGround :info="info" :opacity="opacity"/>
-    <BaseSongList :songs="songs" @player="player" />
-  </div>
+  <g-head-nav background="transparent" :title="title" color="#fff" isFixed />
+  <BaseBackGround :info="info" :opacity="opacity" />
+  <song-list :songs="songData" />
 </template>
-<script>
-/*eslint-disable */
-import { mapMutations, mapGetters } from 'vuex';
-import { getAlbum } from '@/api/album';
-import { Song } from '@/utils/config';
-export default {
+<script lang="ts">
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
+import debounce from 'lodash.debounce';
+import { fetchAlbum } from '@/api/album';
+import { arrayToString, splitString } from '@/utils';
+import type { Song, StrKeys } from '@/types';
+import SongList from '@/components/common/SongList.vue';
+import BaseBackGround from '@/components/base/BaseBackGround.vue'
+const msg = {
+  artist: '',
+  alias: '',
+  subscribedCount: 0,
+  commentCount: 0,
+  shareCount: 0,
+  description: '',
+  name: '',
+  coverImgUrl: '',
+  publishTime: 0,
+  id: '',
+}
+
+export default defineComponent({
   name: 'Album',
-  data() {
-    return {
-      songs: [], opacity: 1,
-      info: {
-        nickname: '',
-        subscribedCount: 0,
-        commentCount: 0,
-        shareCount: 0,
-        description: 0,
-        name: '',
-        coverImgUrl: '',
-        avatarUrl: '',
-      },
-      title:'专辑'
-    };
-  },
-  computed: {
-    ...mapGetters(['playList']),
-  },
-  created() {
-    this.getPlaylist();
-  },
-  mounted() {
-    document.addEventListener('scroll', this.handldeScroll);
-  },
-  methods: {
-    async getPlaylist() {
-      const { id } = this.$route.params;
-      const { code, songs, album } = await getAlbum(id);
-      const info = {
-        artist: (album.artists || []).map((item) => item.name).join('/'),
-        alias: (album.alias || []).join('/'),
+  components: { SongList, BaseBackGround },
+  setup() {
+    const route = useRoute();
+    const songData = ref<Song[]>([]);
+    const info = ref<StrKeys<string>>(msg)
+    const opacity = ref(1);
+    const title = ref('专辑')
+    const getList = async () => {
+      const { id } = route.params;
+      const { songs, album } = await fetchAlbum(id);
+      const _info: StrKeys<string> = {
+        artist: arrayToString(album.artists),
+        alias: splitString(album.alias),
         subscribedCount: album.info.likedCount || 0,
         commentCount: album.info.commentCount || 0,
         shareCount: album.info.shareCount || 0,
         description: album.description,
-        name: album.name,
+        name: album.name || '',
         coverImgUrl: album.picUrl,
         publishTime: album.publishTime,
         id: album.artist.id,
       };
-      this.info = info;
+      info.value = _info;
 
-      let list = [];
+      let list: Song[] = [];
       for (let i = 0, length = songs.length; i < length; i++) {
         const song = {
           id: songs[i]['id'],
           name: songs[i]['name'],
           album: songs[i]['al']['name'],
-          artists: songs[i]['ar'],
+          artists: arrayToString(songs[i]['ar']),
           picUrl: songs[i]['al']['picUrl'],
           publishTime: album.publishTime,
-          alia: songs[i]['alia'] || [],
+          alia: splitString(songs[i]['alia']),
           privilege: {
             pl: songs[i]['privilege']['pl'],
             fee: songs[i]['fee'],
             flag: songs[i]['privilege']['flag'],
             maxbr: songs[i]['privilege']['maxbr'],
           },
-        };
-        list.push(new Song(song));
+        }
+        list.push(song);
       }
-      this.songs = list;
-    },
-    getArtist(artist) {
-      return artist.reduce((acc, cur) => {
-        acc.push(cur.name);
-        return acc;
-      }, []);
-    },
-    player(index, ele, item) {
-      if (item.fee == 1) {
-        this.$toast({ message: '此歌曲为vip歌曲, 因合作方要求,暂时无法播放' });
-      }
-      this.$drop(ele);
-
-      if (!Object.is(this.songs, this.playList)) {
-        this.setPlay(this.songs);
-        this.setSequenceList(this.songs);
-      }
-      this.setCurrrentIndex(index);
-    },
-    handldeScroll() {
-      this.opacity = 1 - document.documentElement.scrollTop / 200;
+      songData.value = list;
+    }
+    const handldeScroll = () => {
+      opacity.value = Math.max(1 - document.documentElement.scrollTop / 200, 0);
       if (document.documentElement.scrollTop > 150) {
-        this.title = this.info.name;
+        title.value = info.value.name as string;
       } else {
-        this.title = "专辑";
+        title.value = "专辑";
       }
-    },
-    ...mapMutations(['setCurrrentIndex', 'setPlay', 'setSequenceList']),
+    }
+    onMounted(() => {
+      getList();
+      document.addEventListener('scroll', debounce(handldeScroll, 17));
+    })
+    onUnmounted(() => {
+      document.removeEventListener('scroll', handldeScroll);
+    })
+
+    return {
+      songData,
+      title,
+      opacity,
+      info
+    }
   },
-};
+});
 </script>

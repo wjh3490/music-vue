@@ -1,6 +1,6 @@
 <template>
   <div class="paddingtop45 new-album">
-    <base-card :show-more="false" title="本周新碟">
+    <g-card :show-more="false" title="本周新碟" :style="{ position: 'sticky', top: ' 5rem' }">
       <album-list
         :list="weekAlbum"
         :style="{
@@ -9,8 +9,8 @@
           width: '14rem',
         }"
       />
-    </base-card>
-    <base-card :show-more="false" title="本周新碟" :style="{ position: 'sticky', top: ' 5rem' }">
+    </g-card>
+    <g-card :show-more="false" title="本周新碟" :style="{ position: 'sticky', top: ' 5rem' }">
       <album-list
         :list="monthAlbum"
         :style="{
@@ -19,7 +19,7 @@
           width: '14rem',
         }"
       />
-    </base-card>
+    </g-card>
   </div>
 </template>
 <script lang="ts">

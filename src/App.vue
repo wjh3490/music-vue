@@ -1,7 +1,10 @@
 <template>
   <router-view :key="$route.fullPath" />
-  <!-- <normal-player v-show="fullScreen"/>
-  <mini-player v-show="!fullScreen" /> -->
+  <div v-show="!!playList.length">
+    <normal-player v-show="fullScreen" />
+    <mini-player v-show="!fullScreen" />
+  </div>
+
   <!-- <PlaySongs /> -->
   <vue-audio />
 </template>
@@ -20,7 +23,7 @@ export default defineComponent({
   components: { VueAudio, Player, NormalPlayer, MiniPlayer },
   setup() {
     const store = useStore();
-    const fullScreen = computed(() => store.getters.fullScreen);
+    const fullScreen = computed(() => store.state.fullScreen);
     const playList = computed(() => store.state.playList);
 
     return {

@@ -10,7 +10,7 @@ export default function useSwiper() {
     const onSlideChange = () => {
         active.value = swiper.value.activeIndex;
     };
-    const handleSlide = (index, value, speed: number = 0) => {
+    const handleSlide = (index, value?, speed?: number = 0) => {
         if (active.value == index) return;
         valueKey.value = value;
         swiper.value.slideTo(index, speed, false);

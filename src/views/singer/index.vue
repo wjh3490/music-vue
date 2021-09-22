@@ -1,26 +1,26 @@
 <template>
-  <base-back title="歌手榜" />
-  <base-tabs
+  <g-head-nav title="歌手榜" />
+  <g-tabs-nav
     :navList="countryOptions"
     :active="active"
     ref="tabRef"
     @tabs="handleSlide"
     @change="handleChange"
   />
-  <base-swiper-items
+  <g-swiper-items
     :list="countryOptions"
     :options="basicSwiperOptions"
     @slideChange="onSlideChange"
     @swiper="onSwiper"
   >
     <singer-list :ref="getRefs" />
-  </base-swiper-items>
+  </g-swiper-items>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import SingerList from "@/components/Singer/SingerList.vue";
 import useSwiper from '@/composables/useSwiper';
 import { basicSwiperOptions, countryOptions } from '@/utils';
+import SingerList from "@/components/Singer/SingerList.vue";
 
 interface Detail {
   getSingers: (type: number) => void,

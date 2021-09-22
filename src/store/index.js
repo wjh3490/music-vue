@@ -29,69 +29,12 @@ const store = createStore({
     lockScroll: 0,
   },
   getters: {
-    lockScroll(state) {
-      return state.lockScroll;
-    },
-    visible(state) {
-      return state.visible;
-    },
-    songInfo(state) {
-      return state.songInfo;
-    },
-    LyricScrollY(state) {
-      return state.LyricScrollY;
-    },
-    debounce(state) {
-      return state.debounce;
-    },
-    activeLyricIndex(state) {
-      return state.activeLyricIndex;
-    },
     lyricKeys(state) {
       const times = (state.currentLyric || []).map(item => +item.time)
       return times;
     },
-    currentLyric(state) {
-      return state.currentLyric;
-    },
-    currentTime(state) {
-      return state.currentTime;
-    },
-    duration(state) {
-      return state.duration;
-    },
-    playHistory(state) {
-      return state.playHistory;
-    },
-    likeList(state) {
-      return state.likeList;
-    },
-    singer(state) {
-      return state.singer;
-    },
-    sequenceList(state) {
-      return state.sequenceList;
-    },
-    mode(state) {
-      return state.mode;
-    },
-    currrenSong(state) {
+    currentSong(state) {
       return state.playList[state.currrentIndex] || {};
-    },
-    playList(state) {
-      return state.playList;
-    },
-    currrentIndex(state) {
-      return state.currrentIndex;
-    },
-    playing(state) {
-      return state.playing;
-    },
-    fullScreen(state) {
-      return state.fullScreen;
-    },
-    historyList(state) {
-      return state.historyList;
     },
   },
   mutations: {
@@ -107,11 +50,11 @@ const store = createStore({
     setActiveLyricIndex(state, index) {
       state.activeLyricIndex = index;
     },
-    setDebounce(state, d) {
-      state.debounce = d;
+    setDebounce(state,debounce) {
+      state.debounce = debounce;
     },
-    setLyricScrollY(state, y) {
-      state.LyricScrollY = y;
+    setLyricScrollY(state, LyricScrollY) {
+      state.LyricScrollY = LyricScrollY;
     },
 
     setLyricKeys(state, lyricKeys) {

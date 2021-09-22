@@ -1,9 +1,24 @@
-function optionsToMaps(options) {
-    return options.reduce((acc, cur, index) => {
-        acc[index] = cur.id
-        return acc
-    }, {});
-}
+import { optionsToMaps } from './util'
+
+export const playMode = {
+    sequence: 0,
+    loop: 1,
+    random: 2,
+};
+
+export const homeNavOptions = [
+    { icon: 'icon-portrait', name: '歌手', to: '/singer' },
+    { icon: 'icon-paiming', name: '排行榜', to: '/rank' },
+    { icon: 'icon-fenlei', name: '歌单', to: '/playlist' },
+    { icon: 'icon-Live-1', name: '电台', to: '' },
+    { icon: 'icon-zhibojiankan', name: '直播', to: '' },
+]
+
+export const mallNavOptions = [
+    { icon: 'icon-icon', name: '畅销榜', to: '/mall-shop' },
+    { icon: 'icon-category1', name: '语种风格馆', to: '/mall-category' },
+    { icon: 'icon-yigoumai', name: '已购', to: '' },
+]
 
 export const colorsMaps = {
     blue: '#169af3',
@@ -13,7 +28,7 @@ export const colorsMaps = {
 export const tabLinkMaps = {
     'song': { name: "Songs", params: { id: 1 } },
     'album': { name: "Songs", params: { id: 2 } },
-    'digitalbum':  { name: "Mall"},
+    'digitalbum': { name: "Mall" },
 };
 
 export const radioOptions = [
@@ -60,14 +75,14 @@ export const nameMaps = {
     3: '日本专辑推荐',
 }
 
-export const mallNavOptions = [
+export const malltabOptions = [
     { id: 'daily', name: '日榜' },
     { id: 'week', name: '周榜' },
     { id: 'year', name: '2021年榜' },
     { id: 'total', name: '总榜' },
 ]
 
-export const mallNavMaps = optionsToMaps(mallNavOptions);
+export const mallNavMaps = optionsToMaps(malltabOptions);
 
 export const categoryOptions = [
     { id: 'Z_H', name: '华语' },

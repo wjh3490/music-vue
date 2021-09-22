@@ -1,13 +1,13 @@
 import service from '../request/service';
 
-export function getPlaylist() {
+export function fetchPlaylist() {
   return service({
     url: `/playlist/hot`,
     method: 'get',
   });
 }
 
-export function getPlaylistDetail(id) {
+export function fetchPlaylistDetail(id) {
   return service({
     url: `playlist/detail?id=${id}`,
     method: 'get',

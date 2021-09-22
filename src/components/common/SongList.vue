@@ -1,59 +1,74 @@
 <template>
-  <div>
-    <section
-      v-for="(item, index) in songs"
-      :key="item.id"
-      :class="{ active: item.id == currrenSong.id }"
-      class="songlist-item"
-      @click.stop.prevent="$emit('play', index, $event.currentTarget, item)"
-    >
-      <div v-if="!visible" class="songlist-index" :class="{ active: item.id == currrenSong.id }">{{ index + 1 }}</div>
-      <div v-if="visible" class="songlist-figure">
-        <img v-lazy="item.picUrl" alt />
+  <section
+    v-for="(item, index) in songs"
+    :key="item.id"
+    :class="{ active: item.id === currentSong.id }"
+    class="songlist-item"
+    @click.stop.prevent="handlePlay(index)"
+  >
+    <div
+      v-if="!visible"
+      class="songlist-index"
+      :class="{ active: item.id == currentSong.id }"
+    >{{ index + 1 }}</div>
+    <div v-if="visible" class="songlist-figure">
+      <img v-lazy="item.picUrl" alt />
+    </div>
+    <div class="songlist-name">
+      <div class="ellipsis songlist-title" :class="{ active: item.id == currentSong.id }">
+        <span>{{ item.name }}</span>
+        <span
+          v-if="item.alia"
+          :class="{ active: item.id == currentSong.id }"
+          class="songlist-alia"
+        >({{ item.alia }})</span>
       </div>
-      <div class="songlist-name">
-        <div class="ellipsis songlist-title" :class="{ active: item.id == currrenSong.id }">
-          <span>{{ item.name }}</span>
-          <span
-            v-if="item.alia"
-            :class="{ active: item.id == currrenSong.id }"
-            class="songlist-alia"
-          >({{ item.alia }})</span>
-        </div>
-        <div class="songlist-album" :class="{ active: item.id == currrenSong.id }">
-          <base-privilege :privilege="item.privilege" />
-          <div class="ellipsis songlist-content">
-            <span>{{ item.artists }}</span> ·
-            <span>{{ item.album }}</span>
-          </div>
+      <div class="songlist-album" :class="{ active: item.id == currentSong.id }">
+        <privilege :privilege="item.privilege" />
+        <div class="ellipsis songlist-content">
+          <span>{{ item.artists }}</span> ·
+          <span>{{ item.album }}</span>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
 import { useStore } from 'vuex';
+import isEqual from 'lodash.isequal'
 import type { Song } from '@/types'
+import Privilege from './Privilege.vue';
+
 export default defineComponent({
-  name: 'BaseSongList',
+  name: 'SongList',
+  components: { Privilege },
   props: {
     songs: {
       type: Array as PropType<Array<Song>>,
       default: () => []
     },
     visible: {
-      type:Boolean,
+      type: Boolean,
       default: false,
     }
   },
-  emits: ['play'],
-  setup() {
+  setup(props) {
     const store = useStore();
-    const currrenSong = computed(() => store.getters.currrenSong);
+    const currentSong = computed(() => store.getters.currentSong);
+    const playList = computed(() => store.state.playList);
+
+    const handlePlay = (index: number) => {
+      if (!isEqual(props.songs, playList.value)) {
+        store.commit('setPlay', props.songs)
+        store.commit('setSequenceList', props.songs)
+      }
+      store.commit('setCurrrentIndex', index)
+    }
     return {
-      currrenSong,
+      currentSong,
+      handlePlay,
     }
   },
 });
@@ -87,7 +102,6 @@ export default defineComponent({
     overflow: hidden;
     margin-left: 1rem;
     margin-right: 0.6rem;
-   
   }
   &-index {
     font-size: 16px;

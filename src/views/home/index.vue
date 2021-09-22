@@ -2,7 +2,7 @@
   <div class="recommend">
     <home-search />
     <!-- 轮播图 -->
-    <base-swiper-items v-slot="{ data }" :list="swiperList" :options="homeSwiperOptions">
+    <g-swiper-items v-slot="{ data }" :list="swiperList" :options="homeSwiperOptions">
       <div class="recommend-swiper-wrap">
         <img v-lazy="data.imageUrl" class="swiper-lazy swiper-img" @click="gotoPath(data)" />
         <span
@@ -11,26 +11,26 @@
         >{{ data.typeTitle }}</span>
       </div>
       <div class="my-lazy-preloader"></div>
-    </base-swiper-items>
+    </g-swiper-items>
     <!-- 导航栏 -->
-    <base-nav />
+    <navigation :navList="homeNavOptions"/>
     <!-- 推荐歌单 -->
-    <base-card title="推荐歌单" to="/playlist">
+    <g-card title="推荐歌单" to="/playlist">
       <home-list :list="personalized" />
-    </base-card>
+    </g-card>
     <!-- 排行榜 -->
-    <base-card title="排行榜" to="/rank">
-      <base-swiper-items
+    <g-card title="排行榜" to="/rank">
+      <g-swiper-items
         v-slot="{ data, index }"
         :list="toplists"
         :options="topListSwiperOptions"
         model="id"
       >
         <home-top-list :data="data" :index="index" />
-      </base-swiper-items>
-    </base-card>
+      </g-swiper-items>
+    </g-card>
     <!--  新歌  新碟  数字专辑  -->
-    <base-card :to="tabLinkMaps[activeTab]">
+    <g-card :to="tabLinkMaps[activeTab]">
       <template #title>
         <div class="home-newsong-tabs" @click="handleTabChange">
           <h3 :class="{ 'home-newsong-active': activeTab === 'song' }" data-type="song">新歌</h3>
@@ -43,7 +43,7 @@
           >数字专辑</h3>
         </div>
       </template>
-      <base-swiper-items
+      <g-swiper-items
         v-for="item in multipleList"
         v-show="item.type === activeTab"
         v-slot="{ data }"
@@ -53,14 +53,14 @@
         model="id"
       >
         <home-new-song :data="data" @play="(id) => handlePlay(id, item.type)"/>
-      </base-swiper-items>
-    </base-card>
+      </g-swiper-items>
+    </g-card>
     <!-- 独家放送  -->
-    <base-card title="独家放送">
+    <g-card title="独家放送">
       <home-list :list="videos" />
-    </base-card>
+    </g-card>
     <!-- 电台  -->
-    <base-card :show-more="false">
+    <g-card :show-more="false">
       <template #title>
         <div class="home-newsong-tabs">
           <h3 class="home-newsong-active">广播电台</h3>
@@ -69,11 +69,11 @@
         </div>
       </template>
       <home-list :list="list" round v-if="list.length" />
-    </base-card>
+    </g-card>
     <!-- 热门MV  -->
-    <base-card title="热门MV">
+    <g-card title="热门MV">
       <home-list :list="mvs" />
-    </base-card>
+    </g-card>
   </div>
 </template>
 
@@ -87,13 +87,14 @@ import HomeSearch from "@/components/Home/HomeSearch.vue";
 import HomeTopList from "@/components/Home/HomeTopList.vue";
 import HomeNewSong from "@/components/Home/HomeNewSong.vue";
 import HomeList from "@/components/Home/HomeList.vue";
+import Navigation from '@/components/common/Navigation.vue';
 import useMultiple from "@/composables/home/useMultiple";
 import useBatch from "@/composables/home/useBatch";
-import { homeSwiperOptions, topListSwiperOptions, colorsMaps, tabLinkMaps } from '@/utils'
+import { homeNavOptions, homeSwiperOptions, topListSwiperOptions, colorsMaps, tabLinkMaps } from '@/utils'
 
 export default defineComponent({
   name: "Home",
-  components: { HomeSearch, HomeTopList, HomeNewSong, HomeList },
+  components: { Navigation, HomeSearch, HomeTopList, HomeNewSong, HomeList },
   setup() {
     const router = useRouter();
     const store = useStore();
@@ -124,7 +125,7 @@ export default defineComponent({
       if(type !== 'song') return;
       const index = store.state.playList.findIndex((item) => item.id == id);
       if (index >= 0) {
-        if (id == store.getters.currrenSong.id) {
+        if (id == store.getters.currentSong.id) {
           store.commit('setPlaying', !store.state.playing)
           store.state.playing ? audio.play() : audio.pause();
         } else {
@@ -165,6 +166,7 @@ export default defineComponent({
       tabLinkMaps,
       activeTab,
       multipleList,
+      homeNavOptions,
       handleTabChange,
       gotoPath,
       toplists,

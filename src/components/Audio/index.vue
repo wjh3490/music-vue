@@ -14,19 +14,11 @@
 <script lang="ts">
 import { defineComponent, nextTick, ref, watch } from 'vue'
 import { useStore } from 'vuex';
-import { playMode } from '@/utils/config.js';
-import { parseLyric, shuffle } from '@/utils';
+import { playMode, parseLyric, formatLyrics, shuffle } from '@/utils';
 import { fetchSong, fetchLyric } from '@/api/songs';
-import { modeOptions } from '@/constants'
-
-interface Lyric {
-  time: string,
-  lyric: string,
-  tlyric: string;
-}
 
 export default defineComponent({
-  name: 'Audio',
+  name: 'VueAudio',
   setup() {
     const store = useStore();
     const src = ref('');
@@ -46,20 +38,7 @@ export default defineComponent({
       const lyrics = formatLyrics(currentLyric, currentTLyric);
       store.commit('setCurrentLyric', lyrics);
     };
-    const formatLyrics = (currentLyric: { [index: number]: string }, currentTLyric: { [index: number]: string }) => {
-      const lyrics = Object.keys(currentLyric).reduce((acc, cur) => {
-        if (currentLyric[cur]) {
-          const lyricItem: Lyric = {
-            time: cur,
-            lyric: currentLyric[cur],
-            tlyric: currentTLyric[cur],
-          }
-          acc.push(lyricItem)
-        }
-        return acc
-      }, [] as Array<Lyric>)
-      return lyrics;
-    }
+
     const handleEnd = () => {
       if (store.state.playList.length === 1) store.commit('setMode', playMode.loop);
       store.state.mode === playMode.loop ? handleLoop() : handleNext();
@@ -76,7 +55,7 @@ export default defineComponent({
       store.commit('setCurrrentIndex', index)
     };
     const resetCurrentIndex = (list) => {
-      const index = list.findIndex((item) => item.id === store.getters.currrenSong.id);
+      const index = list.findIndex((item) => item.id === store.getters.currentSong.id);
       setCurrrentIndex(index);
     };
     const getNewList = (mode: number) => {
@@ -89,8 +68,8 @@ export default defineComponent({
     };
     const ready = () => { };
 
-    watch(() => store.getters.currrenSong, async (newSong) => {
-      let res = await fetchSong(newSong.id);
+    watch(() => store.getters.currentSong, async (newSong) => {
+      const res = await fetchSong(newSong.id);
       if (!res.data[0].url) {
         src.value = `https://music.163.com/song/media/outer/url?id=${newSong.id}.mp3`;
       } else {
@@ -110,7 +89,7 @@ export default defineComponent({
       }
     })
     watch(() => store.state.mode, getNewList)
-    
+
     return {
       src,
       audio,

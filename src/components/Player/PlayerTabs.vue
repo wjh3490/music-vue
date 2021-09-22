@@ -56,9 +56,9 @@ export default defineComponent({
     }
   }
   &-return {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    width: 4rem;
+    height: 4rem;
+    line-height: 4rem;
     text-align: center;
     transform: rotate(270deg);
   }
@@ -67,9 +67,9 @@ export default defineComponent({
     color: #fff;
   }
   &-line {
-    margin: 0 7px;
-    height: 6px;
-    width: 1px;
+    margin: 0 0.7rem;
+    height: 0.6rem;
+    width: 0.1rem;
     overflow: hidden;
     background-color: rgba(225, 225, 225, 0.8);
   }

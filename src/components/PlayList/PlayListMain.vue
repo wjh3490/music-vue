@@ -1,28 +1,30 @@
 <template>
-  <base-list :list="list" @list="getSingerDetail" />
+  <MallArea :list="list" @list="getSingerDetail"  class="playList-content"/>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { getPlaylistDetail } from '@/api/playlist';
+import { fetchPlaylistDetail } from '@/api/playlist';
+import MallArea from '@/components/Mall/MallArea.vue'
 export default defineComponent({
   name: 'PlayListMain',
+  components: { MallArea },
   props: ['id'],
   setup(_, { expose }) {
-    const { setSinger } = useStore()
-    const router = useRouter()
+    const store = useStore();
+    const router = useRouter();
     const list = ref([]);
     const getSingers = async (type) => {
       const {
         playlist: { tracks },
-      } = await getPlaylistDetail(type);
+      } = await fetchPlaylistDetail(type);
       list.value = tracks.reduce((acc, cur) => {
         const obj = {
           id: cur.id,
-          picUrl: cur.al.picUrl,
+          coverUrl: cur.al.picUrl,
           playCount: cur.dt,
-          name: cur.name,
+          albumName: cur.name,
         };
         acc.push(obj);
         return acc;
@@ -34,7 +36,7 @@ export default defineComponent({
         singerPic: singer.picUrl,
         name: singer.name,
       };
-      setSinger(_singer);
+      store.commit('setSinger', _singer);
       router.push(`/playlist/${singer.id}`);
     }
     expose({ getSingers });
@@ -45,3 +47,10 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="less" scoped>
+.playList-content{
+  &:deep(.mall-area-item) {
+    margin-top: 1.6rem;
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="mall-shop">
-    <base-back :isFixed="true" title="畅销榜" />
+    <g-head-nav :isFixed="true" title="畅销榜" />
     <nav class="mall-shop-nav">
       <span
         class="mall-shop-nav-item"
@@ -13,7 +13,7 @@
         @click="albumType = 1"
       >数字单曲榜</span>
     </nav>
-    <base-tabs
+    <g-tabs-nav
       :navList="mallNavOptions"
       :active="active"
       ref="tabRef"

@@ -13,7 +13,7 @@ import SwiperCore, { Lazy, Autoplay, Pagination, EffectCoverflow } from "swiper"
 import "swiper/swiper-bundle.min.css";
 SwiperCore.use([Lazy, Autoplay, Pagination, EffectCoverflow]);
 export default defineComponent({
-  name: "BaseSwiperItems",
+  name: "GSwiperItems",
   components: {
     Swiper,
     SwiperSlide,

@@ -1,21 +1,21 @@
 <template>
   <div class="player-info-container">
     <section class="player-info-des ellipsis">
-      <p class="player-info-name ellipsis">{{ currrenSong.name }}</p>
+      <p class="player-info-name ellipsis">{{ currentSong.name }}</p>
       <div class="player-info-time ellipsis">
         发行时间：
-        <span v-if="currrenSong.publishTime">
+        <span v-if="currentSong.publishTime">
           {{
-            parseTime(currrenSong.publishTime, '{y}-{m}-{d}')
+            parseTime(currentSong.publishTime, '{y}-{m}-{d}')
           }}
         </span>
         <span v-else>暂无</span>
       </div>
       <div class="player-info-line"></div>
-      <p class="player-info-artists ellipsis">歌手： {{ currrenSong.artists }}</p>
+      <p class="player-info-artists ellipsis">歌手： {{ currentSong.artists }}</p>
       <div class="player-info-wrap">
-        <img class="player-info-figure" v-lazy="currrenSong.picUrl" alt />
-        <p class="player-info-album">专辑：{{ currrenSong.album }}</p>
+        <img class="player-info-figure" v-lazy="currentSong.picUrl" alt />
+        <p class="player-info-album">专辑：{{ currentSong.album }}</p>
       </div>
     </section>
     <section class="player-info-simisong" v-if="simiSongs.length">
@@ -29,9 +29,9 @@
     <section class="player-info-simiplaylist" v-if="simiPlayList.length">
       <span class="player-info-title">相关歌单</span>
       <div
-        class="player-info-simiplaylist-item"
         v-for="playlist in simiPlayList"
         :key="playlist.id"
+        class="player-info-simiplaylist-item"
       >
         <img v-lazy="playlist.coverImgUrl" alt class="player-info-simiplaylist-figure" />
         <span class="player-info-simiplaylist-name ellipsis">{{ playlist.name }}</span>
@@ -44,13 +44,13 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex';
-import { querySongSimi, queryPlaylistSimi } from '@/api/singer';
+import { fetchSongSimi, fetchPlaylistSimi } from '@/api/singer';
 import { arrayToString, parseTime } from '@/utils';
 
 interface Songs {
   name: string,
   id: number,
-  artists: [],
+  artists: any[],
 }
 interface PlayList {
   name: string,
@@ -60,42 +60,53 @@ interface PlayList {
 
 export default defineComponent({
   name: 'PlayerInfo',
-  setup() {
+  props: {
+    index: {
+      type: Number,
+      default: 0,
+    }
+  },
+  setup(props) {
     const store = useStore();
     const simiPlayList = ref<PlayList[]>([]);
     const simiSongs = ref<Songs[]>([]);
-    let flag = true;
-    const currrenSong = computed(() => store.getters.currrenSong);
-
+    const currentSong = computed(() => store.getters.currentSong);
+    const fullScreen = computed(() => store.state.fullScreen)
+    let flag = false;
     const getSimiPlaylist = async () => {
-      const { playlists } = await queryPlaylistSimi(
-        currrenSong.value.id,
+      const { playlists } = await fetchPlaylistSimi(
+        currentSong.value.id,
         3
       );
       simiPlayList.value = playlists.slice(0, 3);
     };
     const getSimiSong = async () => {
-      const { songs } = await querySongSimi(currrenSong.value.id, 3);
+      const { songs } = await fetchSongSimi(currentSong.value.id, 3);
       simiSongs.value = songs.slice(0, 3);
     };
     const getData = () => {
-      if (flag) {
-        getSimiPlaylist();
-        getSimiSong();
-        flag = false;
-      }
+      getSimiPlaylist();
+      getSimiSong();
+      flag = true
     }
-    watch(store.state.currrentIndex, () => {
-      flag = true;
+    watch(() => props.index, (val) => {
+      if (val === 0 && !flag) {
+        getData();
+      }
     })
-    onMounted(getData)
+    watch(currentSong, () => {
+      if (fullScreen.value && props.index === 0) {
+        getData();
+      }
+    })
 
     return {
       simiSongs,
-      currrenSong,
+      currentSong,
       simiPlayList,
       parseTime,
       arrayToString,
+      fullScreen
     }
   },
 });

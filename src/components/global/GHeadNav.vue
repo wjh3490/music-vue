@@ -1,32 +1,29 @@
 <template>
-  <div
-    class="return"
-    :class="{ isFixed }"
-    :style="{ color, background, opacity }"
-  >
-    <span
-      class="iconfont icon-iconfont2 return-left"
-      @click="$router.back()"
-    ></span>
-    <div class="return-middle ellipsis">
+  <div class="head-nav" :class="{ isFixed }" :style="{ color, background, opacity }">
+    <span class="iconfont icon-iconfont2 head-nav-left" @click="$router.back()"></span>
+    <div class="head-nav-middle ellipsis">
       <slot>
         <b>{{ title }}</b>
       </slot>
     </div>
-    <span class="return-right">
+    <span class="head-nav-right">
       <slot name="right" />
     </span>
   </div>
 </template>
-<script>
-export default {
-  name: 'BaseBack',
+<script lang="ts">
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name: 'GHeadNav',
   props: {
     isFixed: {
       type: Boolean,
       default: false,
     },
-    title: String,
+    title: {
+      type: String,
+      default: '',
+    },
     background: {
       type: String,
       default: '#fff',
@@ -35,9 +32,12 @@ export default {
       type: Number,
       default: 1,
     },
-    color: String,
+    color: {
+      type: String,
+      default: '',
+    },
   },
-};
+});
 </script>
 
 <style scoped lang="less">
@@ -46,12 +46,12 @@ export default {
   top: 0;
   left: 0;
 }
-.return {
+.head-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
-  line-height: 50px;
+  height: 5rem;
+  line-height: 5rem;
   width: 100%;
   z-index: 99;
   color: #000;
@@ -59,7 +59,7 @@ export default {
   &-left,
   &-right {
     height: 100%;
-    width: 50px;
+    width: 5rem;
     text-align: center;
     font-size: 20px;
   }

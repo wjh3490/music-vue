@@ -9,12 +9,12 @@
         }"
       ></div>
       <div class="mini-cd-bgc" :class="{ 'animation_pause': !playing }">
-        <img :src="currrenSong.picUrl" alt class="mini-cd-img" />
+        <img v-lazy="currentSong.picUrl" alt class="mini-cd-img" />
       </div>
     </section>
 
     <section class="mini-desc ellipsis">
-      <p class="mini-player-name ellipsis">{{ currrenSong.name }} - {{ currrenSong.artists }}</p>
+      <p class="mini-player-name ellipsis">{{ currentSong.name }} - {{ currentSong.artists }}</p>
     </section>
     <div class="control">
       <i
@@ -41,7 +41,7 @@ export default defineComponent({
     const store = useStore();
     const playing = computed(() => store.state.playing);
     const percent = computed(() => store.state.currentTime / store.state.duration);
-    const currrenSong = computed(() => store.getters.currrenSong);
+    const currentSong = computed(() => store.getters.currentSong);
     const handleVisible = () => { store.commit('setVisible', true) };
     const handlePlaying = () => { store.commit('setPlaying', !playing.value) };
     const handleFullScreen = () => { store.commit('setFullScreen', true) };
@@ -50,11 +50,11 @@ export default defineComponent({
     return {
       playing,
       percent,
-      currrenSong,
+      currentSong,
+      actionNext,
       handleVisible,
       handlePlaying,
       handleFullScreen,
-      actionNext,
     }
 
   },
