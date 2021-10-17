@@ -1,110 +1,72 @@
-import { ref, onMounted, shallowRef } from 'vue'
-import { splitList } from "@/utils";
-import { Song } from "@/utils/config";
+import { ref, onMounted } from 'vue'
 import { fetchNewAlbumset, fetchAlbumList } from "@/api/album";
-import { fetchNewsong } from "@/api/recomment.js";
-type multipleType = {
-    list: [];
+import { fetchNewsong } from "@/api/recomment";
+import { splitList, arrayToString } from "@/utils";
+interface multipleType {
+    list: Array<{ [key: string]: string | number }>;
     type: string;
 };
-
-export type songType = {
-    id: string;
+interface Item {
+    id: number;
     name: string;
     picUrl: string;
     artists: string;
     album?: string;
-    alia?: string;
-    publishTime?: number;
-    privilege?: {
-        pl: string;
-        fee: string;
-        flag: string;
-        maxbr: string;
-    };
 };
 
 export default function useMultiple() {
     const activeTab = ref<any>("song");
     const multipleList = ref<multipleType[]>([]);
+    const getItem = (
+        id: number,
+        name: string,
+        picUrl: string,
+        artists: string,
+        album: string
+    ): Item =>
+    ({
+        id,
+        name,
+        picUrl,
+        artists: Array.isArray(artists) ? arrayToString(artists) : artists,
+        album
+    })
     const getNewAlbum = async () => {
         const { albums } = await fetchNewAlbumset({ limit: 6 });
-        const list = albums.slice(0, 6).reduce((acc: Array<songType>, cur: any) => {
+        const list = albums.slice(0, 6).reduce((acc: Array<Item>, cur: any) => {
             const { id, name, picUrl, artists } = cur;
-            acc.push(
-                new Song({
-                    id,
-                    name,
-                    picUrl,
-                    artists,
-                })
-            );
+            acc.push(getItem(id, name, picUrl, artists, ''))
             return acc;
         }, []);
-        const multiple: multipleType = {
-            list: splitList(list, 3),
-            type: "album",
-        };
-        multipleList.value.push(multiple);
+        multipleList.value.push({ list: splitList(list, 3), type: "album", });
     };
     const getAlbumList = async () => {
         const { products } = await fetchAlbumList({ limit: 9 });
-        const list = products.reduce((acc: Array<songType>, cur: any) => {
+        const list = products.reduce((acc: Array<Item>, cur: any) => {
             const { albumId, albumName, coverUrl, artistName } = cur;
-            acc.push(
-                new Song({
-                    id: albumId,
-                    name: albumName,
-                    picUrl: coverUrl,
-                    artists: [{ name: artistName }],
-                })
-            );
+            acc.push(getItem(albumId, albumName, coverUrl, artistName, ''));
             return acc;
         }, []);
-        const multiple: multipleType = {
-            list: splitList(list, 3),
-            type: "digitalbum",
-        };
-        multipleList.value.push(multiple);
+        multipleList.value.push({ list: splitList(list, 3), type: "digitalbum", });
     };
     const getNewsong = async () => {
-        const { result } = await fetchNewsong({ limit: 30, offset: 1 });
-        const list = result.reduce((acc: Array<songType>, cur: any) => {
+        const { result } = await fetchNewsong({ limit: 12, offset: 1 });
+        const list = result.reduce((acc: Array<Item>, cur: any) => {
             const { id, name, picUrl, song } = cur;
-            acc.push(
-                new Song({
-                    id,
-                    name,
-                    picUrl,
-                    artists: song["artists"],
-                    album: song.album.name,
-                    privilege: {
-                        pl: song.privilege["pl"],
-                        fee: song.privilege["fee"],
-                        flag: song.privilege["flag"],
-                        maxbr: song.privilege["maxbr"],
-                    },
-                })
-            );
+            acc.push(getItem(id, name, picUrl, song.artists, song?.album?.name));
             return acc;
         }, []);
-        const multiple: multipleType = {
-            list: splitList(list, 3),
-            type: "song",
-        };
-        multipleList.value.push(multiple);
+        multipleList.value.push({ list: splitList(list, 3), type: "song", });
     };
-    const handleTabChange = (e: Event): void => {
-        const {
-            type
-        }  = (e.target as HTMLDivElement).dataset
-        activeTab.value = type;
+    const handleTabChange = (id: string): void => {
+        activeTab.value = id;
     };
 
-    onMounted(getNewAlbum);
-    onMounted(getAlbumList);
-    onMounted(getNewsong);
-
+    onMounted(() => {
+        getNewAlbum()
+        getAlbumList()
+        getNewsong()
+    });
     return {
         activeTab,
         multipleList,

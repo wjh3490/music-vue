@@ -53,3 +53,9 @@ export const homeSwiperOptions = {
     disableOnInteraction: false,
   },
 };
+
+export const mallSwiperOptions = {
+  watchSlidesVisibility: true,
+  centeredSlides: true,
+  slidesPerView: 'auto',
+}

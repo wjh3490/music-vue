@@ -115,8 +115,9 @@ function getRandomInt(min, max) {
  * @return {Object}
  */
 export function parseLyric(lrc) {
-    let lyrics = lrc.split('\n');
-    let lrcObj = {};
+    if(!lrc) return [];
+    let lyrics = lrc.split('\n').filter(Boolean);
+    let lrcObj = [];
 
     for (let i = 0; i < lyrics.length; i++) {
         let lyric = decodeURIComponent(lyrics[i]);
@@ -128,25 +129,14 @@ export function parseLyric(lrc) {
         let min = Number(String(t.match(/\[\d*/i)).slice(1));
         let sec = Number(String(t.match(/\:\d*/i)).slice(1));
         let time = min * 60 + sec;
-        lrcObj[time] = clause;
+        lrcObj.push({
+            time,
+            lyric: clause
+        })
     }
+    return !!lrcObj.length ? lrcObj : lyrics;
+}
 
-    return lrcObj;
-}
-export function formatLyrics(currentLyric, currentTLyric) {
-    const lyrics = Object.keys(currentLyric).reduce((acc, cur) => {
-        if (currentLyric[cur]) {
-            const lyricItem = {
-                time: cur,
-                lyric: currentLyric[cur],
-                tlyric: currentTLyric[cur],
-            }
-            acc.push(lyricItem)
-        }
-        return acc
-    }, [])
-    return lyrics;
-}
 export function scrollToEase(
     el,
     start,
@@ -170,10 +160,10 @@ export function scrollToEase(
     animate();
 }
 
-export function scrollToSmooth(el, to, flag = false) {
+export function scrollToInstant(el, to) {
     el.scrollTo({
         top: to,
-        behavior: flag ? 'smooth' : 'instant',
+        behavior: 'instant',
     });
 }
 

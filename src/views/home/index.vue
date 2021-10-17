@@ -3,17 +3,10 @@
     <home-search />
     <!-- 轮播图 -->
     <g-swiper-items v-slot="{ data }" :list="swiperList" :options="homeSwiperOptions">
-      <div class="recommend-swiper-wrap">
-        <img v-lazy="data.imageUrl" class="swiper-lazy swiper-img" @click="gotoPath(data)" />
-        <span
-          class="recommend-swiper-title"
-          :style="{ backgroundColor: colorsMaps[data.titleColor] }"
-        >{{ data.typeTitle }}</span>
-      </div>
-      <div class="my-lazy-preloader"></div>
+      <home-swiper-content :content="data" />
     </g-swiper-items>
     <!-- 导航栏 -->
-    <navigation :navList="homeNavOptions"/>
+    <navigation :navList="homeNavOptions" />
     <!-- 推荐歌单 -->
     <g-card title="推荐歌单" to="/playlist">
       <home-list :list="personalized" />
@@ -32,16 +25,17 @@
     <!--  新歌  新碟  数字专辑  -->
     <g-card :to="tabLinkMaps[activeTab]">
       <template #title>
-        <div class="home-newsong-tabs" @click="handleTabChange">
-          <h3 :class="{ 'home-newsong-active': activeTab === 'song' }" data-type="song">新歌</h3>
-          <span class="home-newsong-tabs-line" @click.stop></span>
-          <h3 :class="{ 'home-newsong-active': activeTab === 'album' }" data-type="album">新碟</h3>
-          <span class="home-newsong-tabs-line" @click.stop></span>
-          <h3
-            :class="{ 'home-newsong-active': activeTab === 'digitalbum' }"
-            data-type="digitalbum"
-          >数字专辑</h3>
-        </div>
+        <status-tabs
+          :list="hometabOptions"
+          :active="activeTab"
+          :normal-style="{
+            color: '#999',
+            fontSize: '1.6rem',
+            fontWeight: 700
+          }"
+          active-color="#333"
+          @change="handleTabChange"
+        />
       </template>
       <g-swiper-items
         v-for="item in multipleList"
@@ -52,7 +46,7 @@
         :options="topListSwiperOptions"
         model="id"
       >
-        <home-new-song :data="data" @play="(id) => handlePlay(id, item.type)"/>
+        <home-new-song :data="data" :type="item.type" />
       </g-swiper-items>
     </g-card>
     <!-- 独家放送  -->
@@ -79,33 +73,61 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { vGetBanner, vGetDetail } from "@/api/recomment.js";
+import { fetchBanner, fetchNewsong } from "@/api/recomment.js";
 import { fetchRankList } from "@/api/rank.js";
+import { fetchNewAlbumset, fetchAlbumList } from "@/api/album";
+import useBatch from "@/composables/home/useBatch";
+import dialog from '@/components/common/Dialog/index'
+import toast from '@/components/common/Toast/index'
+import {
+  homeNavOptions,
+  homeSwiperOptions,
+  topListSwiperOptions,
+  tabLinkMaps,
+  hometabOptions,
+  splitList,
+  arrayToString
+} from '@/utils'
+import Navigation from '@/components/common/Navigation.vue';
+import StatusTabs from '@/components/common/StatusTabs.vue'
 import HomeSearch from "@/components/Home/HomeSearch.vue";
 import HomeTopList from "@/components/Home/HomeTopList.vue";
 import HomeNewSong from "@/components/Home/HomeNewSong.vue";
 import HomeList from "@/components/Home/HomeList.vue";
-import Navigation from '@/components/common/Navigation.vue';
-import useMultiple from "@/composables/home/useMultiple";
-import useBatch from "@/composables/home/useBatch";
-import { homeNavOptions, homeSwiperOptions, topListSwiperOptions, colorsMaps, tabLinkMaps } from '@/utils'
+import HomeSwiperContent from "@/components/Home/HomeSwiperContent.vue";
+interface multipleType {
+  list: Array<{ [key: string]: string | number }>;
+  type: string;
+};
+interface Item {
+  id: number;
+  name: string;
+  picUrl: string;
+  artists: string;
+  album?: string;
+  song?: { [key: string]: any }
+};
 
 export default defineComponent({
   name: "Home",
-  components: { Navigation, HomeSearch, HomeTopList, HomeNewSong, HomeList },
+  components: {
+    StatusTabs,
+    Navigation,
+    HomeSearch,
+    HomeTopList,
+    HomeNewSong,
+    HomeList,
+    HomeSwiperContent,
+  },
   setup() {
-    const router = useRouter();
-    const store = useStore();
     const swiperList = ref([]);
     const toplists = ref([]);
-    const audio = document.getElementById('audio') as HTMLAudioElement;
+    const activeTab = ref<any>("song");
+    const multipleList = ref<multipleType[]>([]);
 
-    const { multipleList, activeTab, handleTabChange } = useMultiple();
     const state = useBatch();
     const getBanners = async () => {
-      const { banners } = await vGetBanner();
+      const { banners } = await fetchBanner();
       swiperList.value = banners;
     };
     const getTopList = async () => {
@@ -113,73 +135,74 @@ export default defineComponent({
       const toplist = list.filter((item) => item.tracks?.length);
       toplists.value = toplist;
     };
-    const gotoPath = (path): void => {
-      if (path.targetType == 1) {
-          handlePlay(path.targetId);
-      }
-      if (path.targetType == 10) {
-        router.push({ name: 'Album', params: { id: path.targetId } });
-      }
+    const getItem = (
+      id: number,
+      name: string,
+      picUrl: string,
+      artists: string,
+      album: string
+    ): Item =>
+    ({
+      id,
+      name,
+      picUrl,
+      artists: Array.isArray(artists) ? arrayToString(artists) : artists,
+      album
+    })
+    const getAlbums = async () => {
+      const { albums } = await fetchNewAlbumset({ limit: 6 });
+      const list = albums.slice(0, 6).reduce((acc: Array<Item>, cur: any) => {
+        const { id, name, picUrl, artists } = cur;
+        acc.push(getItem(id, name, picUrl, artists, ''))
+        return acc;
+      }, []);
+      multipleList.value.push({ list: splitList(list, 3), type: "album", });
     };
-    const handlePlay = async (id: number, type: string) => {
-      if(type !== 'song') return;
-      const index = store.state.playList.findIndex((item) => item.id == id);
-      if (index >= 0) {
-        if (id == store.getters.currentSong.id) {
-          store.commit('setPlaying', !store.state.playing)
-          store.state.playing ? audio.play() : audio.pause();
-        } else {
-           store.commit('setCurrrentIndex', index)
-        }
-      } else {
-        const { songs, privileges } = await vGetDetail(id);
-        const song = {
-          id: songs[0]['id'],
-          name: songs[0]['name'],
-          picUrl: songs[0]['al']['picUrl'],
-          artists: songs[0]['ar'],
-          album: songs[0]['al']['name'],
-          alia: songs[0]['alia'],
-          privilege: {
-            pl: privileges[0]['pl'],
-            fee: privileges[0]['fee'],
-            flag: privileges[0]['flag'],
-            maxbr: privileges[0]['maxbr'],
-          },
-        };
-        store.commit('setPlay', [song, store.state.playList]);
-        store.commit('setSequenceList', store.state.playList);
-        store.commit('setCurrrentIndex', 0);
-      }
-    }
-    
+    const getDigitalAlbums = async () => {
+      const { products } = await fetchAlbumList({ limit: 9 });
+      const list = products.reduce((acc: Array<Item>, cur: any) => {
+        const { albumId, albumName, coverUrl, artistName } = cur;
+        acc.push(getItem(albumId, albumName, coverUrl, artistName, ''));
+        return acc;
+      }, []);
+      multipleList.value.push({ list: splitList(list, 3), type: "digitalbum", });
+    };
+    const getNewsongs = async () => {
+      const { result } = await fetchNewsong({ limit: 12, offset: 1 });
+      const list = result.reduce((acc: Array<Item>, cur: any) => {
+        const { id, name, picUrl, song } = cur;
+        acc.push({ ...getItem(id, name, picUrl, song.artists, song?.album?.name), song });
+        return acc;
+      }, []);
+      multipleList.value.push({ list: splitList(list, 3), type: "song", });
+    };
+    const handleTabChange = (id: string): void => {
+      activeTab.value = id;
+    };
     onMounted(() => {
       getBanners();
       getTopList()
+      getAlbums()
+      getDigitalAlbums()
+      getNewsongs()
     });
-
     return {
       homeSwiperOptions,
       topListSwiperOptions,
+      hometabOptions,
       swiperList,
-      colorsMaps,
       tabLinkMaps,
       activeTab,
       multipleList,
       homeNavOptions,
       handleTabChange,
-      gotoPath,
       toplists,
       ...state,
-      handlePlay,
     };
   },
 });
 </script>
 <style lang="less" scoped>
-.recommend-type {
-  margin-bottom: 10px;
-}
 .recommend {
   padding-bottom: 70px;
 }
@@ -193,24 +216,6 @@ export default defineComponent({
   margin-top: 6px;
 }
 
-.swiper-img {
-  height: 140px;
-}
-.recommend-swiper {
-  &-wrap {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-  }
-  &-title {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 1px 6px;
-    color: #fff;
-    border-radius: 8px 0 0 0;
-  }
-}
 .icon-youjiantou {
   font-size: 12px;
 }

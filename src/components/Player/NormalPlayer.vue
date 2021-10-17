@@ -1,23 +1,29 @@
 <template>
-  <div :style="{ backgroundImage: `url(${backgroundImage})` }" class="normal-player">
-    <div class="normal-player-main">
-      <player-tabs :index="active" @slide="handleSlide" />
-      <g-swiper-items
-        v-slot="{ data }"
-        :list="playerOptions"
-        :options="playerSwiperOptions"
-        style="height:calc(100% - 4rem)"
-        @slideChange="onSlideChange"
-        @swiper="onSwiper"
-      >
-        <component :is="data.component" :index="active"/>
-      </g-swiper-items>
+  <transition name="slide">
+    <div
+      v-show="fullScreen"
+      :style="{ backgroundImage: `url(${backgroundImage})` }"
+      class="normal-player"
+    >
+      <div class="normal-player-main">
+        <player-tabs :index="active" @slide="handleSlide" />
+        <g-swiper-items
+          v-slot="{ data }"
+          :list="playerOptions"
+          :options="playerSwiperOptions"
+          style="height:calc(100% - 4rem)"
+          @slideChange="onSlideChange"
+          @swiper="onSwiper"
+        >
+          <component :is="data.component" :index="active" />
+        </g-swiper-items>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue'
+import { defineComponent, watch, ref, computed } from 'vue'
 import { useStore } from 'vuex';
 import PlayerTabs from '@/components/Player/PlayerTabs.vue'
 import PlayerInfo from '@/components/Player/PlayerInfo.vue'
@@ -36,6 +42,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const backgroundImage = ref('');
+    const fullScreen = computed(() => store.state.fullScreen);
     const {
       active,
       onSwiper,
@@ -50,12 +57,13 @@ export default defineComponent({
         backgroundImage.value = val.picUrl;
       }
     });
-    watch(() => store.state.fullScreen, (val) => {
+    watch(() => fullScreen.value, (val) => {
       if (val) handleSlide(1);
     })
 
     return {
       active,
+      fullScreen,
       playerOptions,
       backgroundImage,
       playerSwiperOptions,
@@ -73,7 +81,7 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: 100;
   transition: background-image 0.4s;
   background: no-repeat 50% / cover;
 }

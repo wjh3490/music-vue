@@ -1,6 +1,6 @@
 import service from '../request/service';
 
-export function vGetPersonalized() {
+export function fetchPersonalized() {
   return service({
     url: '/personalized?limit=6',
     method: 'get',
@@ -15,21 +15,21 @@ export function fetchNewsong(params) {
   });
 }
 
-export function vGetBanner() {
+export function fetchBanner() {
   return service({
     url: '/banner',
     method: 'get',
   });
 }
 
-export function recommentSongs(id) {
+export function fetchRecommentSongs(id) {
   return service({
     url: `/playlist/detail?id=${id}`,
     method: 'get',
   });
 }
 
-export function vGetDetail(id) {
+export function fetchSongDetail(id) {
   return service({
     url: `/song/detail?ids=${id}`,
     method: 'get',

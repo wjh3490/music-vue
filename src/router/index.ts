@@ -33,12 +33,12 @@ const routes: RouteRecordRaw[] =
     //   path: '/user',
     //   component: () => import('../views/user'),
     // },
-    {
-      path: '/playlist',
-      name: 'Playlist',
-      component: () =>
-        import('@/views/playlist/index.vue'),
-    },
+    // {
+    //   path: '/playlist',
+    //   name: 'Playlist',
+    //   component: () =>
+    //     import('@/views/playlist/index.vue'),
+    // },
     {
       path: '/playlist/:id',
       name: 'PlayListDetail',
@@ -70,11 +70,18 @@ const routes: RouteRecordRaw[] =
       name: 'Songs',
       component: () => import('@/views/songs/index.vue'),
     },
-    // {
-    //   path: '/search',
-    //   component: () =>
-    //     import('../views/search'),
-    // },
+    {
+      path: '/search',
+      name: 'Search',
+      component: () =>
+        import('@/views/search/index.vue'),
+    },
+    {
+      path: '/search-detail',
+      name: 'SearchDetail',
+      component: () =>
+        import('@/views/search/detail.vue'),
+    },
 
   ]
 const router = createRouter({

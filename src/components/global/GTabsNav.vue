@@ -4,7 +4,7 @@
       <ul
         class="tabs-nav-wrap"
         ref="scrollItemRef"
-        :class="{ 'tabs-nav-normal': navList.length <= 4 }"
+        :class="{ 'tabs-nav-normal': navList.length <= 5 }"
       >
         <li
           v-for="(item, index) in navList"
@@ -126,7 +126,7 @@ export default defineComponent({
     watch(() => props.active, (val, oldval) => {
       init();
       emit('change', val, oldval);
-      props.navList.length > 4 && nextTick(adjust);
+      props.navList.length > 5 && nextTick(adjust);
     })
     onBeforeUnmount(() => clearInterval(timeId));
     expose({ init })

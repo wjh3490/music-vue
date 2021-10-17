@@ -1,210 +1,155 @@
 <template>
-  <div class="search">
-    <BaseBack :isFixed="true" :background="'rgb(22, 154, 243'">
-      <input
-        type="text"
-        v-model="searchData"
-        placeholder="热门"
-        class="search-input"
-      />
-
+  <div class="search-container">
+    <g-head-nav :show="false">
+      <template #left>{{ null }}</template>
+      <div class="search-container-wrap">
+        <i class="iconfont icon-sousuo search-container-look"></i>
+        <input
+          type="text"
+          v-model="keywords"
+          :placeholder="defaultKeyword"
+          ref="inputRef"
+          class="search-container-input"
+          @keydown.enter="handleKeyDown"
+        />
+        <i
+          v-show="keywords"
+          class="iconfont icon-guanbi2fill search-container-close"
+          @click="handleClear"
+        ></i>
+      </div>
       <template #right>
-        <span @click="cancle" style="font-size:15px">取消</span>
+        <router-link :to="{ name: 'Home' }" style="padding: 0 1rem;">取消</router-link>
       </template>
-    </BaseBack>
+    </g-head-nav>
 
-    <div class="item">
-      <SearchList
-        :list="hotLsit"
-        hotTitle="热门搜索"
-        @handleSearch="(data) => (searchData = data)"
-        :visible="!searchData"
-        :vertical="true"
-        key="hot"
-      />
-
-      <SearchList
-        :visible="!searchData"
-        hotTitle="历史记录"
-        :list="historyList"
-        @handleSearch="(data) => (searchData = data)"
-        @del="del"
-        :vertical="false"
-        key="history"
-      />
-
-      <SearchResult :list="searchList" @play="play" :noResult="noResult">
-        <template v-slot="{ item }">
-          <div class="name ellipsis" v-html="highlight(item.name)"></div>
-          <div class="singer ellipsis" v-html="highlight(item.singer)"></div>
-        </template>
-      </SearchResult>
+    <div v-show="!keywords" class="search-container-list">
+      <search-history-list />
+      <search-hot-list />
     </div>
+
+    <search-result-list v-show="keywords" :list="searchList" :keyword="keywords" />
   </div>
 </template>
 
-<script>
-/* eslint-disable */
-import { mapMutations, mapGetters } from 'vuex';
-import { vSearch, vSearchHot } from '@/api/search';
-import { filterList } from '@/utils/index.js';
-import SearchList from '@/components/Search/SearchList';
-import SearchResult from '@/components/Search/SearchResult';
-export default {
+<script lang="ts">
+const MAX_LENGTH = 10
+import debounce from 'lodash.debounce'
+import { defineComponent, ref, watch, onMounted, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { fetchSearchSuggest, fetchSearchDefault } from '@/api/search'
+import SearchHistoryList from '@/components/Search/SearchHistoryList.vue'
+import SearchResultList from '@/components/Search/SearchResultList.vue'
+import SearchHotList from '@/components/Search/SearchHotList.vue'
+
+export default defineComponent({
   name: 'Search',
-  components: { SearchList, SearchResult },
-  data() {
-    return {
-      searchData: '',
-      hotLsit: [],
-      searchList: [],
-      flag: null,
-      noResult: false,
-    };
-  },
-
-  computed: {
-    highlight() {
-      const reg = new RegExp(this.searchData, 'gi');
-      return function(val) {
-        return val.replace(reg, `<span class='red'>${this.searchData}</span>`);
-      };
-    },
-    ...mapGetters(['playList', 'historyList']),
-  },
-
-  watch: {
-    searchData(newVal) {
-      this.debounce(() => {
-        this.getSearch(newVal);
-      }, 300);
-    },
-  },
-
-  created() {
-    this.getHotList();
-  },
-
-  methods: {
-    debounce(fn, wait = 1000) {
-      if (this.flag) clearTimeout(this.flag);
-      this.flag = setTimeout(fn, wait);
-    },
-    async getSearch(data) {
-      if (!this.searchData) {
-        this.searchList = [];
-        return;
-      }
-
-      const { code, result } = await vSearch(data);
-      if (code === 200) {
-        const { songs } = result;
-        if (!songs) {
-          this.searchList = [];
-          this.noResult = true;
-          return;
-        }
-        this.noResult = false;
-        const songsList = songs.reduce((acur, ele) => {
-          const song = {
-            id: ele.id,
-            name: ele.name,
-            singer: ele.artists[0].name,
-            picUrl: ele.artists[0].img1v1Url,
-          };
-
-          acur.push(song);
-          return acur;
-        }, []);
-
-        this.searchList = Object.freeze(songsList);
-      }
-    },
-    async getHotList() {
-      const { code, result } = await vSearchHot();
-      if (code === 200) {
-        const { hots } = result;
-        const list = hots.reduce((acur, item) => {
-          acur.push(item.first);
-          return acur;
-        }, []);
-        this.hotLsit = list;
-      }
-    },
-    cancle() {
-      this.searchData = '';
-      this.searchList = [];
-    },
-
-    del() {
-      if (this.historyList.length === 0) return;
-      this.$MessageBox({
-        title: '',
-        content: '是否要删除全部',
+  components: { SearchHistoryList, SearchResultList, SearchHotList },
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
+    const keywords = ref('')
+    const defaultKeyword = ref('')
+    const searchList = ref([])
+    const inputRef = ref<HTMLInputElement | null>(null)
+    const getSearchList = async (keywords: string) => {
+      const { result: { allMatch = [] } } = await fetchSearchSuggest({
+        keywords,
+        type: 'mobile'
       })
-        .then(() => {
-          this.setHistoryList([]);
-          localStorage.setItem('history', JSON.stringify([]));
-        })
-        .catch(() => {});
-    },
-    play(song) {
-      // console.log(song);
-      // let songs = this.playList;
-      const history = this.historyList;
-      const id = history.indexOf(this.searchData);
-      if (id > -1) {
-        history.splice(id, 1);
+      searchList.value = allMatch
+    }
+    const getSearchDefault = async () => {
+      const { data: { showKeyword } } = await fetchSearchDefault()
+      defaultKeyword.value = showKeyword
+    }
+    const handleClear = () => { keywords.value = '' }
+    const handleKeyDown = () => {
+      router.push({ name: 'SearchDetail', query: { keyword: keywords.value } })
+    }
+    
+    watch(keywords, debounce((val: string) => {
+      if (!val) return
+      getSearchList(val)
+    }, 200))
+    watch(route, ({ name, query }) => {
+      nextTick(() => (inputRef.value as HTMLInputElement).focus())
+      if (name === 'Search' && query.keyword) {
+        keywords.value = query?.keyword as string ?? ''
       }
-      if (history.length >= 10) {
-        history.pop();
+      if (name === 'SearchDetail') {
+        const history = store.state.historyList
+        const keyword = query?.keyword ?? ''
+        const id = history.indexOf(keyword)
+        if (id > -1) history.splice(id, 1)
+        if (history.length >= MAX_LENGTH) history.pop()
+        history.unshift(keyword);
+        localStorage.setItem('history', JSON.stringify(history));
+        store.commit('setHistoryList', history)
       }
-      history.unshift(this.searchData);
-      /**********************/
-      const songs = filterList(this.playList, song);
-      const index = songs.findIndex((item) => item.id === song.id);
-      localStorage.setItem('history', JSON.stringify(history));
-      this.setPlay(songs);
-      this.setCurrrentIndex(index);
-      this.setFullScreen(true);
-      this.setHistoryList(history);
-    },
-    ...mapMutations([
-      'setCurrrentIndex',
-      'setPlay',
-      'setFullScreen',
-      'setHistoryList',
-    ]),
+    }, { immediate: true })
+
+    onMounted(getSearchDefault)
+
+    return {
+      keywords,
+      inputRef,
+      searchList,
+      defaultKeyword,
+      handleClear,
+      handleKeyDown
+    }
   },
-};
+});
 </script>
 <style scoped lang="less">
-.search-input {
-  width: 100%;
-  height: 28px;
-  padding-left: 15px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50px;
-  &::-webkit-input-placeholder {
-    /* placeholder颜色  */
-    color: #f1f1f1;
-    /* placeholder字体大小  */
-    font-size: 14px;
-  }
-}
-.search {
+.search-container {
   position: relative;
   background: #fbfbfb;
-  padding-top: 50px;
   color: #f1f1f1;
   z-index: 9;
-  .item {
+  &-list {
+    padding: 0 1.6rem;
+  }
+  &-item {
     height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
   }
-}
-.name {
-  font-size: 14px;
+  &-wrap {
+    position: relative;
+    width: 96%;
+    height: 3.5rem;
+    padding: 0 3rem;
+    box-sizing: border-box;
+    background: #ebecec;
+    border-radius: 3rem;
+    margin: 0 1rem;
+  }
+  &-input {
+    width: 100%;
+    height: 3.5rem;
+    line-height: 1.8rem;
+    background: rgba(0, 0, 0, 0);
+    font-size: 14px;
+    color: #333;
+  }
+  &-look,
+  &-close {
+    position: absolute;
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+    margin: 0 0.8rem;
+    vertical-align: middle;
+  }
+  &-look {
+    left: 0;
+  }
+  &-close {
+    right: 0;
+    color: #bbbdc0;
+  }
 }
 </style>

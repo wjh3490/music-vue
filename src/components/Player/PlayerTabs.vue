@@ -28,6 +28,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const handleFullScreen = () => {
+      store.commit('setlockScroll', -1)
       store.commit('setFullScreen', false)
     };
     return {

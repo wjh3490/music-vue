@@ -1,5 +1,5 @@
 <template >
-  <div class="song-privilege">
+  <span class="song-privilege">
     <!-- vip -->
     <span v-if="privilege.fee === 1" class="icon vip">vip</span>
     <!-- sq -->
@@ -8,7 +8,7 @@
     <span v-if="/64|68|1088|1092/.test(`${privilege.flag}`)" class="icon only">独家</span>
     <!-- 试听 -->
     <span v-if="/1152|1028|1088|1092/.test(`${privilege.flag}`)" class="icon listen">试听</span>
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
@@ -25,10 +25,9 @@ export default defineComponent({
 });
 </script>
 <style  scoped>
-.song-privilege {
-  display: flex;
-}
+
 .icon {
+  display: inline-block;
   border: 0.1rem solid #169af3;
   border-radius: 3px;
   color: #169af3;

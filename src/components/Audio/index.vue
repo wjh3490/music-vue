@@ -14,7 +14,7 @@
 <script lang="ts">
 import { defineComponent, nextTick, ref, watch } from 'vue'
 import { useStore } from 'vuex';
-import { playMode, parseLyric, formatLyrics, shuffle } from '@/utils';
+import { playMode, parseLyric, shuffle } from '@/utils';
 import { fetchSong, fetchLyric } from '@/api/songs';
 
 export default defineComponent({
@@ -32,10 +32,18 @@ export default defineComponent({
       nextTick(() => store.commit('setDuration', audio.value.duration));
     };
     const getLyric = async (id: number) => {
-      const res = await fetchLyric(id);
-      const currentLyric = parseLyric(res.lrc.lyric) || {};
-      const currentTLyric = parseLyric(res.tlyric.lyric) || {};
-      const lyrics = formatLyrics(currentLyric, currentTLyric);
+      const { lrc, tlyric } = await fetchLyric(id);
+      const currentLyric = parseLyric(lrc.lyric);
+      const currentTLyric = parseLyric(tlyric.lyric);
+      const lyrics = currentLyric.reduce((acc, cur, index) => {
+        const item = {
+          time: cur.time,
+          ...(cur.time !== undefined ? { ...cur } : { lyric: cur }),
+          tlyric: currentTLyric?.[index]?.lyric ?? ''
+        }
+        if (item.lyric) acc.push(item);
+        return acc
+      }, [])
       store.commit('setCurrentLyric', lyrics);
     };
 
@@ -82,7 +90,7 @@ export default defineComponent({
       nextTick(() => audio.value.play())
     })
     watch(() => store.state.playing, (val) => {
-      if (val) {
+      if (val) { 
         nextTick(() => audio.value.play());
       } else {
         nextTick(() => audio.value.pause());

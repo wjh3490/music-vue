@@ -1,5 +1,5 @@
 import { shallowReactive, toRefs, onMounted } from 'vue'
-import { vGetPersonalized } from "@/api/recomment.js";
+import { fetchPersonalized } from "@/api/recomment.js";
 import { getVideos, getMVs, getDjs, getDjToplist } from "@/api/video";
 type mvType = {
     cover: string,
@@ -14,7 +14,7 @@ export default function useBatch() {
     const apis = [
         getDjs(),
         getDjToplist(),
-        vGetPersonalized(),
+        fetchPersonalized(),
         getVideos(),
         getMVs(),
     ];

@@ -10,7 +10,14 @@
                 <span v-if="!!songs.length">({{ songs.length }}首)</span>
             </div>
         </div>
-        <song-list :songs="songs" :visible="true" />
+        <song-item
+            v-for="(song, index) in songs"
+            :key="song.id"
+            :song="song"
+            :songs="songs"
+            :index="index"
+            :visible="true"
+        />
     </div>
 </template>
 
@@ -19,11 +26,11 @@ import { defineComponent, ref } from 'vue';
 import { fetchTopSong } from '@/api/songs';
 import { arrayToString } from '@/utils';
 import type { Song } from '@/types';
-import SongList from '@/components/common/SongList.vue'
+import SongItem from '@/components/common/SongItem.vue'
 
 export default defineComponent({
     name: 'SongsNewSongList',
-    components: { SongList },
+    components: { SongItem },
     props: {
         index: { type: Number, default: 1, },
         data: { type: Object, default: () => { } }

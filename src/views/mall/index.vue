@@ -11,24 +11,16 @@
       <g-swiper-items
         v-slot="{ data, index }"
         :list="num === 1 ? albums : songs"
-        :options="{
-          watchSlidesVisibility: true,
-          centeredSlides: true,
-          slidesPerView: 'auto',
-        }"
+        :options="mallSwiperOptions"
       >
         <mall-album :list="data" :num="index" />
       </g-swiper-items>
       <template #right>
-        <div class="mall-rank">
-          <template v-for="(item, index) in mallOptions" :key="'s'+item.time">
-            <span
-              :class="{ 'mall-rank-active': (num === 1 ? albumActive : songActive) === item.time }"
-              @click="handleChange(item.time, num)"
-            >{{ item.rank }}</span>
-            <span v-if="index !== 2" class="mall-rank-line"></span>
-          </template>
-        </div>
+        <status-tabs
+          :list="mallOptions"
+          :active="num === 1 ? albumActive : songActive"
+          @change="(val) => handleChange(val, num - 1)"
+        />
       </template>
     </g-card>
 
@@ -44,10 +36,11 @@ import {
   fetchAlbumListStyle,
   fetchAlbumSongsaleboard,
 } from '@/api/album';
+import { mallNavOptions, mallOptions, nameMaps, splitList, mallSwiperOptions } from '@/utils'
 import MallAlbum from '@/components/Mall/MallAlbum.vue';
 import MallArea from '@/components/Mall/MallArea.vue';
 import Navigation from '@/components/common/Navigation.vue';
-import { mallNavOptions, mallOptions, nameMaps, splitList } from '@/utils'
+import StatusTabs from '@/components/common/StatusTabs.vue'
 
 interface Mall {
   title: string,
@@ -56,7 +49,7 @@ interface Mall {
 
 export default defineComponent({
   name: 'Mall',
-  components: { Navigation, MallAlbum, MallArea },
+  components: { Navigation, MallAlbum, MallArea, StatusTabs },
   setup() {
     const albumActive = ref('daily');
     const songActive = ref('daily');
@@ -66,7 +59,7 @@ export default defineComponent({
       songs: [],
       news: [],
     });
-    const fetchAlbumsList = async (type = 'daily', albumType = 0) => {
+    const getAlbumsList = async (type = 'daily', albumType = 0) => {
       const { products } = await fetchAlbumSongsaleboard({
         type,
         albumType,
@@ -82,7 +75,7 @@ export default defineComponent({
       });
       state.songs = splitList(products.slice(0, 12), 4);
     }
-    const fetchAlbumStyle = async () => {
+    const getAlbumStyle = async () => {
       const apis = [
         fetchAlbumListStyle({ area: 'Z_H', limit: 3 }),
         fetchAlbumListStyle({ area: 'E_A', limit: 3 }),
@@ -99,20 +92,20 @@ export default defineComponent({
       state.news = products
     }
     const handleChange = (type: string, albumType: number) => {
-      if (albumType === 1) {
+      if (albumType === 0) {
         if (albumActive.value === type) return;
-        fetchAlbumsList(type, albumType - 1);
+        getAlbumsList(type, albumType);
         albumActive.value = type;
       } else {
         if (songActive.value === type) return;
-        getSongsList(type, albumType - 1);
+        getSongsList(type, albumType);
         songActive.value = type;
       }
     }
     onMounted(() => {
-      fetchAlbumsList();
+      getAlbumsList();
       getSongsList();
-      fetchAlbumStyle();
+      getAlbumStyle();
       getNewAblums()
     })
     return {
@@ -121,6 +114,7 @@ export default defineComponent({
       albumActive,
       mallOptions,
       mallNavOptions,
+      mallSwiperOptions,
       ...toRefs(state),
       handleChange
     }

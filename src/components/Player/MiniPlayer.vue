@@ -1,62 +1,72 @@
 <template>
-  <div class="mini-container" @click.stop="handleFullScreen">
-    <section class="mini-cd" :class="{ active: !playing }">
-      <div
-        class="mini-cd-wrap"
-        :style="{
-          backgroundImage: `conic-gradient(#20a0ff 0%, #2010ff ${percent *
-            100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
-        }"
-      ></div>
-      <div class="mini-cd-bgc" :class="{ 'animation_pause': !playing }">
-        <img v-lazy="currentSong.picUrl" alt class="mini-cd-img" />
+  <transition name="slide">
+    <div v-show="!fullScreen" class="mini-container" @click.stop="handleFullScreen">
+      <!-- <section class="mini-cd" :class="{ active: !playing }">
+        <div
+          class="mini-cd-wrap"
+          :style="{
+            backgroundImage: `conic-gradient(#20a0ff 0%, #2010ff ${percent *
+              100}%, #fff ${percent * 100}%, #fff ${100 - percent * 100}%)`,
+          }"
+        ></div>
+        <div class="mini-cd-bgc" :class="{ 'animation_pause': !playing }">
+          <img :src="currentSong.picUrl" alt class="mini-cd-img" />
+        </div>
+      </section>-->
+      <mini-progress-bar />
+      <section class="mini-desc ellipsis">
+        <p class="mini-player-name ellipsis">{{ currentSong.name }} - {{ currentSong.artists }}</p>
+      </section>
+      <div class="control">
+        <i
+          @click.stop="handlePlaying"
+          class="pause iconfont mini-control-icon mini-icon-commom"
+          :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
+        ></i>
+        <i @click.stop="actionNext" class="next iconfont icon-qianjin mini-icon-commom"></i>
+        <i
+          @click.stop="handleVisible"
+          class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
+        ></i>
       </div>
-    </section>
-
-    <section class="mini-desc ellipsis">
-      <p class="mini-player-name ellipsis">{{ currentSong.name }} - {{ currentSong.artists }}</p>
-    </section>
-    <div class="control">
-      <i
-        @click.stop="handlePlaying"
-        class="pause iconfont mini-control-icon mini-icon-commom"
-        :class="playing ? 'icon-pause-full' : 'icon-bofang31'"
-      ></i>
-      <i @click.stop="actionNext" class="next iconfont icon-qianjin mini-icon-commom"></i>
-
-      <i
-        @click.stop="handleVisible"
-        class="iconfont icon-iconsMusicyemianbofangmoshiPlayList mini_collect-icon mini-icon-commom"
-      ></i>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex';
+import MiniProgressBar from './MiniProgressBar.vue'
 export default defineComponent({
   name: 'MiniPlayer',
+  components: { MiniProgressBar },
   setup() {
     const store = useStore();
     const playing = computed(() => store.state.playing);
+    const fullScreen = computed(() => store.state.fullScreen);
     const percent = computed(() => store.state.currentTime / store.state.duration);
     const currentSong = computed(() => store.getters.currentSong);
-    const handleVisible = () => { store.commit('setVisible', true) };
+    const handleVisible = () => {
+      store.commit('setPlayListVisible', true);
+      store.commit('setlockScroll', 1)
+    };
     const handlePlaying = () => { store.commit('setPlaying', !playing.value) };
-    const handleFullScreen = () => { store.commit('setFullScreen', true) };
+    const handleFullScreen = () => {
+      store.commit('setlockScroll', 1)
+      store.commit('setFullScreen', true)
+    };
     const actionNext = () => { store.dispatch('actionNext') };
 
     return {
       playing,
       percent,
+      fullScreen,
       currentSong,
       actionNext,
       handleVisible,
       handlePlaying,
       handleFullScreen,
     }
-
   },
 });
 </script>
@@ -69,13 +79,12 @@ export default defineComponent({
     width: 100%;
     height: 56px;
     background-color: #fff;
-    box-shadow: rgba(0, 69, 189, 0.1) 0px 0px 6px 0px;
+    box-shadow: 0px 0px 20px 10px rgb(95 101 105 / 15%);
     z-index: 99;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-
     .control {
       display: flex;
       justify-content: space-between;
@@ -107,41 +116,6 @@ export default defineComponent({
         font-size: 12px;
         color: #888;
       }
-    }
-  }
-  &-cd {
-    position: relative;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
-    transition: all 0.5s;
-    overflow: hidden;
-    transform: translateY(-5px);
-    &.active {
-      transform: translateY(-1px) scale(0.8);
-    }
-    &-wrap {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    &-bgc {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 3px;
-      overflow: hidden;
-      animation: move 20s linear infinite;
-      &.animation_pause {
-        animation-play-state: paused;
-      }
-    }
-    &-img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
     }
   }
 }

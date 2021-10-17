@@ -1,6 +1,6 @@
 <template>
   <div class="proress-wrap">
-    <div class="currentTime">{{ currentTime }}</div>
+    <div class="currentTime">{{ formatTime(currentTime) }}</div>
     <div class="proress-line-wrap">
       <div class="proress-bar" ref="progressRef" @click.stop.prevent="hanleClick">
         <div
@@ -20,12 +20,12 @@
         </div>
       </div>
     </div>
-    <div class="duration">{{ duration }}</div>
+    <div class="duration">{{ formatTime(duration) }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onUnmounted, onMounted, nextTick, } from 'vue';;
+import { defineComponent, ref, computed, onUnmounted, nextTick, } from 'vue';;
 import { useStore } from 'vuex';
 import { formatTime } from '@/utils'
 export default defineComponent({
@@ -41,18 +41,18 @@ export default defineComponent({
     let cachePercent: number = 0;;
     let finaPercent: number = 0;
 
-    const percent: any = computed({
+    const duration = computed(() => store.state.duration);
+    const currentTime = computed(() => store.state.currentTime);
+    const percent = computed({
       get() {
         if (isMove.value) return;
-        const ratio = store.state.currentTime / store.state.duration
+        const ratio = currentTime.value / duration.value
         return (ratio * 100).toFixed(2) || 0;
       },
       set(val) {
         progressBarRef.value.style.transform = `translate3d(${(val as number) - 100}%, 0, 0)`
       }
     })
-    const duration = computed(() => formatTime(store.state.duration));
-    const currentTime = computed(() => formatTime(store.state.currentTime));
 
     const handleTouchStart = (e: TouchEvent) => {
       touch.startX = e.touches[0].clientX;
@@ -66,9 +66,9 @@ export default defineComponent({
       const newPercent = deltaX / touch.left;
       percent.value = Math.max(Math.min(+cachePercent + newPercent * 100, 100), 0);
       finaPercent = +cachePercent + newPercent * 100;
-      tips.value = formatTime(finaPercent / 100 * store.state.duration);
+      tips.value = formatTime(finaPercent / 100 * duration.value);
     }
-    let audio;
+    let audio: HTMLAudioElement;
     nextTick(() => { audio = document.getElementById('audio') as HTMLAudioElement });
     const handleCurrentTime = (time: number) => {
       const filterLyric = store.getters.lyricKeys.filter((item) => item <= Math.floor(time));
@@ -78,16 +78,17 @@ export default defineComponent({
     }
     let timeId = -1;
     const handleTouchEnd = () => {
-      const currentTime = finaPercent / 100 * store.state.duration;
+      const currentTime = finaPercent / 100 * duration.value;
       handleCurrentTime(currentTime);
       visible.value = false;
       timeId = setTimeout(() => { isMove.value = false }, 50);
     };
     const hanleClick = (e) => {
-      const offsetX = progressRef.value.getBoundingClientRect().left;
-      const width = progressRef.value.getBoundingClientRect().width;
-      const percent = (e.clientX - offsetX) / width;
-      const currentTime = percent * store.state.duration;
+      const { left, width } = progressRef?.value?.getBoundingClientRect();
+      const _left = left;
+      const _width = width;
+      const percent = (e.clientX - _left) / _width;
+      const currentTime = percent * duration.value;
       handleCurrentTime(currentTime)
     };
 
@@ -100,6 +101,7 @@ export default defineComponent({
       handleTouchMove,
       handleTouchEnd,
       hanleClick,
+      formatTime,
       progressBarRef,
       progressRef,
       currentTime,

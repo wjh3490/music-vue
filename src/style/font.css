@@ -24,6 +24,13 @@
   url('//at.alicdn.com/t/font_2448928_2w35tftpkzw.svg?t=1619610261372#iconfont') format('svg'); /* iOS 4.1- */
 }
 
+@font-face {
+  font-family: "iconfont"; /* Project id 2854130 */
+  src: url('//at.alicdn.com/t/font_2854130_vvubkple3k.woff2?t=1633778552592') format('woff2'),
+       url('//at.alicdn.com/t/font_2854130_vvubkple3k.woff?t=1633778552592') format('woff'),
+       url('//at.alicdn.com/t/font_2854130_vvubkple3k.ttf?t=1633778552592') format('truetype');
+}
+
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
@@ -136,15 +143,6 @@
   content: "\e62f";
 }
 
-
-
-
-
-
-
-
-/*  */
-
 /* .icon-bofang:before {
   content: '\e623';
 } */
@@ -156,3 +154,12 @@
 .icon-pause-full:before {
   content: '\ea8c';
 }
+
+.icon-guanbi2fill:before {
+  content: "\e724";
+}
+
+.icon-sousuo:before {
+  content: "\e7a8";
+}
+

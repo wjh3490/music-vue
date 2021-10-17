@@ -1,35 +1,4 @@
-.scale-leave-to,
-.scale-enter {
-  transform: translate3d(0, 100%, 0);
-}
-
-.scale-enter-active,
-.scale-leave-active {
-  transition: transform 0.3s;
-}
-//
-
-//
-.fade2-enter,
-.fade2-leave-to {
-  transform: translate3d(0, 100%, 0);
-  opacity: 0;
-}
-.fade2-enter-active,
-.fade2-leave-active {
-  transition: all 0.3s;
-}
-//
-// .fade1-enter,
-.fade1-enter-leave-to {
-  opacity: 1;
-}
-.fade1-enter-active,
-.fade1-enter-leave-active {
-  transition: all 1s;
-}
-//
-.slide-enter,
+.slide-enter-from,
 .slide-leave-to {
   transform: translate3d(0, 100%, 0);
   opacity: 0;
@@ -38,6 +7,16 @@
 .slide-leave-active {
   transition: all 0.3s;
 }
+
+.fade-in-enter-from,
+.fade-in-leave-to {
+  opacity: 0;
+}
+.fade-in-enter-active,
+.fade-in-leave-active {
+  transition: all .3s;
+}
+
 @keyframes move {
   from {
     transform: rotate(0deg);

@@ -1,8 +1,5 @@
 <template>
-  <div class="play-mode">
-    <slot />
-    <i class="iconfont mode-icon" :class="modeOptions[mode]['icon']" @click="visible = !visible"></i>
-    <!-- <transition name="slide"> -->
+  <transition name="slide">
     <ul v-show="visible" class="mode-list">
       <li
         v-for="(item, index) in modeOptions"
@@ -18,8 +15,7 @@
         </span>
       </li>
     </ul>
-    <!-- </transition> -->
-  </div>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -31,20 +27,22 @@ type Mode = string | number | symbol;
 
 export default defineComponent({
   name: 'PlayerMode',
-  setup() {
+  props: {
+    visible: Boolean,
+  },
+  emits: ['update:visible'],
+  setup(_, { emit }) {
     const store = useStore();
-    const visible = ref(false);
     const mode = computed(() => store.state.mode);
     const setMode = (mode: Mode) => { store.commit('setMode', mode) }
 
     const changeMode = (status: Mode) => {
-      visible.value = false;
+      emit('update:visible', false)
       if (mode.value === status) return;
       setMode(status);
     }
     return {
       mode,
-      visible,
       modeOptions,
       changeMode,
     }
@@ -52,32 +50,32 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-.play-mode {
-  position: relative;
-  z-index: 1200;
+.mode-list {
+  position: absolute;
+  left: 2.5rem;
+  bottom: 4.5rem;
+  padding: 0.4rem 1rem 0.4rem 0.7rem;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px) brightness(100%);
+  border-radius: 4px;
   .mode-icon {
-    font-size: 24px;
+    font-size: 2.4rem;
     color: #fff;
-    vertical-align: middle;
     &.active {
       color: #a9a98a;
     }
   }
-  .mode-list {
-    position: absolute;
-    left: 0;
-    top: -325%;
-    font-size: 12px;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px) brightness(100%);
-    .mode-item {
-      width: 100px;
-      .mode-name {
-        vertical-align: middle;
-        &.active {
-          color: #a9a98a;
-        }
+  .mode-item {
+    width: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .mode-name {
+      font-size: 1.4rem;
+      &.active {
+        color: #a9a98a;
       }
     }
   }

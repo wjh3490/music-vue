@@ -8,7 +8,7 @@
     </div>
     <div class="lyric-item" ref="lyricRef">
       <div class="empty1"></div>
-      <div class="no-lyric" v-if="!lyricKeys.length">暂无歌词</div>
+      <div class="no-lyric" v-if="!currentLyric.length">暂无歌词</div>
       <div
         v-for="(item, index) in currentLyric"
         :key="item.time"
@@ -21,7 +21,7 @@
 
       <div class="empty"></div>
     </div>
-    <div class="pause-wrap" @click.stop="setPlaying">
+    <div class="pause-wrap" @click.stop="handlePlaying">
       <i class="pause iconfont control-icon" :class="playing ? 'icon-zanting11' : 'icon-bofang'"></i>
     </div>
   </div>
@@ -30,19 +30,19 @@
 <script lang="ts">
 import { defineComponent, ref, watch, computed, nextTick } from 'vue'
 import { useStore } from 'vuex'
-import { scrollToEase } from '@/utils/index.js';
+import { scrollToEase, scrollToInstant } from '@/utils/index.js';
 export default defineComponent({
   name: 'PlayerLyric',
   setup() {
     const store = useStore()
     const lyricRef = ref<any>(null);
     const activeLyricRef = ref([]);
-    const currentLyric = computed(() => store.state.currentLyric);
-    const currentSong = computed(() => store.getters.currentSong);
-    const activeLyricIndex = computed(() => store.state.activeLyricIndex);
     const playing = computed(() => store.state.playing);
-    const lyricKeys = computed(() => store.getters.lyricKeys);
+    const currentLyric = computed(() => store.state.currentLyric);
     const LyricScrollY = computed(() => store.state.LyricScrollY);
+    const activeLyricIndex = computed(() => store.state.activeLyricIndex);
+    const lyricKeys = computed(() => store.getters.lyricKeys);
+    const currentSong = computed(() => store.getters.currentSong);
 
     const scrollAnimate = () => {
       const activeElement = activeLyricRef.value[LyricScrollY.value];
@@ -51,38 +51,38 @@ export default defineComponent({
       const { offsetTop, offsetHeight } = activeElement;
       scrollToEase(lyricRef.value, start, offsetTop - 100 - offsetHeight);
     };
-    const setPlaying = () => {
-      store.commit('setPlaying', !playing)
-    };
+    const handlePlaying  = () => { store.commit('setPlaying', !playing.value) }
 
     watch(() => store.state.currentTime, (val) => {
-      if (!lyricKeys.value.length) return;
+      const _lyricKeys = lyricKeys?.value;
+      // const LyricScrollY = LyricScrollY?.value;
+      if (!_lyricKeys.length) return;
       if (!store.state.fullScreen) return;
-      if (lyricKeys.value[LyricScrollY.value] > ~~val) {
+      if (_lyricKeys[LyricScrollY.value] > ~~val) {
         if (store.state.debounce) {
-          store.commit('setActiveLyricIndex', lyricKeys.value[Math.min(LyricScrollY.value - 1, lyricKeys.value.length - 1)])
+          store.commit('setActiveLyricIndex', _lyricKeys[Math.min(LyricScrollY.value - 1, _lyricKeys.length - 1)])
           nextTick(scrollAnimate);
           store.commit('setDebounce', false);
         };
         return;
       };
-      store.commit('setLyricScrollY', Math.min(LyricScrollY.value + 1, lyricKeys.value.length))
-      store.commit('setActiveLyricIndex', lyricKeys.value[Math.min(LyricScrollY.value - 1, lyricKeys.value.length - 1)])
+      store.commit('setLyricScrollY', Math.min(LyricScrollY.value + 1, _lyricKeys.length))
+      store.commit('setActiveLyricIndex', _lyricKeys[Math.min(LyricScrollY.value - 1, _lyricKeys.length - 1)])
       nextTick(scrollAnimate)
     });
-    watch(() => store.state.currrentIndex, () => {
-      store.commit('setLyricScrollY', 0)
+    watch(currentSong, () => {
+      store.commit('setLyricScrollY', 0);
+      nextTick(() => scrollToInstant(lyricRef.value, 0))
     });
 
     return {
       playing,
       lyricRef,
-      lyricKeys,
       currentSong,
       currentLyric,
       activeLyricRef,
       activeLyricIndex,
-      setPlaying,
+      handlePlaying,
     }
   },
 });

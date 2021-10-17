@@ -1,6 +1,7 @@
 import axios from 'axios';
 const service = axios.create({
   baseURL: import.meta.env.PROD ? 'https://netease-cloud-music-api-gilt.vercel.app/':'http://localhost:3001', 
+  // baseURL: 'https://netease-cloud-music-api-gilt.vercel.app/',
 });
 service.defaults.retry = 0;
 service.defaults.retryDelay = 1000;

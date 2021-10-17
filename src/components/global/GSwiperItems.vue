@@ -1,7 +1,7 @@
 <template>
   <swiper v-bind="options">
     <swiper-slide v-for="(item, index) in list" :key="item[keyValue] || index">
-      <slot :data="item" :index="index"/>
+      <slot :data="item" :index="index" />
     </swiper-slide>
   </swiper>
 </template>

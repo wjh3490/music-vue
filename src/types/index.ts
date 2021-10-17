@@ -5,17 +5,17 @@ export interface Privilege {
     maxbr: number,
 }
 
-export interface Song {
+export interface SongParams {
     id: number,
     name: string,
     album: string,
-    alia?: '',
+    alia: '',
     artists: string,
-    publishTime?: number,
+    publishTime: number,
     picUrl: string,
     privilege: Privilege
 }
-
+ export type Song = Partial<SongParams>
 export interface Singer {
     id: number,
     name: string,

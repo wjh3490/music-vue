@@ -1,33 +1,38 @@
 <template>
   <section
-    v-for="(item, index) in songs"
-    :key="item.id"
-    :class="{ active: item.id === currentSong.id }"
+    :class="{ active: song.id === currentSong.id }"
     class="songlist-item"
     @click.stop.prevent="handlePlay(index)"
   >
-    <div
-      v-if="!visible"
-      class="songlist-index"
-      :class="{ active: item.id == currentSong.id }"
-    >{{ index + 1 }}</div>
-    <div v-if="visible" class="songlist-figure">
-      <img v-lazy="item.picUrl" alt />
-    </div>
-    <div class="songlist-name">
-      <div class="ellipsis songlist-title" :class="{ active: item.id == currentSong.id }">
-        <span>{{ item.name }}</span>
-        <span
-          v-if="item.alia"
-          :class="{ active: item.id == currentSong.id }"
-          class="songlist-alia"
-        >({{ item.alia }})</span>
+    <template v-if="hide">
+      <div
+        v-if="!visible"
+        class="songlist-index"
+        :class="{ active: song.id == currentSong.id }"
+      >{{ index + 1 }}</div>
+      <div v-if="visible" class="songlist-figure">
+        <img v-lazy="song.picUrl" />
       </div>
-      <div class="songlist-album" :class="{ active: item.id == currentSong.id }">
-        <privilege :privilege="item.privilege" />
+    </template>
+    <div class="songlist-name">
+      <div class="ellipsis songlist-title" :class="{ active: song.id == currentSong.id }">
+        <span v-if="highlight" v-html="highlightFn(song.name)"></span>
+        <span v-else>{{ song.name }}</span>
+
+        <span v-if="song.alia" :class="{ active: song.id == currentSong.id }" class="songlist-alia">
+          (
+          <span v-if="highlight" v-html="highlightFn(song.alia)"></span>
+          <span v-else>{{ song.alia }}</span>)
+        </span>
+      </div>
+      <div class="songlist-album" :class="{ active: song.id == currentSong.id }">
+        <privilege :privilege="song.privilege" />
         <div class="ellipsis songlist-content">
-          <span>{{ item.artists }}</span> ·
-          <span>{{ item.album }}</span>
+          <span v-if="highlight" v-html="highlightFn(song.artists)"></span>
+          <span v-else>{{ song.artists }}</span>
+          .
+          <span v-if="highlight" v-html="highlightFn(song.album)"></span>
+          <span v-else>{{ song.album }}</span>
         </div>
       </div>
     </div>
@@ -40,26 +45,50 @@ import { useStore } from 'vuex';
 import isEqual from 'lodash.isequal'
 import type { Song } from '@/types'
 import Privilege from './Privilege.vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
-  name: 'SongList',
+  name: 'SongItem',
   components: { Privilege },
   props: {
+    song: {
+      type: Object as PropType<Song>,
+      default: () => { }
+    },
     songs: {
-      type: Array as PropType<Array<Song>>,
+      type: Object as PropType<Song[]>,
       default: () => []
+    },
+    index: {
+      type: Number,
+      default: 0,
     },
     visible: {
       type: Boolean,
       default: false,
+    },
+    highlight: {
+      type: Boolean,
+      default: false
+    },
+    hide: {
+      type: Boolean,
+      default: true
     }
   },
   setup(props) {
-    const store = useStore();
-    const currentSong = computed(() => store.getters.currentSong);
-    const playList = computed(() => store.state.playList);
+    const store = useStore()
+    const route = useRoute()
+    const currentSong = computed(() => store.getters.currentSong)
+    const playList = computed(() => store.state.playList)
+    const highlightFn = computed(() => (val: string | undefined) => {
+      const keyword = route.query.keyword as string
+      const reg = new RegExp(keyword, 'gi');
+      return (val as string).replace(reg, `<span class='highlight'>${keyword}</span>`);
+    })
 
     const handlePlay = (index: number) => {
+      console.log(props.songs, playList.value)
       if (!isEqual(props.songs, playList.value)) {
         store.commit('setPlay', props.songs)
         store.commit('setSequenceList', props.songs)
@@ -67,6 +96,7 @@ export default defineComponent({
       store.commit('setCurrrentIndex', index)
     }
     return {
+      highlightFn,
       currentSong,
       handlePlay,
     }
@@ -79,7 +109,7 @@ export default defineComponent({
     position: relative;
     display: flex;
     align-items: center;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
     &.active {
       &::after {
         position: absolute;
@@ -107,6 +137,7 @@ export default defineComponent({
     font-size: 16px;
     width: 5rem;
     text-align: center;
+    color: #333;
     &.active {
       color: #169af3;
     }
@@ -115,12 +146,13 @@ export default defineComponent({
   &-title {
     width: 26rem;
     font-size: 18px;
+    color: #333;
     &.active {
       color: #169af3;
     }
   }
   &-alia {
-    color: #a59797f5;
+    color: #333;
     &.active {
       color: #169af3;
     }

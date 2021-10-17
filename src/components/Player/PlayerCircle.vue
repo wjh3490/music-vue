@@ -6,14 +6,7 @@
     <div class="song-detail">
       <p class="song-singer">{{ currentSong.name }}</p>
       <p class="song-name">{{ currentSong.artists }}</p>
-      <div class="currrent_lyric">
-        {{
-          currentLyric
-            ? currentLyric?.lyric
-            : '暂无歌词'
-        }}
-      </div>
-      <div class="currrent_lyric" v-if="currentLyric?.tlyric">{{ currentLyric['tlyric'] }}</div>
+      <player-currrent-lyric />
     </div>
   </div>
 </template>
@@ -21,24 +14,23 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
 import { useStore } from 'vuex';
+import PlayerCurrrentLyric from './PlayerCurrrentLyric.vue'
 export default defineComponent({
   name: 'PlayerCircle',
+  components: { PlayerCurrrentLyric },
   setup() {
     const store = useStore()
     const currentSong = computed(() => store.getters.currentSong);
-    const currentLyric = computed(() => store.state.currentLyric[store.state.LyricScrollY - 1]);
-
     return {
       currentSong,
-      currentLyric,
     }
   },
 });
 </script>
 <style scoped lang="less">
 .song-detail {
-  padding: 0 44px;
-  margin-top: 8px;
+  padding: 0 4.4rem;
+  margin-top: 0.8rem;
   .song-singer {
     font-size: 24px;
     color: #fff;
@@ -51,15 +43,12 @@ export default defineComponent({
   }
 }
 .circle {
-  .currrent_lyric {
-    font-size: 14px;
-    color: rgba(225, 225, 225, 0.8);
-  }
   .bgc {
-    width: 280px;
-    height: 250px;
+    width: 28rem;
+    height: 25rem;
     border-radius: 10px;
     margin: 0 auto;
+    margin-top: 1.6rem;
     overflow: hidden;
     background-size: 100% 100%;
     background-position: center, center;
@@ -67,15 +56,13 @@ export default defineComponent({
     transition: background-image 0.2s;
     .bgc-img {
       height: 100%;
+      background-color: #ccc;
     }
   }
   .no-lyric {
-    margin-top: 18px;
+    margin-top: 1.8rem;
     font-size: 14px;
     color: #fff;
   }
-}
-.rotateY {
-  transform: rotateY(180deg);
 }
 </style>

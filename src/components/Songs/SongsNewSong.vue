@@ -51,7 +51,8 @@ export default defineComponent({
     }
 
     watch(active, (val) => {
-      songs.value[val].flag && songs.value[val].getSongs(topSongMaps[val]);
+      const _songs = songs.value
+      _songs[val].flag && _songs[val].getSongs(topSongMaps[val]);
     })
     onMounted(() => {
       songs.value[0].getSongs(7);

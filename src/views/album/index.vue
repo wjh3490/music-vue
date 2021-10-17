@@ -1,7 +1,7 @@
 <template>
   <g-head-nav background="transparent" :title="title" color="#fff" isFixed />
   <BaseBackGround :info="info" :opacity="opacity" />
-  <song-list :songs="songData" />
+  <song-item v-for="(song, index) in songData" :key="song.id" :song="song" :songs="songData" :index="index" />
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
@@ -10,7 +10,7 @@ import debounce from 'lodash.debounce';
 import { fetchAlbum } from '@/api/album';
 import { arrayToString, splitString } from '@/utils';
 import type { Song, StrKeys } from '@/types';
-import SongList from '@/components/common/SongList.vue';
+import SongItem from '@/components/common/SongItem.vue';
 import BaseBackGround from '@/components/base/BaseBackGround.vue'
 const msg = {
   artist: '',
@@ -27,7 +27,7 @@ const msg = {
 
 export default defineComponent({
   name: 'Album',
-  components: { SongList, BaseBackGround },
+  components: { SongItem, BaseBackGround },
   setup() {
     const route = useRoute();
     const songData = ref<Song[]>([]);

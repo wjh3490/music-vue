@@ -2,20 +2,22 @@
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  // -webkit-user-select: none;
-  // user-select: none;
+  /* -webkit-user-select: none;
+  user-select: none; */
 }
 html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   font-size: calc(100vw / 37.5);
-  //    -webkit-tap-highlight-color: transparent;
-  //     -webkit-touch-callout: none;
-  //     -webkit-user-select: none;
-  //     user-select: none;
+  /*    -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none; */
 }
-
+:root {
+  --blue: #169af3;
+}
 body {
   margin: 0;
   font-size: 12px;
@@ -258,7 +260,7 @@ img {
 }
 
 #nprogress .bar {
-  background: #169af3 !important; //自定义颜色
+  background: #169af3 !important;自定义颜色
 }
 
 .rebound {
@@ -269,8 +271,8 @@ img {
   padding-bottom: 2rem;
 }
 .parent-hidden {
-  // position: fixed;
-  // left: 0;
+  /* position: fixed;
+  left: 0; */
   overflow: hidden;
 }
 .play-scrollbar {
@@ -285,12 +287,20 @@ img {
   background: #169af3;
 }
 
-.padding60 {
-  padding-bottom: 6rem;
+.padding60 { padding-bottom: 6rem; } 
+.paddingtop45 { padding-top: 4.5rem; }
+.paddingtop60 { padding-top: 6rem; }
+.paddingtop90 {  padding-top: 9rem; }
+
+.lock-scroll {
+  position: fixed;
+  /* left: 0; */
+  width: 100%;
 }
-.paddingtop45 { padding-top: 4.5rem;}
-.paddingtop60 { padding-top: 6rem;}
-.paddingtop90 {  padding-top: 9rem;}
+.highlight{
+  color: var(--blue);
+
+}
  
 
 

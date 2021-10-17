@@ -1,5 +1,5 @@
 <template>
-  <song-list :songs="songList" />
+  <song-item v-for="(song, index) in songList"  :key="song.id"  :songs="songList" :song="song" :index="index"/>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
@@ -8,10 +8,10 @@ import { useStore } from 'vuex';
 import { fetchArtistTop } from '@/api/singer';
 import { splitString, arrayToString } from '@/utils';
 import type { Song } from '@/types';
-import SongList from '@/components/common/SongList.vue'
+import SongItem from '@/components/common/SongItem.vue'
 export default defineComponent({
   name: 'SingerHotSong',
-  components: { SongList },
+  components: { SongItem },
   props: {
     active: {
       type: [String, Number],

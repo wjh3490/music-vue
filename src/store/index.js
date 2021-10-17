@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
-
-import { playMode } from '../utils/config';
+import { playMode } from '../utils/config'
+const parse = JSON.parse
 
 const store = createStore({
   state: {
@@ -13,14 +13,12 @@ const store = createStore({
     fullScreen: false,
     sequenceList: [],
     mode: playMode.sequence,
-    historyList: JSON.parse(localStorage.getItem('history')) || [],
-
-    likeList: JSON.parse(localStorage.getItem('likeList')) || [],
-    playHistory: JSON.parse(localStorage.getItem('playHistory')) || [],
-    visible: false,
+    historyList: parse(localStorage.getItem('history')) || [],
+    likeList: parse(localStorage.getItem('likeList')) || [],
+    playHistory: parse(localStorage.getItem('playHistory')) || [],
+    playListVisible: false,
     currentTime: 0,
     currentLyric: [],
-    lyricKeys: [],
     duration: 0,
     LyricScrollY: 0,
     debounce: false,
@@ -30,8 +28,8 @@ const store = createStore({
   },
   getters: {
     lyricKeys(state) {
-      const times = (state.currentLyric || []).map(item => +item.time)
-      return times;
+      const times = (state.currentLyric || []).map(item => item.time ? item.time : '') || []
+      return times.filter(Boolean);
     },
     currentSong(state) {
       return state.playList[state.currrentIndex] || {};
@@ -41,24 +39,17 @@ const store = createStore({
     setlockScroll(state, num) {
       state.lockScroll = state.lockScroll + num;
     },
-    setVisible(state, visible) {
-      state.visible = visible;
-      if (!visible) {
-        state.lockScroll = state.lockScroll - 1;
-      }
+    setPlayListVisible(state, visible) {
+      state.playListVisible = visible;
     },
     setActiveLyricIndex(state, index) {
       state.activeLyricIndex = index;
     },
-    setDebounce(state,debounce) {
+    setDebounce(state, debounce) {
       state.debounce = debounce;
     },
     setLyricScrollY(state, LyricScrollY) {
       state.LyricScrollY = LyricScrollY;
-    },
-
-    setLyricKeys(state, lyricKeys) {
-      state.lyricKeys = lyricKeys;
     },
     setCurrentLyric(state, currentLyric) {
       state.currentLyric = currentLyric;
@@ -101,9 +92,6 @@ const store = createStore({
     },
     setFullScreen(state, fullScreen) {
       state.fullScreen = fullScreen;
-      if (!fullScreen) {
-        state.lockScroll = state.lockScroll - 1;
-      }
     },
     setMode(state, mode) {
       state.mode = mode;
@@ -135,7 +123,7 @@ const store = createStore({
         }
       }
     },
-    emptyList({ commit, state }) {
+    clearAll({ commit, state }) {
       commit('setPlay', []);
       commit('setSequenceList', []);
       commit('setCurrrentIndex', -1);
