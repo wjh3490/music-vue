@@ -1,4 +1,5 @@
 import service from '../request/service';
+import { StrKeys } from '@/types'
 
 export function getVideos() {
   return service({

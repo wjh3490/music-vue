@@ -1,5 +1,5 @@
 import { shallowReactive, toRefs, onMounted } from 'vue'
-import { fetchPersonalized } from "@/api/recomment.js";
+import { fetchPersonalized } from "@/api/recomment";
 import { getVideos, getMVs, getDjs, getDjToplist } from "@/api/video";
 type mvType = {
     cover: string,

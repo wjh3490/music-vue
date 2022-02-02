@@ -1,4 +1,5 @@
 import service from '../request/service';
+import { StrKeys } from '@/types'
 
 export function fetchPersonalized() {
   return service({
@@ -7,7 +8,7 @@ export function fetchPersonalized() {
   });
 }
 
-export function fetchNewsong(params) {
+export function fetchNewsong(params: StrKeys<string>) {
   return service({
     url: '/personalized/newsong',
     method: 'get',
@@ -22,17 +23,19 @@ export function fetchBanner() {
   });
 }
 
-export function fetchRecommentSongs(id) {
-  return service({
-    url: `/playlist/detail?id=${id}`,
-    method: 'get',
-  });
-}
+// export function fetchRecommentSongs(params) {
+//   return service({
+//     url: `/playlist/detail?id=${id}`,
+//     method: 'get',
+//     params
+//   });
+// }
 
-export function fetchSongDetail(id) {
+export function fetchSongDetail(params: StrKeys<string>) {
   return service({
-    url: `/song/detail?ids=${id}`,
+    url: '/song/detail',
     method: 'get',
+    params
   });
 }
 export function recommendSongs() {

@@ -6,7 +6,7 @@
   <section class="singer-about-represent" v-if="info.topicData.length">
     <h2>代表作品</h2>
     <div v-for="item in info.topicData" :key="item.id" class="singer-about-represent-item">
-      <img v-lazy="item.coverUrl" alt class="singer-about-represent-left" />
+      <img v-lazy="item.coverUrl" class="singer-about-represent-left" />
       <div class="singer-about-represent-right">
         <p class="singer-about-represent-mainTitle">{{ item.mainTitle }}</p>
         <p class="singer-about-represent-tag ellipsis">标签: {{ item.tags.join(',') }}</p>
@@ -30,7 +30,7 @@
         <ul class="singer-about-samilar-wrap">
           <li v-for="artist in simiArtists" :key="artist.id" class="singer-about-samilar-item">
             <router-link :to="{ name: 'SingerDetail', params: { id: artist.id } }">
-              <img v-lazy="artist.img1v1Url" alt class="singer-about-samilar-figure" />
+              <img v-lazy="artist.img1v1Url" class="singer-about-samilar-figure" />
               <span class="singer-about-samilar-name">{{ artist.name }}</span>
             </router-link>
           </li>
@@ -77,14 +77,14 @@ export default defineComponent({
       simiArtists: [],
     })
     const getSingerInfo = async (id: string) => {
-      const { topicData, briefDesc } = await fetchArtistDesc(id);
+      const { topicData, briefDesc } = await fetchArtistDesc({ id });
       state.info = {
         topicData,
         briefDesc,
       }
     }
     const getSimiSinger = async (id: string) => {
-      const { artists, } = await fetchArtistSimi(id);
+      const { artists, } = await fetchArtistSimi({ id });
       state.simiArtists = artists;
     }
     const getDetail = () => {

@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch, computed, nextTick } from 'vue'
 import { useStore } from 'vuex'
-import { scrollToEase, scrollToInstant } from '@/utils/index.js';
+import { scrollToEase, scrollToInstant } from '@/utils/index';
 export default defineComponent({
   name: 'PlayerLyric',
   setup() {

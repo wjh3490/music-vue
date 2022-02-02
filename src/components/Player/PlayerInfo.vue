@@ -74,14 +74,14 @@ export default defineComponent({
     const fullScreen = computed(() => store.state.fullScreen)
     let flag = false;
     const getSimiPlaylist = async () => {
-      const { playlists } = await fetchPlaylistSimi(
-        currentSong.value.id,
-        3
-      );
+      const { playlists } = await fetchPlaylistSimi({
+        id: currentSong.value.id,
+        limit: 3
+      });
       simiPlayList.value = playlists.slice(0, 3);
     };
     const getSimiSong = async () => {
-      const { songs } = await fetchSongSimi(currentSong.value.id, 3);
+      const { songs } = await fetchSongSimi({id: currentSong.value.id, limit: 3});
       simiSongs.value = songs.slice(0, 3);
     };
     const getData = () => {

@@ -16,9 +16,9 @@
     </section>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
-import { useRoute } from 'vue-router';
-import { fetchCloudsearch } from '@/api/search';
+import { defineComponent, ref, PropType } from 'vue'
+import { useRoute } from 'vue-router'
+import { fetchCloudsearch } from '@/api/search'
 
 export interface Artist {
     img1v1Url: string,

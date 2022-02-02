@@ -1,5 +1,11 @@
 <template>
-  <song-item v-for="(song, index) in songList"  :key="song.id"  :songs="songList" :song="song" :index="index"/>
+  <song-item
+    v-for="(song, index) in songList"
+    :key="song.id"
+    :songs="songList"
+    :song="song"
+    :index="index"
+  />
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
@@ -27,7 +33,7 @@ export default defineComponent({
 
     const getDetail = async () => {
       const { id } = route.params;
-      const { songs } = await fetchArtistTop(id);
+      const { songs } = await fetchArtistTop(({ id } as { id: string }));
       for (let i = 0, length = songs.length; i < length; i++) {
         const song = {
           id: songs[i]['id'],

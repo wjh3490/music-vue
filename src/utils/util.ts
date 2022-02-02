@@ -1,26 +1,29 @@
-export function filterNum(val) {
+import type { Song } from '@/types'
+
+export function filterNum(val: number) {
+    let res: number | string = ''
     if (val >= 10000 && val < 100000000) {
-        val = `${(val / 10000).toFixed(1)}万`;
+        res = `${((val) / 10000).toFixed(1)}万` as string | number;
     }
     if (val >= 100000000) {
-        val = `${(val / 100000000).toFixed(1)}亿`;
+        res = `${(val / 100000000).toFixed(1)}亿`;
     }
-    return val;
+    return res;
 }
 
-export function formatTime(interval) {
+export function formatTime(interval: number): string {
     interval = ~~interval;
     let minute = ~~(interval / 60);
     let second = String(interval % 60).padStart(2, '0');
     return minute + ':' + second;
 }
 
-export function parseTime(time, cFormat) {
+export function parseTime(time: number, cFormat: string) {
     if (arguments.length === 0 || !time) {
         return null;
     }
     const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}';
-    let date;
+    let date: Date;
     if (typeof time === 'object') {
         date = time;
     } else {
@@ -56,19 +59,19 @@ export function parseTime(time, cFormat) {
     return time_str;
 }
 
-export function arrayToString(arr = [], separate = '/', val = 'name') {
+export function arrayToString(arr: Array<any> = [], separate: string = '/', val: string = 'name'): string {
     return arr.map((item) => item[val]).join(separate);
 }
 
-export function splitString(arr = [], separate = '/') {
+export function splitString(arr: Array<any> = [], separate: string = '/'): string {
     return arr.join(separate);
 }
 
-export function formatIndex(index) {
+export function formatIndex(index: number): string {
     return (index + '').padStart(2, '0');
 }
 
-export function formatRank(rank) {
+export function formatRank(rank: number) {
     if (rank > 0) return ['icon-jiantou', 'rankRose'];
     if (rank < 0) return ['icon-jiantou', 'rankLose'];
     if (rank == 0) return ['icon-line', 'rankEqual'];
@@ -79,7 +82,7 @@ export function formatRank(rank) {
  * @return {Array}
  */
 
-export function filterList(list, currentSong) {
+export function filterList(list: Array<any>, currentSong: Song): Array<Song> {
     let data = list.slice();
     if (data.length === 0) {
         data.push(currentSong);
@@ -96,7 +99,7 @@ export function filterList(list, currentSong) {
  * @param {Array} arr
  * @return {Array}
  */
-export function shuffle(arr) {
+export function shuffle<T extends Array<any>>(arr: T) {
     let _arr = arr.slice();
     for (let i = 0; i < arr.length; i++) {
         let j = getRandomInt(0, i);
@@ -104,31 +107,31 @@ export function shuffle(arr) {
         _arr[i] = _arr[j];
         _arr[j] = t;
     }
-    return _arr;
+    return _arr
 }
 
-function getRandomInt(min, max) {
+function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 /**
  * @param {Lrc} lrc
  * @return {Object}
  */
-export function parseLyric(lrc) {
-    if(!lrc) return [];
+export function parseLyric(lrc: string) {
+    if (!lrc) return [];
     let lyrics = lrc.split('\n').filter(Boolean);
-    let lrcObj = [];
+    let lrcObj: Array<{ time: number, lyric: string }> = [];
 
     for (let i = 0; i < lyrics.length; i++) {
         let lyric = decodeURIComponent(lyrics[i]);
         let timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
         let timeRegExpArr = lyric.match(timeReg);
         if (!timeRegExpArr) continue;
-        let clause = lyric.replace(timeReg, '');
+        let clause: string = lyric.replace(timeReg, '') as string;
         let t = timeRegExpArr[0];
-        let min = Number(String(t.match(/\[\d*/i)).slice(1));
-        let sec = Number(String(t.match(/\:\d*/i)).slice(1));
-        let time = min * 60 + sec;
+        let min: number = Number(String(t.match(/\[\d*/i)).slice(1));
+        let sec: number = Number(String(t.match(/\:\d*/i)).slice(1));
+        let time: number = min * 60 + sec;
         lrcObj.push({
             time,
             lyric: clause
@@ -138,11 +141,11 @@ export function parseLyric(lrc) {
 }
 
 export function scrollToEase(
-    el,
-    start,
-    to,
-    scrollTop = 'scrollTop',
-    duration = 300
+    el: Element,
+    start: number,
+    to: number,
+    scrollTop: string = 'scrollTop',
+    duration: number = 300
 ) {
     const change = to - start;
 
@@ -160,10 +163,9 @@ export function scrollToEase(
     animate();
 }
 
-export function scrollToInstant(el, to) {
+export function scrollToInstant(el: Element, to: number) {
     el.scrollTo({
         top: to,
-        behavior: 'instant',
     });
 }
 
@@ -182,16 +184,16 @@ function easeOutQuart(t, b, c, d) {
     return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 }
 
-export function splitList(list, length) {
-    let index = 0;
-    let newArray = [];
+export function splitList<T extends Array<any>>(list: T, length: number) {
+    let index: number = 0;
+    let newArray: Array<any> = [];
     while (index < list.length) {
         newArray.push(list.slice(index, (index += length)));
     }
     return newArray;
 }
 
-export function optionsToMaps(options) {
+export function optionsToMaps(options: Array<any>) {
     return options.reduce((acc, cur, index) => {
         acc[index] = cur.id
         return acc

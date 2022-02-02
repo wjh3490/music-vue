@@ -18,7 +18,7 @@ export default defineComponent({
     const getSingers = async (type) => {
       const {
         playlist: { tracks },
-      } = await fetchPlaylistDetail(type);
+      } = await fetchPlaylistDetail({id: type});
       list.value = tracks.reduce((acc, cur) => {
         const obj = {
           id: cur.id,

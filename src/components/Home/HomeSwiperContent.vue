@@ -49,7 +49,7 @@ export default defineComponent({
                     store.commit('setCurrrentIndex', index)
                 }
             } else {
-                const { songs, privileges } = await fetchSongDetail(id);
+                const { songs, privileges } = await fetchSongDetail({id});
                 const song = {
                     id: songs[0]?.id,
                     name: songs[0]?.name,

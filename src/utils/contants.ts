@@ -1,9 +1,9 @@
 import { optionsToMaps } from './util'
 
-export const playMode = {
-    sequence: 0,
-    loop: 1,
-    random: 2,
+export enum playMode {
+    sequence = 0,
+    loop = 1,
+    random = 2,
 };
 
 export const homeNavOptions = [
@@ -26,9 +26,9 @@ export const mallNavOptions = [
     { icon: 'icon-yigoumai', name: '已购', to: '' },
 ]
 
-export const colorsMaps = {
-    blue: '#169af3',
-    red: '#ff3a3a',
+export enum colorsMaps {
+    blue = '#169af3',
+    red = '#ff3a3a',
 };
 
 export const colorsRankMaps = {

@@ -73,8 +73,8 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import { fetchBanner, fetchNewsong } from "@/api/recomment.js";
-import { fetchRankList } from "@/api/rank.js";
+import { fetchBanner, fetchNewsong } from "@/api/recomment";
+import { fetchRankList } from "@/api/rank";
 import { fetchNewAlbumset, fetchAlbumList } from "@/api/album";
 import useBatch from "@/composables/home/useBatch";
 import dialog from '@/components/common/Dialog/index'

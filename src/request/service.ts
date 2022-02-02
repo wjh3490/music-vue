@@ -1,13 +1,20 @@
 import axios from 'axios';
-const service = axios.create({
+import type { AxiosInstance, AxiosRequestConfig, AxiosPromise,AxiosResponse } from 'axios'
+const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.PROD ? 'https://netease-cloud-music-api-gilt.vercel.app/':'http://localhost:3001', 
   // baseURL: 'https://netease-cloud-music-api-gilt.vercel.app/',
 });
-service.defaults.retry = 0;
-service.defaults.retryDelay = 1000;
+interface Time {
+  retry: number,
+  retryDelay: number
+}
+type Service = AxiosRequestConfig & Time;
+
+(service.defaults as Service).retry = 0;
+(service.defaults as Service).retryDelay = 1000;
 
 service.interceptors.request.use(
-  config => {
+  (config: AxiosRequestConfig) => {
     // if ('token') {
     //   config.headers['token'] = fn()
     //   config.headers['ContentType'] = 'application/json; charset=utf-8'
@@ -20,10 +27,10 @@ service.interceptors.request.use(
 );
 
 service.interceptors.response.use(
-  response => {
-    const { code, ...rest } = response.data;
+  (response: AxiosResponse<any>) => {
+    const { code, ...rest } : {code: number, rest: {}} = response.data;
     if(code === 200) {
-      return rest;
+      return rest as any;
     }
   },
   err => {

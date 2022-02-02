@@ -17,7 +17,7 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { fetchCloudsearch } from '@/api/search';
 import { splitString, arrayToString } from '@/utils'

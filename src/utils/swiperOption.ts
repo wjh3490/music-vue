@@ -1,3 +1,5 @@
+import type { SwiperOptions } from "swiper/types";
+
 // basic
 export const basicSwiperOptions = {
   loop: false,

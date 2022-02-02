@@ -109,7 +109,7 @@ export default defineComponent({
       const { id } = route.params;
       const {
         data: { artist, identify = { imageDesc: '', imageUrl: '' } },
-      } = await fetchArtistDetail(id);
+      } = await fetchArtistDetail({ id });
       const {
         cover,
         albumSize,

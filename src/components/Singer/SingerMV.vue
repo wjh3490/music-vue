@@ -31,7 +31,7 @@ import { defineComponent, reactive, ref } from 'vue'
 import { fetchArtistMv } from '@/api/singer';
 import { useRoute } from 'vue-router';
 import { filterNum, formatTime } from '@/utils'
-interface MV{
+interface MV {
   id: number,
   imgurl: string,
   publishTime: number,
@@ -52,7 +52,7 @@ export default defineComponent({
     const flag = ref(true)
     let mvList = ref<MV[]>([]);
     const getDetail = async () => {
-      const { mvs } = await fetchArtistMv(route.params.id);
+      const { mvs } = await fetchArtistMv({ id: route.params.id as string });
       mvList.value = mvs;
       flag.value = false;
     };

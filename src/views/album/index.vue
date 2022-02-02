@@ -1,7 +1,13 @@
 <template>
   <g-head-nav background="transparent" :title="title" color="#fff" isFixed />
   <BaseBackGround :info="info" :opacity="opacity" />
-  <song-item v-for="(song, index) in songData" :key="song.id" :song="song" :songs="songData" :index="index" />
+  <song-item
+    v-for="(song, index) in songData"
+    :key="song.id"
+    :song="song"
+    :songs="songData"
+    :index="index"
+  />
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from 'vue';
@@ -36,7 +42,7 @@ export default defineComponent({
     const title = ref('专辑')
     const getList = async () => {
       const { id } = route.params;
-      const { songs, album } = await fetchAlbum(id);
+      const { songs, album } = await fetchAlbum({ id: id as string });
       const _info: StrKeys<string> = {
         artist: arrayToString(album.artists),
         alias: splitString(album.alias),
@@ -50,6 +56,8 @@ export default defineComponent({
         id: album.artist.id,
       };
       info.value = _info;
+
+      
 
       let list: Song[] = [];
       for (let i = 0, length = songs.length; i < length; i++) {

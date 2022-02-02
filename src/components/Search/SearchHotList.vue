@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { fetchSearchHots } from '@/api/search';
+import { fetchSearchHots } from '@/api/search'
 export default defineComponent({
   name: 'SearchHotList',
   setup() {

@@ -9,8 +9,8 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
-import { useRoute } from 'vue-router';
+import { defineComponent, ref, PropType } from 'vue'
+import { useRoute } from 'vue-router'
 import { fetchCloudsearch } from '@/api/search';
 import AlbumItem from '@/components/common/AlbumItem.vue'
 import type { Album } from '@/components/common/AlbumItem.vue'

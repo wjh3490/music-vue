@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
-import { useStore } from 'vuex';
+import { useStore } from 'vuex'
 import dialog from '../common/Dialog'
 export default defineComponent({
   name: 'SearchHistoryList',

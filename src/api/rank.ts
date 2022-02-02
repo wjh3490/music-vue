@@ -1,9 +1,11 @@
 import service from '../request/service';
+import { StrKeys } from '@/types'
 
-export function rankSongs(id) {
+export function rankSongs(params:StrKeys<string>) {
   return service({
-    url: `playlist/detail?id=${id}`,
+    url: 'playlist/detail',
     method: 'get',
+    params
   });
 }
 

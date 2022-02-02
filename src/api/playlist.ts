@@ -1,4 +1,5 @@
 import service from '../request/service';
+import { StrKeys } from '@/types'
 
 export function fetchPlaylist() {
   return service({
@@ -7,15 +8,16 @@ export function fetchPlaylist() {
   });
 }
 
-export function fetchPlaylistDetail(id) {
+export function fetchPlaylistDetail(params: StrKeys<string>) {
   return service({
-    url: `playlist/detail?id=${id}`,
+    url: 'playlist/detail',
     method: 'get',
+    params
   });
 }
-export function getRecommendPlaylist(page_no = 1) {
+export function getRecommendPlaylist() {
   return service({
-    url: `/personalized?limit=${10 * page_no}`,
+    url: '/personalized',
     method: 'get',
   });
 }

@@ -1,7 +1,7 @@
 <template>
-    <ul>
-      <album-item v-for="item in albums" :key="item.id" :data="item" />
-    </ul>
+  <ul>
+    <album-item v-for="item in albums" :key="item.id" :data="item" />
+  </ul>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -19,7 +19,7 @@ export default defineComponent({
     const route = useRoute();
     let albums = ref<Array<Album>>([]);
     const getDetail = async () => {
-      const { hotAlbums } = await fetchArtistAlbum(route.params.id);
+      const { hotAlbums } = await fetchArtistAlbum({ id: route.params.id as string });
       albums.value = hotAlbums;
       flag.value = false;
     };

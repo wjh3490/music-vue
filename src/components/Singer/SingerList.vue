@@ -37,7 +37,7 @@
 import { defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router';
-import { fetchSinger } from '@/api/singer';
+import { fetchTopSinger } from '@/api/singer';
 import { formatIndex, formatRank } from '@/utils';
 
 interface Singer {
@@ -59,7 +59,7 @@ export default defineComponent({
     const getSingers = async (type: number) => {
       const {
         list: { artists },
-      } = await fetchSinger(type);
+      } = await fetchTopSinger({type});
       singerList.value = artists;
       flag.value = false;
     }

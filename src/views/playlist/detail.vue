@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import { rankSongs } from '@/api/rank';
 import { mapMutations, mapGetters } from 'vuex';
 import { Song } from '@/utils/config';
@@ -59,7 +59,7 @@ export default defineComponent({
           playCount,
         },
         privileges,
-      } = await rankSongs(id);
+      } = await rankSongs({ id });
       const info = {
         nickname: creator.nickname,
         avatarUrl: creator.avatarUrl,

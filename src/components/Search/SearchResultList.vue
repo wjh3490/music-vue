@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, watch } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useHighlight from '@/composables/useHighlist'
 export default defineComponent({
   name: 'SearchResultList',

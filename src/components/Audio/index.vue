@@ -32,7 +32,7 @@ export default defineComponent({
       nextTick(() => store.commit('setDuration', audio.value.duration));
     };
     const getLyric = async (id: number) => {
-      const { lrc, tlyric } = await fetchLyric(id);
+      const { lrc, tlyric } = await fetchLyric({ id });
       const currentLyric = parseLyric(lrc.lyric);
       const currentTLyric = parseLyric(tlyric.lyric);
       const lyrics = currentLyric.reduce((acc, cur, index) => {
@@ -77,7 +77,7 @@ export default defineComponent({
     const ready = () => { };
 
     watch(() => store.getters.currentSong, async (newSong) => {
-      const res = await fetchSong(newSong.id);
+      const res = await fetchSong({ id: newSong.id });
       if (!res.data[0].url) {
         src.value = `https://music.163.com/song/media/outer/url?id=${newSong.id}.mp3`;
       } else {
@@ -90,7 +90,7 @@ export default defineComponent({
       nextTick(() => audio.value.play())
     })
     watch(() => store.state.playing, (val) => {
-      if (val) { 
+      if (val) {
         nextTick(() => audio.value.play());
       } else {
         nextTick(() => audio.value.pause());

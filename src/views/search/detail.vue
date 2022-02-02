@@ -40,16 +40,15 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import type { LocationQueryValue } from "vue-router";
-import useSwiper from '@/composables/useSwiper';
+import { defineComponent, ref, onMounted } from "vue"
+import { useRoute, useRouter } from "vue-router"
+import useSwiper from '@/composables/useSwiper'
 import { SearchOptions, basicSwiperOptions } from '@/utils'
-import SearchAblums from '@/components/Search/SearchAlbums.vue'
-import SearchSongs from '@/components/Search/SearchSongs.vue'
-import SearchPlaylist from '@/components/Search/SearchPlaylist.vue'
-import SearchSingers from '@/components/Search/SearchSingers.vue'
 import SearchMultiple from '@/components/Search/SearchMultiple.vue'
+import SearchSongs from '@/components/Search/SearchSongs.vue'
+import SearchAblums from '@/components/Search/SearchAlbums.vue'
+import SearchSingers from '@/components/Search/SearchSingers.vue'
+import SearchPlaylist from '@/components/Search/SearchPlaylist.vue'
 
 interface Detail {
     getDetail: (type: number) => void,
@@ -61,18 +60,17 @@ interface Tab {
 export default defineComponent({
     name: 'SearchDetail',
     components: {
-        SearchAblums,
-        SearchSongs,
-        SearchPlaylist,
-        SearchSingers,
         SearchMultiple,
+        SearchSongs,
+        SearchAblums,
+        SearchSingers,
+        SearchPlaylist,
     },
     setup() {
         const route = useRoute()
         const router = useRouter()
-        const _keyword = route?.query?.keyword ?? ''
-        const keyword = ref<string | LocationQueryValue[]>(_keyword)
-
+        const _keyword = (route?.query?.keyword as string) ?? ''
+        const keyword = ref<string>(_keyword)
         const tabRef = ref<Tab | null>(null)
         const searchs = ref<Detail[]>([]);
         const {
@@ -91,7 +89,7 @@ export default defineComponent({
         const handleClear = () => {
             router.push({ name: 'Search', query: { keyword: '' } })
         }
-        const getRefs = (el) => {
+        const getRefs = (el: Detail) => {
             searchs.value.push(el)
         }
         onMounted(async () => {

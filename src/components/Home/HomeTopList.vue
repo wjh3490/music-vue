@@ -5,7 +5,7 @@
       class="home-toplist-main"
       :style="{ backgroundColor: colorsRankMaps[index] }"
     >
-      <img :src="data.coverImgUrl" alt class="home-toplist-figure" />
+      <img :src="data.coverImgUrl"  class="home-toplist-figure" />
       <div class="home-toplist-songs">
         <div class="home-toplist-title">
           <b class="home-toplist-name">{{ data.name }}</b>
